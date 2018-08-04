@@ -2,22 +2,22 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const keys = require("../../config/keys")
+const keys = require("../config/keys")
 const passport = require("passport");
 
 //Load Input Validation
-const validateRegisterInput = require("../../validation/register");
-const validateLoginInput = require("../../validation/login");
+const validateRegisterInput = require("../validation/register");
+const validateLoginInput = require("../validation/login");
 
 //Load User model
-const User = require("../../models/User");
+const User = require("../models/User");
 
 //test route
-router.get("/test", (req, res) => res.json({msg: "Users Works"}));
+router.get("/test", (req, res) => res.render("pages/test"));
 
 
 //registration route (Public)
-//Get api/users/register
+//post /users/register
 
 router.post("/register", (req, res) => {
     //fill in errors object if any occure and check validation
@@ -59,7 +59,7 @@ router.post("/register", (req, res) => {
 });
 
 //login route (Public)
-//Get api/users/login
+//post /users/login
 
 router.post("/login", (req, res) => {
 
