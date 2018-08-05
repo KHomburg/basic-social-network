@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const User = mongoose.model("users");
 const keys = require("../config/keys");
 
+
+//extracting the jwt token from the cookie "token"
 var cookieExtractor = function(req) {
     var token = null;
     if (req && req.cookies)
@@ -13,10 +15,13 @@ var cookieExtractor = function(req) {
     return token;
 };
 
+
+//set options for authentication
 const opts = {};
 opts.jwtFromRequest = cookieExtractor;
 opts.secretOrKey = keys.secretOrKey;
 
+//Authentication Strategy
 module.exports = passport => {
     passport.use(
         new JwtStrategy(opts, (jwt_payload, done) => {

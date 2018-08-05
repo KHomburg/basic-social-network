@@ -1,9 +1,18 @@
-Neue register view
+<% include ../../partials/head %>
 
-<form action="/users/register" method="post">
-    <input id="Name" type="text" name="name" placeholder="Name eingeben"> </br>
-    <input id="Email" type="text" name="email" placeholder="Email eingeben"></br>
-    <input id="Passwort" type="text" name="password" placeholder="Passwort eingeben"></br>
-    <input id="Bestätigung_des_passworts" type="text" name="password2" placeholder="Passwort bestätigen"></br>
-    <input type="submit" value="Absenden">
-</form>
+<% include ../../partials/header %>
+
+<body>
+    Neue register view
+    <div class="form-group">
+        <form action="/users/register" method="post">
+            <input class="form-control" id="Name" type="text" name="name" placeholder="Name eingeben"> </br>
+            <input class="form-control" id="Email" type="email" name="email" placeholder="Email eingeben"></br>
+            <input class="form-control" id="Passwort" type="password" name="password" placeholder="Passwort eingeben"></br>
+            <input class="form-control" id="Bestätigung_des_passworts" type="password" name="password2" placeholder="Passwort bestätigen"></br>
+            <input class="form-control" type="submit" value="Absenden">
+        </form>
+    </div>
+</body>
+
+<% include ../../partials/foot %>

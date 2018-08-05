@@ -1,7 +1,16 @@
-Neue login view
+<% include ../../partials/head %>
 
-<form action="/users/login" method="post">
-    <input id="Email" type="text" name="email" placeholder="Email eingeben"></br>
-    <input id="Passwort" type="text" name="password" placeholder="Passwort eingeben"></br>
-    <input type="submit" value="Absenden">
-</form>
+<% include ../../partials/header %>
+
+<body>
+    Neue login view
+    <div class="form-group">
+        <form action="/users/login" method="post">
+            <input class="form-control" id="Email" type="text" name="email" placeholder="Email eingeben"></br>
+            <input class="form-control" id="Passwort" type="text" name="password" placeholder="Passwort eingeben"></br>
+            <input class="form-control" type="submit" value="Absenden">
+        </form>
+    </div>
+</body>
+
+<% include ../../partials/foot %>

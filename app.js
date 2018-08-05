@@ -11,6 +11,7 @@ const cookieParser = require('cookie-parser');
 const users ={};
 const profile ={};
 const posts ={};
+const statics ={};
 //API:
 users.api = require('./routes/api/users');
 profile.api = require('./routes/api/profile');
@@ -19,6 +20,7 @@ posts.api = require('./routes/api/posts');
 users.view = require('./routes/users');
 profile.view = require('./routes/profile');
 posts.view = require('./routes/posts');
+statics.view = require('./routes/statics');
 
 
 
@@ -28,8 +30,6 @@ const app = express();
 //body parser
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-
-
 
 // Passport middleware
 app.use(passport.initialize());
@@ -65,6 +65,7 @@ app.use('/api/posts', posts.api);
 app.use('/users', users.view);
 app.use('/profile', profile.view);
 app.use('/posts', posts.view);
+app.use('/', statics.view);
 
 
 //Server Setup

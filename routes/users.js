@@ -21,7 +21,7 @@ router.get("/test", (req, res) => {
 
 
 //registration route (Public)
-//post /users/register
+//get /users/register
 router.get("/register", (req, res) => res.render("pages/users/register"));
 
 //registration route (Public)
@@ -114,17 +114,13 @@ router.post("/login", (req, res) => {
                             id: user.id,
                             name: user.name
                         }
-
                         //create token 
                         jwt.sign(payload, keys.secretOrKey, undefined, (err, token) => {
-                            
+                            //save token in cookie and return json                       
                             res.cookie("token", token).json({
                                 success: true,
                                 token: "Bearer " + token
-                            })
-                            .then(console.log("cookie created"))
-                            .catch("error while creating cookie");                    
-                                
+                            })                          
                         });
                     } else {
                         errors.password = "Password incorrect";
@@ -135,23 +131,28 @@ router.post("/login", (req, res) => {
 });
 
 
-
-
 //return current User route (Private)
-//Get api/users/current
+//Get users/current
 router.get("/current", passport.authenticate("jwt", {
     session: false
 }), (req, res) => {
-    console.log(req.user.id);
-    res.json({
+    const currentUser = {
         id: req.user.id,
         name: req.user.name,
         email: req.user.email
-    });
+    }
+    res.render("pages/users/current", {currentUser});
 });
 
-
-
+//logout Route (Private)
+//Get users/logout
+router.get('/logout', (req,res) => {
+    if(req.cookies.token){
+        res.clearCookie('token').send('Cookie deleted');
+    } else {
+        res.send("You are not logged in")
+    }
+});
 
 
 module.exports = router;
