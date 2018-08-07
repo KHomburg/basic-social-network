@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const keys = require("../config/keys")
-const passport = require("passport");
+
 
 router.get("/test", (req, res) => res.json({msg: "Profile Works"}));
 
@@ -36,26 +35,26 @@ router.get('/:id', (req, res) => {
     
 });
 
-//edit profile get/post
-router.get("/edit", passport.authenticate("jwt", {
-    session: false,
-    failureRedirect: '/users/login'
-}), (req, res) => {
-    //Profile.findOne({user: req.params.id})
-    //    .then(profile => {
-    //        console.log(profile)
-    //        
-    //        //res.render("pages/profile/edit", {profile})
-    //    .catch(res.json({msg: "not logged in"}))
-    //    });
-    res.json({msg: "test"});
-});
-
-router.get("/current", passport.authenticate("jwt", {
-    session: false,
-}), (req, res) => {
-    res.send("test");
-});
+////edit profile get/post
+//router.get("/edit", passport.authenticate("jwt", {
+//    session: false,
+//    failureRedirect: '/users/login'
+//}), (req, res) => {
+//    //Profile.findOne({user: req.params.id})
+//    //    .then(profile => {
+//    //        console.log(profile)
+//    //        
+//    //        //res.render("pages/profile/edit", {profile})
+//    //    .catch(res.json({msg: "not logged in"}))
+//    //    });
+//    res.json({msg: "test"});
+//});
+//
+//router.get("/current", passport.authenticate("jwt", {
+//    session: false,
+//}), (req, res) => {
+//    res.send("test");
+//});
 
 
 module.exports = router;

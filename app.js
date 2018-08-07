@@ -1,18 +1,21 @@
 const express = require('express');
+const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
-const passport = require("passport");
+const keys = require("./config/keys");
+const multer = require('multer');
+const upload = multer(); 
+const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const MongoStore = require('connect-mongo')(session);
+
 
 //Route Constants
 const users ={};
 const profile ={};
 const posts ={};
 const statics ={};
-//API:
-users.api = require('./routes/api/users');
-profile.api = require('./routes/api/profile');
-posts.api = require('./routes/api/posts');
+
 //View:
 users.view = require('./routes/users');
 profile.view = require('./routes/profile');
@@ -20,22 +23,16 @@ posts.view = require('./routes/posts');
 statics.view = require('./routes/statics');
 
 
-
-const app = express();
-
 //Middleware
 //body parser
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-// Passport middleware
-app.use(passport.initialize());
-
-//Passport Config
-require("./config/passport")(passport);
 
 //Cookie middleware
+app.use(upload.array());
 app.use(cookieParser());
+app.use(session({secret: keys.secretOrKey, saveUninitialized: true, store: new MongoStore({ mongooseConnection: mongoose.connection }) }));
 
 //DB Setup
 mongoose
@@ -49,11 +46,6 @@ app.set('view engine', 'ejs');
 
 
 //ROUTES
-//Use API routes
-app.use('/api/users', users.api);
-app.use('/api/profile', profile.api);
-app.use('/api/posts', posts.api);
-
 //Use View routes
 app.use('/users', users.view);
 app.use('/profile', profile.view);
@@ -62,5 +54,6 @@ app.use('/', statics.view);
 
 
 //Server Setup
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log('Server running'));

@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const keys = require("../config/keys")
-const passport = require("passport");
+const keys = require("../config/keys");
+const authenticate = require("../config/authenticate");
 
 //Load Input Validation
 const validateRegisterInput = require("../validation/register");
@@ -18,6 +17,7 @@ router.get("/test", (req, res) => {
     res.render("pages/test");
     console.log(req.cookies.token);
 });
+
 
 
 
@@ -87,8 +87,6 @@ router.post("/register", (req, res) => {
 });
 
 
-
-
 //login route (Public)
 //get /users/login
 router.get("/login", (req, res) => res.render("pages/users/login"));
@@ -125,48 +123,36 @@ router.post("/login", (req, res) => {
             bcrypt.compare(password, user.password)
                 .then(isMatch => {
                     if (isMatch) {
-                        //User matched (define payload of the token)
-                        const payload = {
-                            id: user.id,
-                            name: user.name
-                        }
-                        //create token 
-                        jwt.sign(payload, keys.secretOrKey, undefined, (err, token) => {
-                            //save token in cookie and return json                       
-                            res.cookie("token", token).json({
-                                success: true,
-                                token: "Bearer " + token
-                            })                          
-                        });
+
+                        console.log("create session");
+                        req.session.userId = user._id;
+                        console.log("session created");
+                        res.redirect("/users/current");
                     } else {
                         errors.password = "Password incorrect";
                         return res.status(400).json(errors);
                     }
-                });
+                })
         });
 });
 
 
 //return current User route (Private)
 //Get users/current
-router.get("/current", passport.authenticate("jwt", {
-    session: false,
-    failureRedirect: '/users/login'
-}), (req, res) => {
-    const currentUser = {
-        id: req.user.id,
-        name: req.user.name,
-        email: req.user.email
-    }
-    res.render("pages/users/current", {currentUser});
+router.get("/current", authenticate.checkLogIn, (req, res) => {
+    User.findById(req.session.userId, (err, user) => {
+        var currentUser = user
+        res.render("pages/users/current", {currentUser})
+    });
 });
 
 
 //logout Route (Private)
 //Get users/logout
 router.get('/logout', (req,res) => {
-    if(req.cookies.token){
-        res.clearCookie('token').send('Cookie deleted');
+    if(req.session.userId){
+        req.session.destroy();
+        res.send("You are logged out now")
     } else {
         res.send("You are not logged in")
     }
