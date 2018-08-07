@@ -9,8 +9,9 @@ const passport = require("passport");
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
 
-//Load User model
+//Load models
 const User = require("../models/User");
+const Profile = require("../models/Profile");
 
 //test route
 router.get("/test", (req, res) => {
@@ -20,9 +21,10 @@ router.get("/test", (req, res) => {
 
 
 
-//registration route (Public)
+//registration route => creates a User and a Profile Model (Public)
 //get /users/register
 router.get("/register", (req, res) => res.render("pages/users/register"));
+
 
 //registration route (Public)
 //post /users/register
@@ -62,12 +64,26 @@ router.post("/register", (req, res) => {
                         newUser.password = hash;
                         //save new User
                         newUser.save()
-                            .then(user => res.json(user))
-                            .catch(err => console.log(err));
+                            .then((user) => {
+                                res.json(user);
+                                const createdUser = user;
+                            })
+                            .catch(err => console.log(err))
+
+                            //Create the profile
+                            .then(createProfile => {
+                                const newProfile = new Profile({
+                                    user: newUser._id
+                                });
+                                newProfile.save()
+                                    .then(console.log("Profile saved:" + newProfile))
+                                    .catch(err => console.log(err));
+                            });
                     })
                 })
             }
         })
+
 });
 
 
@@ -134,7 +150,8 @@ router.post("/login", (req, res) => {
 //return current User route (Private)
 //Get users/current
 router.get("/current", passport.authenticate("jwt", {
-    session: false
+    session: false,
+    failureRedirect: '/users/login'
 }), (req, res) => {
     const currentUser = {
         id: req.user.id,
@@ -143,6 +160,7 @@ router.get("/current", passport.authenticate("jwt", {
     }
     res.render("pages/users/current", {currentUser});
 });
+
 
 //logout Route (Private)
 //Get users/logout
