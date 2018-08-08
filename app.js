@@ -5,9 +5,9 @@ const bodyParser = require("body-parser");
 const keys = require("./config/keys");
 const multer = require('multer');
 const upload = multer(); 
-const session = require('express-session');
-const cookieParser = require('cookie-parser');
-const MongoStore = require('connect-mongo')(session);
+const session = require('express-session'); //for authentication Session
+const cookieParser = require('cookie-parser'); //for creating cookies (prob. not necessary in the future)
+const MongoStore = require('connect-mongo')(session); //for storing sessions server side
 
 
 //Route Constants
@@ -32,7 +32,7 @@ app.use(bodyParser.json());
 //Cookie middleware
 app.use(upload.array());
 app.use(cookieParser());
-app.use(session({secret: keys.secretOrKey, saveUninitialized: true, store: new MongoStore({ mongooseConnection: mongoose.connection }) }));
+app.use(session({secret: keys.secretOrKey, saveUninitialized: true, resave: true, store: new MongoStore({ mongooseConnection: mongoose.connection }) }));
 
 //DB Setup
 mongoose

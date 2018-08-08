@@ -19,8 +19,6 @@ router.get("/test", (req, res) => {
 });
 
 
-
-
 //registration route => creates a User and a Profile Model (Public)
 //get /users/register
 router.get("/register", (req, res) => res.render("pages/users/register"));
@@ -140,11 +138,14 @@ router.post("/login", (req, res) => {
 //return current User route (Private)
 //Get users/current
 router.get("/current", authenticate.checkLogIn, (req, res) => {
-    User.findById(req.session.userId, (err, user) => {
-        var currentUser = user
-        res.render("pages/users/current", {currentUser})
-    });
+        User.findById(req.session.userId, (err, user) => {
+            var currentUser = user
+            //loggedInUser(req, res);
+            res.render("pages/users/current", {currentUser})
+        })
+
 });
+
 
 
 //logout Route (Private)

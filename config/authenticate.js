@@ -15,6 +15,18 @@ module.exports.checkLogIn = (req, res, next) => {
     }
 }
 
-
-
-
+//Doesn't work yet
+module.exports.loggedInUser = (req, res) => {
+    return new Promise((res, rej) => {
+        if (req.session.userId) {
+            res(
+                User.findById(req.session.userId, (err, user, next) => {
+                    const currentUser = user
+                    console.log(currentUser)
+                    return currentUser
+                })
+            )        
+        } else {
+            rej(res.send("You must be logged in"));
+        }
+})};
