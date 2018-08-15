@@ -15,7 +15,13 @@ const Profile = require("../models/Profile");
 //test route
 router.get("/test", (req, res) => {
     res.render("pages/test");
-    console.log(req.cookies.token);
+    console.log(req.session);
+});
+
+//return current User route (Private)
+//Get users/current
+router.get("/current", authenticate.checkLogIn, (req, res) => {
+    authenticate.sessionUser(req, res, "pages/users/current")
 });
 
 
@@ -50,7 +56,6 @@ router.post("/register", (req, res) => {
             } else {
                 //else create new User
                 const newUser = new User({
-                    name: req.body.name,
                     email: req.body.email,
                     password: req.body.password
                 });
@@ -71,6 +76,7 @@ router.post("/register", (req, res) => {
                             //Create the profile
                             .then(createProfile => {
                                 const newProfile = new Profile({
+                                    name: req.body.name,
                                     user: newUser._id
                                 });
                                 newProfile.save()
@@ -133,20 +139,6 @@ router.post("/login", (req, res) => {
                 })
         });
 });
-
-
-//return current User route (Private)
-//Get users/current
-router.get("/current", authenticate.checkLogIn, (req, res) => {
-        User.findById(req.session.userId, (err, user) => {
-            var currentUser = user
-            //loggedInUser(req, res);
-            res.render("pages/users/current", {currentUser})
-        })
-
-});
-
-
 
 //logout Route (Private)
 //Get users/logout

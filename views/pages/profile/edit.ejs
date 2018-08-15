@@ -2,15 +2,53 @@
 
 <% include ../../partials/header %>
 
-<%= currentProfile.user._id %> </br>
+<%= currentUserProfile %>
+</br>
 
 <body>
     Neue login view
     <div class="form-group">
-        <form action="/users/login" method="post">
+        <form action="/profile/edit" method="post">
+            <h3>Allgemeines:</h3>
+            <input class="form-control" id="Name" type="text" name="name" placeholder="Name"></br>
             <input class="form-control" id="Email" type="text" name="email" placeholder="Email eingeben"></br>
-            <input class="form-control" id="Passwort" type="passord" name="password" placeholder="Passwort eingeben"></br>
-            <input class="form-control" type="submit" value="Absenden">
+            <input class="form-control" id="Standort" type="text" name="location" placeholder="Standort/Wohnort"></br>
+            <input class="form-control" id="Bio" type="text" name="bio" placeholder="Über dich..."></br>
+
+            <h3>Social</h3>
+            <input class="form-control" id="Twitter" type="text" name="twitter" placeholder="Twitter"></br>
+            <input class="form-control" id="Facebook" type="text" name="facebook" placeholder="Facebook"></br>
+            <input class="form-control" id="LinkdIn" type="text" name="linkedin" placeholder="LinkdIn"></br>
+            <input class="form-control" id="Website" type="text" name="website" placeholder="Website"></br>
+
+            <input class="form-control" type="submit" value="Speichern">
+        </form>
+    </div>
+
+    <div class="form-group">
+        <form action="/profile/experience" method="post">
+            <h3>Berufserfahrung:</h3>
+            <input class="form-control" id="Titel" type="text" name="title" placeholder="Berufstitel"></br>
+            <input class="form-control" id="Unternehmen" type="text" name="company" placeholder="Unternehmen"></br>
+            <input class="form-control" id="Ort" type="text" name="location" placeholder="Ort"></br>
+            <input class="form-control" id="Von" type="date" name="from" placeholder="Von (Datum)"></br>
+            <input class="form-control" id="Bis" type="date" name="to" placeholder="Bis (Datum)"></br>
+
+            <input class="form-control" type="submit" value="Speichern">
+        </form>
+        
+    </div>
+
+    <div class="form-group">
+        <form action="/profile/education" method="post">
+            <h3>Bildungsweg</h3>
+            <input class="form-control" id="Universität" type="text" name="university" placeholder="Universität"></br>
+            <input class="form-control" id="Studiengang" type="text" name="fieldOfStudy" placeholder="Studiengang"></br>
+            <input class="form-control" id="Abschluss" type="text" name="degree" placeholder="Abschluss"></br>
+            <input class="form-control" id="Von" type="date" name="from" placeholder="Von (Datum)"></br>
+            <input class="form-control" id="Bis" type="date" name="to" placeholder="Bis (Datum)"></br>
+
+            <input class="form-control" type="submit" value="Speichern">
         </form>
     </div>
 </body>

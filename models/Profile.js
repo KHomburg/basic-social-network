@@ -14,9 +14,6 @@ const ProfileSchema = new Schema({
     location: {
         type: String
     },
-    company: {
-        type: String
-    },
     bio: {
         type: String
     },
@@ -40,13 +37,6 @@ const ProfileSchema = new Schema({
             to: {
                 type: Date
             },
-            current: {
-                type: Boolean,
-                default: false,
-            },
-            description: {
-                type: String
-            }
         }
     ],
     education: [
@@ -55,14 +45,12 @@ const ProfileSchema = new Schema({
                 type: String,
                 require: true
             },
-            fieldofstudy: {
+            fieldOfStudy: {
                 type: String,
                 required: true
             },
             degree: {
-                type: Boolean,
-                required: true,
-                default: false,
+                type: String,
             },
             from: {
                 type: Date,
@@ -70,10 +58,6 @@ const ProfileSchema = new Schema({
             },
             to: {
                 type: Date
-            },
-            current: {
-                type: Boolean,
-                default: false,
             },
         }
     ],
@@ -94,6 +78,14 @@ const ProfileSchema = new Schema({
             type: String
         }
     },
+    membership: [
+        {
+            group: {
+                type: Schema.Types.ObjectId,
+                ref: "group"
+            },
+        }
+    ],
     date: {
         type: Date,
         default: Date.now

@@ -1,0 +1,23 @@
+<% include ../../partials/head %>
+
+<% include ../../partials/header %>
+Benutzer
+<%= currentUserProfile %>
+</br>
+</br>
+</br>
+Post:
+</br>
+<%= post %>
+</br>
+<body>
+    
+    Comment erstellen:</br>
+    <div class="form-group">
+        <form action="/post/comment/create" method="post">
+            <textarea class="form-control" id="Text" type="text" name="text" placeholder="Text eingeben"></textarea></br>
+            <input type="hidden" name="postId" value="<%= post._id %>"></br>
+            <input class="form-control" type="submit" value="Absenden">
+        </form>
+    </div>
+</body>

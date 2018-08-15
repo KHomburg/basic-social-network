@@ -13,13 +13,15 @@ const MongoStore = require('connect-mongo')(session); //for storing sessions ser
 //Route Constants
 const users ={};
 const profile ={};
-const posts ={};
+const post ={};
+const group ={};
 const statics ={};
 
 //View:
 users.view = require('./routes/users');
 profile.view = require('./routes/profile');
-posts.view = require('./routes/posts');
+post.view = require('./routes/post');
+group.view = require('./routes/group');
 statics.view = require('./routes/statics');
 
 
@@ -49,7 +51,8 @@ app.set('view engine', 'ejs');
 //Use View routes
 app.use('/users', users.view);
 app.use('/profile', profile.view);
-app.use('/posts', posts.view);
+app.use('/post', post.view);
+app.use('/group', group.view);
 app.use('/', statics.view);
 
 
