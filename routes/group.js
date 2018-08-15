@@ -46,17 +46,18 @@ router.post("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, 
             res.send("group already exists")
         } else {
                 const currentUserProfile = req.currentUserProfile
+                console.log(currentUserProfile)
 
                 //Create and save new Group
                 const newGroup = new Group({
                     name: req.body.name,
                     description: req.body.description,
-                    profile: currentUserProfile
+                    moderator: currentUserProfile
                 })
                 newGroup.save();
 
                 //add new Group to creaters profile
-                currentUserProfile.membership.push(newGroup);
+                currentUserProfile.moderatorOf.push(newGroup);
                 currentUserProfile.save(); 
                 
                 res.send(newGroup);            
@@ -68,22 +69,19 @@ router.post("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, 
 //post /group/create; (private)
 router.post("/subscribe", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
-    //Group.findOne({name: req.body.groupName}, (err, group) => {
-    //    var neu = group.members.find(
-    //        (id) => {return id._id == "5b73879e0462280c38c8e0f5"}
-    //    )
-    //    console.log(neu)
-    //    res.redirect("name/asdfasdf");
-    //})
-
 
     Group.findOne({name: req.body.groupName}, (err, group) => {
-        //Check wether User is already member
-        var findMembership = group.members.find(
+        //Check wether User is already member/mod
+        const findMembership = group.members.find(
             (groupMember) => {return groupMember._id = currentUserProfile._id}
-        );
-    
-        if (findMembership == undefined || findMembership == null){
+        )
+        const findMods = group.moderator.find(            
+            (groupMods) => {return groupMods._id = currentUserProfile._id
+                console.log(group.moderator)}
+        )
+
+        //create membership if not already, or mod
+        if (findMembership == undefined || findMembership == null || findMods == undefined || findMods == null){
             //Add profile to group as member
             const newMember = {
                 profile: currentUserProfile

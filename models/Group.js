@@ -3,10 +3,14 @@ const Schema = mongoose.Schema;
 
 //Schema
 const GroupSchema = new Schema({
-    creater: {
-        type: Schema.Types.ObjectId,
-        ref: "profile"
-    },
+    moderator:[
+        {
+            profile: {
+                type: Schema.Types.ObjectId,
+                ref: "profile"
+            },
+        }
+    ],
     name: {
         type: String,
         required: true,

@@ -34,7 +34,7 @@ app.use(bodyParser.json());
 //Cookie middleware
 app.use(upload.array());
 app.use(cookieParser());
-app.use(session({secret: keys.secretOrKey, saveUninitialized: true, resave: true, store: new MongoStore({ mongooseConnection: mongoose.connection }) }));
+app.use(session({secret: keys.secretOrKey, saveUninitialized: false, resave: true, store: new MongoStore({ mongooseConnection: mongoose.connection }) }));
 
 //DB Setup
 mongoose

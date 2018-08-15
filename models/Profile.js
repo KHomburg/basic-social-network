@@ -86,6 +86,14 @@ const ProfileSchema = new Schema({
             },
         }
     ],
+    moderatorOf: [
+        {
+            group: {
+                type: Schema.Types.ObjectId,
+                ref: 'groups'
+            }
+        }
+    ],
     date: {
         type: Date,
         default: Date.now
