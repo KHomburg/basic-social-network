@@ -44,6 +44,7 @@ mongoose
 
 
 // set the view engine to ejs
+app.use('/public', express.static(process.cwd() + '/public'));
 app.set('view engine', 'ejs');
 
 

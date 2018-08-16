@@ -1,0 +1,28 @@
+nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none; }
+
+nav li {
+  display: inline-block; }
+
+nav a {
+  display: block;
+  padding: 6px 12px;
+  text-decoration: none; }
+
+.typ {
+  display: block; }
+
+.bob ul {
+  margin: 0;
+  padding: 0;
+  list-style: none; }
+
+.bob li {
+  display: inline-block; }
+
+.bob a {
+  display: block;
+  padding: 6px 12px;
+  text-decoration: none; }
