@@ -1,1 +1,1 @@
-console.log("test1"),console.log("test3"),console.log("test2");
+$(document).ready(function(){console.log("document ready"),$("#post__reply").click(function(){$("#comment-form").slideToggle()}),$("#close-comment-form").click(function(){$("#comment-form").slideUp()})});

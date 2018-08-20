@@ -1,0 +1,38 @@
+    <!--Sidebar-->
+    <!-- Side navigation -->
+    <div class="sidenav">
+        <ul class="uk-nav-default uk-nav-parent-icon" uk-nav="multiple: true">
+
+            <li class="uk-active parent"><a href="#">Meine Gruppen</a></li>
+            <li class="uk-nav-divider"></li>
+
+            <%if (currentUserProfile.moderatorOf.length > 0) { %>
+                <li class="uk-parent">
+                    <a href="#">Als Moderator</a>
+                        <ul class="uk-nav-sub">
+                            <% currentUserProfile.moderatorOf.forEach((group) => { %>     
+                                
+                                <li><a href="#"><%= group._id.name %></a></li>
+                                
+                            <% }) %>
+                        </ul>
+                </li>    
+                <li class="uk-nav-divider"></li>            
+            <% } %>
+
+
+            <%if (currentUserProfile.membership.length > 0) { %>
+                <ul class="uk-nav uk-nav-default">
+                    <li class="uk-active">Mitglied von:</li>
+
+                        <% currentUserProfile.membership.forEach((group) => { %>     
+                            
+                                <li><a href="#"><%= group._id.name %></a></li>
+                            
+                        <% }) %>
+                </li>                
+            <% } %>
+
+        </ul>
+    </div>
+    </div>

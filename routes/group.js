@@ -22,13 +22,42 @@ router.get("/all", authenticate.checkLogIn, authenticate.reqSessionProfile, (req
 //Get /group/name/:id
 router.get('/name/:name', authenticate.checkLogIn, authenticate.reqSessionProfile,(req, res) => {
     const currentUserProfile = req.currentUserProfile
-    Group.findOne({name: req.params.name}, (err,group) => {
-        if(group){
-            res.render("pages/group/group", {group, currentUserProfile});
+    Group.findOne({name: req.params.name}, (err,currentGroup) => {
+        if(currentGroup){
+            
+        //Check wether User is already member/mod
+        const findMembership = currentGroup.members.find(
+            (groupMember) => {return groupMember._id == currentUserProfile._id.toString()}
+        )
+        const findMods = currentGroup.moderator.find(            
+            (groupMods) => {return groupMods._id == currentUserProfile._id.toString()}
+        )
+
+            //create membership if not already, or mod
+            if (findMembership == undefined && findMods == undefined){
+                var membership = false
+            } else {
+                var membership = true
+            }
+
+                Post.find({group: currentGroup})
+                    .populate("profile")
+                    .sort({date: -1})
+                    .exec(function (err, posts) {
+                        if(posts){
+                        res.render("pages/group/group", {currentGroup, posts, currentUserProfile, membership});
+                        }else if (err){
+                            console.log(err)
+                        } else {
+                            console.log("something went wrong")
+                        }
+                });  
+        }else if (err){
+            console.log(err)
         }else{
-            console.log("err")
-        }        
-    });
+            console.log("Diese Gruppe existiert nicht")
+        }    
+    })
 });
 
 //form for creating a new group
@@ -65,23 +94,13 @@ router.post("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, 
     })
 })
 
-//post request form membership for group
+//post request form for membership for group
 //post /group/create; (private)
 router.post("/subscribe", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
     Group.findOne({name: req.body.groupName}, (err, group) => {
-        //Check wether User is already member/mod
-        const findMembership = group.members.find(
-            (groupMember) => {return groupMember._id = currentUserProfile._id}
-        )
-        const findMods = group.moderator.find(            
-            (groupMods) => {return groupMods._id = currentUserProfile._id
-                console.log(group.moderator)}
-        )
 
-        //create membership if not already, or mod
-        if (findMembership == undefined || findMembership == null || findMods == undefined || findMods == null){
             //Add profile to group as member
             const newMember = {
                 profile: currentUserProfile
@@ -97,9 +116,6 @@ router.post("/subscribe", authenticate.checkLogIn, authenticate.reqSessionProfil
             currentUserProfile.save(); 
             
             res.send("You are a member now");
-        } else {
-            res.send("You are already a member of this group");
-        }
     })
 })
 

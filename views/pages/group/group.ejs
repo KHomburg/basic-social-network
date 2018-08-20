@@ -1,30 +1,91 @@
 <% include ../../partials/head %>
 
 <% include ../../partials/header %>
-<%= currentUserProfile %>
-</br>
-</br>
-</br>
-</br>
-</br>
-selected group by name
-</br>
-<%= group.name %>
-<div class="form-group">
-    <form action="/group/subscribe" method="post">
-        <input type="hidden" name="groupName" value="<%= group.name %>">
-        <input class="form-control" type="submit" value="Beitreten">
-    </form>
-</div>
-</br>
+<% include ../../partials/sidebar %>
+
+
+
 <body>
-    Neuen Post erstellen in der Gruppe "<%= group.name %>".
-    <div class="form-group">
-        <form action="/post/create" method="post">
-            <input class="form-control" id="Titel" type="text" name="title" placeholder="Titel des Beitrags"></br>
-            <textarea class="form-control" id="Text" type="text" name="text" placeholder="Text eingeben"></textarea></br>
-            <input type="hidden" name="groupName" value="<%= group.name %>"></br>
-            <input class="form-control" type="submit" value="Absenden">
-        </form>
-    </div>
+    <div class="main">
+        <div class="group-header">
+            <div class="group-name">
+            <%= currentGroup.name %>
+        </div>
+
+            <!-- if currentUser is already member of this group, don't sho subscrib button -->
+            <% if(membership == false){ %>
+                <!-- form for joining the group -->
+                <div class="sub-button">
+                    <form action="/group/subscribe" method="post">
+                        <input type="hidden" name="groupName" value="<%= currentGroup.name %>">
+                        <input class="uk-button uk-button-primary" type="submit" value="Beitreten">
+                    </form>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- Form for creating a new post in that group -->
+        <div class="new-post">
+            <form action="/post/create" method="post">
+                <fieldset class="uk-fieldset">
+                    <input class="uk-input" id="Titel" type="text" name="title" placeholder="Titel des Beitrags">
+                    <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben"></textarea>
+                    <input type="hidden" name="groupName" value="<%= currentGroup.name %>">
+                    <input class="uk-button uk-button-primary uk-button-small" type="submit" value="Absenden">
+                </fieldset>
+            </form>
+        </div>
+
+
+        <!-- listing posts -->
+        <% if(posts){ posts.forEach((post) => { %>
+            <% post.comments %>
+            <div class="post">
+                <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+                    <div class="uk-width-auto">
+                        <img class="uk-comment-avatar" src="images/maxresdefault.jpg" width="80" height="80" alt="">
+                    </div>
+                    <div class="uk-width-expand">
+                        <h4 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="#"><%= post.title %></a></h4>
+                        <ul class="uk-comment-meta uk-subnav uk-margin-remove-top">
+                            <li><a href="#">von <%= post.profile.name %></a></li>
+                            <li><%= post.date.toDateString("de-De") + " " + post.date.toLocaleTimeString("de-De") %></li>
+                            
+                        </ul>
+                    </div>
+                </header>
+                <div class="uk-comment-body">
+                    <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+                </div>
+
+                <!--
+                <div id="post__reply" class="post__reply">
+                    Antworten
+                </div>
+                -->
+
+                <div class="post__comment-count">
+                    <%= post.comments.length %> Kommentare
+                </div>
+
+                <div id="comment-form" class="comment-form" alt="">
+                    <form action="/post/comment/create" method="post">
+                        <fieldset class="uk-fieldset">
+                            <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben"></textarea>
+                            <input type="hidden" name="postId" value="<%= post._id %>">
+                            <input class="uk-button uk-button-primary uk-button-small" type="submit" value="Absenden">
+                            <input id="close-comment-form" class="uk-button uk-button-default uk-button-small" type="" value="Abbrechen">
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        <% })} %>
+
+
+
+
+    </main>
 </body>
+
+<% include ../../partials/footer %>
+<% include ../../partials/foot %>

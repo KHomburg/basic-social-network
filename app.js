@@ -44,17 +44,19 @@ mongoose
 
 
 // set the view engine to ejs
-app.use('/public', express.static(process.cwd() + '/public'));
+//app.use(express.static(__dirname + '/public/uikit/css'));
+//app.use(express.static(__dirname + '/public/uikit/js'));
+//app.use(express.static(__dirname + '/public/'));
 app.set('view engine', 'ejs');
 
 
 //ROUTES
 //Use View routes
-app.use('/users', users.view);
-app.use('/profile', profile.view);
-app.use('/post', post.view);
-app.use('/group', group.view);
-app.use('/', statics.view);
+app.use('/users', users.view, express.static('public'));
+app.use('/profile', profile.view, express.static('public'));
+app.use('/post', post.view, express.static('public'));
+app.use('/group', group.view, express.static('public'));
+app.use('/', statics.view, express.static('public'));
 
 
 //Server Setup

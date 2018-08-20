@@ -36,8 +36,9 @@ module.exports.sessionUser = (req, res, url) => {
 //checks for profile of current sessions user
 //then renders the template of the path and adds in the profile
 module.exports.sessionProfile = (req, res, path) => {
-    Profile.findOne({user: req.session.userId}, (err, profile) => 
-    {
+    Profile.findOne({user: req.session.userId})
+        .populate("user")
+        .exec((err, profile) => {
         var currentUserProfile = profile;
         if(path != undefined && typeof path === "string"){
             res.render(path, {currentUserProfile})       
@@ -49,7 +50,18 @@ module.exports.sessionProfile = (req, res, path) => {
 
 //returns the profile of the current sessions user
 module.exports.reqSessionProfile = (req, res, next) => {
-    Profile.findOne({user: req.session.userId}, (err, profile) => 
+    Profile.findOne({user: req.session.userId})
+    .populate([
+        {
+            path: "moderatorOf._id",
+            model: "group"
+        },
+        {
+            path: "membership._id",
+            model: "group"
+        }
+    ])
+    .exec((err, profile) => 
     {
         if (profile){
             req.currentUserProfile = profile 

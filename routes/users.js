@@ -20,10 +20,13 @@ router.get("/test", (req, res) => {
 
 //return current User route (Private)
 //Get users/current
-router.get("/current", authenticate.checkLogIn, (req, res) => {
-    authenticate.sessionUser(req, res, "pages/users/current")
-});
+router.get("/current", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    
+    const currentUserProfile = req.currentUserProfile
+    //console.log(currentUserProfile)
+    res.render("pages/users/current", {currentUserProfile})
 
+});
 
 //registration route => creates a User and a Profile Model (Public)
 //get /users/register

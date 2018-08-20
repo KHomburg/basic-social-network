@@ -1,0 +1,52 @@
+body{
+    margin: 0px auto 0px auto;
+    width: 960px;
+    color: #000000;
+    background-color: #d6e8e957
+}
+
+/* Style page content */
+.main {
+    margin-left: 200px; /* Same as the width of the sidebar */
+    padding: 20px;
+}
+
+.deutschland{
+    width: 260px;
+    padding: 2px;
+    margin: 10px auto 20px auto;  
+}
+.divider{
+    border-top: 3px solid ;
+    margin: 5px 0 5px 0;
+
+    &__s{
+        border-top: 3px solid black;
+        margin: 3px 0 3px 0;
+    }
+
+    &__r{
+        border-top: 3px solid rgba(255, 0, 0, 0.801);
+        margin: 3px 0 3px 0;
+    }
+
+    &__g{
+        border-top: 3px solid rgb(241, 169, 11);
+        margin: 3px 0 3px 0;
+    }
+
+    &__w{
+        border-top: 3px solid rgb(255, 255, 255);
+        margin: 3px 0 3px 0;
+    }
+    
+}
+
+
+
+
+///* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
+//@media screen and (max-height: 450px) {
+//    .sidenav {padding-top: 15px;}
+//    .sidenav a {font-size: 18px;}
+//}

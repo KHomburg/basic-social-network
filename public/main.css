@@ -1,28 +1,138 @@
-nav ul {
-  margin: 0;
-  padding: 0;
-  list-style: none; }
+.group-header {
+  padding: 20px;
+  font-size: 30px;
+  width: 600px; }
 
-nav li {
+.sub-button {
+  display: inline-block;
+  text-align: right; }
+
+.group-name {
   display: inline-block; }
 
-nav a {
-  display: block;
-  padding: 6px 12px;
-  text-decoration: none; }
+.new-post {
+  margin: 8px 8px 20px 8px;
+  width: 670px; }
 
-.typ {
-  display: block; }
+.post {
+  background-color: white;
+  padding: 20px;
+  width: 630px;
+  border: 1px solid #e5e5e5;
+  margin: 8px; }
+  .post__autor {
+    display: block;
+    color: #999;
+    font-size: .5rem;
+    text-transform: uppercase;
+    transition: .1s ease-in-out;
+    transition-property: color,background-color; }
+  .post__reply {
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 300px;
+    color: #999;
+    font-size: .75rem;
+    text-transform: uppercase;
+    transition: .1s ease-in-out;
+    transition-property: color,background-color; }
+  .post__comment-count {
+    display: inline-block;
+    color: #999;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 300px;
+    color: #999;
+    font-size: .75rem;
+    text-transform: uppercase;
+    transition: .1s ease-in-out;
+    transition-property: color,background-color; }
 
-.bob ul {
-  margin: 0;
-  padding: 0;
-  list-style: none; }
+.comment-form {
+  display: none; }
 
-.bob li {
-  display: inline-block; }
+.login-form {
+  background-color: white;
+  text-align: center;
+  height: 300px;
+  width: 960px;
+  margin: 100px auto auto auto; }
 
-.bob a {
-  display: block;
-  padding: 6px 12px;
-  text-decoration: none; }
+body {
+  margin: 0px auto 0px auto;
+  width: 960px;
+  color: #000000;
+  background-color: #d6e8e957; }
+
+/* Style page content */
+.main {
+  margin-left: 200px;
+  /* Same as the width of the sidebar */
+  padding: 20px; }
+
+.deutschland {
+  width: 260px;
+  padding: 2px;
+  margin: 10px auto 20px auto; }
+
+.divider {
+  border-top: 3px solid;
+  margin: 5px 0 5px 0; }
+  .divider__s {
+    border-top: 3px solid black;
+    margin: 3px 0 3px 0; }
+  .divider__r {
+    border-top: 3px solid rgba(255, 0, 0, 0.801);
+    margin: 3px 0 3px 0; }
+  .divider__g {
+    border-top: 3px solid #f1a90b;
+    margin: 3px 0 3px 0; }
+  .divider__w {
+    border-top: 3px solid white;
+    margin: 3px 0 3px 0; }
+
+.uk-navbar-container:not(.uk-navbar-transparent) {
+  background-color: rgba(255, 255, 255, 0.9); }
+
+.uk-navbar-dropdown {
+  background-color: rgba(216, 221, 150, 0.719); }
+
+.uk-navbar-container {
+  border-bottom: 1px solid #e5e5e5; }
+
+.profile__edit {
+  background-color: white;
+  padding: 20px;
+  width: 630px;
+  border: 1px solid #e5e5e5;
+  margin: 8px; }
+
+.profile__form {
+  width: 500px;
+  margin: 0 30px; }
+
+/* The sidebar menu */
+.sidenav {
+  height: 100%;
+  /* Full-height: remove this if you want "auto" height */
+  width: 160px;
+  /* Set the width of the sidebar */
+  position: fixed;
+  /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 1;
+  /* Stay on top */
+  top: 0;
+  /* Stay at the top */
+  margin-top: 80px;
+  background-color: #ffffff;
+  /* Black */
+  overflow-x: hidden;
+  /* Disable horizontal scroll */
+  padding: 20px;
+  border-right: 1px solid #e5e5e5;
+  /* The navigation menu links */ }
+  .sidenav a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    display: block; }

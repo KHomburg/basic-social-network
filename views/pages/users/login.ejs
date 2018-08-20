@@ -1,15 +1,36 @@
 <% include ../../partials/head %>
 
-<% include ../../partials/header %>
-
 <body>
-    Neue login view
-    <div class="form-group">
-        <form action="/users/login" method="post">
-            <input class="form-control" id="Email" type="text" name="email" placeholder="Email eingeben"></br>
-            <input class="form-control" id="Passwort" type="passord" name="password" placeholder="Passwort eingeben"></br>
-            <input class="form-control" type="submit" value="Absenden">
-        </form>
+    <div class="login-form">
+    
+        <h3>Login</h3>
+
+        <div class="deutschland login"> 
+            <hr class="divider__s">
+            <hr class="divider__r">
+            <hr class="divider__g">
+        </div>
+
+        <div class="form-group">
+            <form action="/users/login" method="post">
+
+            <div class="uk-margin">
+                <div class="uk-inline">
+                    <span class="uk-form-icon" uk-icon="icon: user"></span>
+                    <input class="uk-input" id="Email" type="text" name="email" placeholder="Email eingeben">
+                </div>
+            </div>
+
+            <div class="uk-margin">
+                <div class="uk-inline">
+                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
+                    <input class="uk-input" id="Passwort" type="passord" name="password" placeholder="Passwort eingeben">
+                </div>
+            </div>
+
+                <input class="uk-button uk-button-default" type="submit" value="Absenden">
+            </form>
+        </div>
     </div>
 </body>
 
