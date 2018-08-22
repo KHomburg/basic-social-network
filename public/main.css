@@ -1,7 +1,7 @@
 .group-header {
-  padding: 20px;
+  padding: 20px 20px 0px 20px;
   font-size: 30px;
-  width: 600px; }
+  width: 640px; }
 
 .sub-button {
   display: inline-block;
@@ -48,9 +48,27 @@
     text-transform: uppercase;
     transition: .1s ease-in-out;
     transition-property: color,background-color; }
+  .post__comment {
+    background-color: white;
+    padding: 20px;
+    width: 630px;
+    border: 1px solid #e5e5e5;
+    margin: -8px 8px 8px 8px; }
+  .post__sub-comment {
+    background-color: white;
+    padding: 20px;
+    width: 580px;
+    border: 1px solid #e5e5e5;
+    margin: -8px 8px 8px 58px; }
 
 .comment-form {
   display: none; }
+
+.uk-card-body {
+  padding: 20px; }
+
+.uk-card {
+  margin: 20px; }
 
 .login-form {
   background-color: white;
@@ -88,6 +106,9 @@ body {
   .divider__g {
     border-top: 3px solid #f1a90b;
     margin: 3px 0 3px 0; }
+  .divider__b {
+    border-top: 3px solid #1e87f0;
+    margin: 3px 0 3px 0; }
   .divider__w {
     border-top: 3px solid white;
     margin: 3px 0 3px 0; }
@@ -96,7 +117,7 @@ body {
   background-color: rgba(255, 255, 255, 0.9); }
 
 .uk-navbar-dropdown {
-  background-color: rgba(216, 221, 150, 0.719); }
+  background-color: #ffffff; }
 
 .uk-navbar-container {
   border-bottom: 1px solid #e5e5e5; }
@@ -111,6 +132,9 @@ body {
 .profile__form {
   width: 500px;
   margin: 0 30px; }
+
+.profile__dl {
+  margin-top: 5px; }
 
 /* The sidebar menu */
 .sidenav {

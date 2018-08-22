@@ -3,17 +3,96 @@
 <% include ../../partials/header %>
 <% include ../../partials/sidebar %>
 
-<%= currentUserProfile %>
-</br>
-</br>
-</br>
-</br>
-<h3>Viewd profile</h3>
+<body>
+    <div class="main">
+        <div class="uk-card uk-card-default">
+            <div class="uk-card-header">
+                <div class="uk-flex-middle" uk-grid>
+                    <div class="uk-width-auto">
+                        <img  width="200" height="200" src="images/maxresdefault.jpg">
+                    </div>
+                    <div class="uk-width-expand">
+                        <h3 class="uk-card-title uk-margin-remove-bottom">Name</h3>
+                        <p class="uk-text-meta uk-margin-remove-top">Unternehmen/Bund</p>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-card-body">
 
-<%= profile %>
+                <ul class="uk-subnav uk-tab" uk-switcher>
+                    <li><a href="#">Social</a></li>
+                    <li><a href="#">Education</a></li>
+                    <li><a href="#">Experience</a></li>
+                </ul>
+                
+                <ul class="uk-switcher uk-margin">
+                    <li>
+                        <table class="uk-table uk-table-divider">
+                            <tbody>
+                                <tr>
+                                    <td class="uk-width-small">Facebook</td>
+                                    <td><%= currentUserProfile.social.facebook %></td>
+                                </tr>
+                                <tr>
+                                    <td class="uk-width-small">Xing</td>
+                                    <td><%= currentUserProfile.social.xing %></td>
+                                </tr>
+                                <tr>
+                                    <td class="uk-width-small">Twitter</td>
+                                    <td><%= currentUserProfile.social.twitter %></td>
+                                </tr>
+                                <tr>
+                                    <td class="uk-width-small">LinkedIn</td>
+                                    <td><%= currentUserProfile.social.linkedin %></td>
+                                </tr>
+                                <tr>
+                                    <td class="uk-width-small">Website</td>
+                                    <td><%= currentUserProfile.social.website %></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    
+                    </li>
+                    <li>
+                        <table class="uk-table uk-table-divider">
+                            <% currentUserProfile.education.forEach((education) => { %>
+                                <tbody>
+                                    <tr>
+                                        <td class="uk-width-small"><%= education.from.getMonth() + "." + education.from.getFullYear()  + " - " + education.to.getMonth() + "." + education.to.getFullYear() %></td>
+                                        <td>                                      
+                                            <dt> <%= education.university %> </dt>
+                                            <dl class="profile__dl"> <%= education.fieldOfStudy + " (" + education.degree +")"%></dl>                              
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            <% }) %>
+                        </table>                    
+                    </li>
+                    <li>
+                    
+                        <table class="uk-table uk-table-divider">
+                            <% currentUserProfile.experience.forEach((experience) => { %>
+                                <tbody>
+                                    <tr>
+                                        <td class="uk-width-small"><%= experience.from.getMonth() + "." + experience.from.getFullYear()  + " - " + experience.to.getMonth() + "." + experience.to.getFullYear() %></td>
+                                        <td>                                      
+                                            <dt> <%= experience.company + " (" + experience.location + ")" %> </dt>
+                                            <dl class="profile__dl"> <%= experience.title%></dl>                              
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            <% }) %>
+                        </table>  
+                    
+                    
+                    
+                    </li>
+                </ul>
 
 
-
-
+            </div>
+        </div>
+    </div>
+</body>
 
 <% include ../../partials/foot %>

@@ -1,17 +1,29 @@
 <% include ../../partials/head %>
 
 <% include ../../partials/header %>
-<%= currentUserProfile %>
+<% include ../../partials/sidebar %>
+
+<body>
+    <div class="main">
+
+        <div class="group-header">
+            Neue Gruppe erstellen:
+            <hr class="divider__b">
+        </div>
+        <div class="new-post">
+        
+            <form action="/group/create" method="post">
+                <fieldset class="uk-fieldset">
+                    <input class="uk-input" id="Name" type="text" name="name" placeholder="Name für neue Gruppe eingeben"></br>
+                    <textarea class="uk-textarea" id="Beschreibung" type="text" name="description" placeholder="Beschreibung eingeben"></textarea></br>
+                    <input class="uk-button uk-button-primary" type="submit" value="Absenden">
+                </fieldset>
+            </form>
+        </div>
 
 
-<body></br></br></br></br></br>
-    Neue Gruppe erstellen:</br>
-    <div class="form-group">
-        <form action="/group/create" method="post">
-            <input class="form-control" id="Name" type="text" name="name" placeholder="Name für neue Gruppe eingeben"></br>
-            <textarea class="form-control" id="Beschreibung" type="text" name="description" placeholder="Beschreibung eingeben"></textarea></br>
-            <input class="form-control" type="submit" value="Absenden">
-        </form>
+
+
     </div>
 </body>
 

@@ -28,8 +28,9 @@ router.get('/id/:id', authenticate.checkLogIn, authenticate.reqSessionProfile, (
 
 //get edit page for profile (Private)
 //get /profile/edit
-router.get("/edit", authenticate.checkLogIn, (req, res) => {
-    authenticate.sessionProfile(req, res, "pages/profile/edit")
+router.get("/edit", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    res.render("pages/profile/edit", {currentUserProfile});
 })
 
 //post changes for profile (Private)

@@ -12,8 +12,7 @@
                         <ul class="uk-nav-sub">
                             <% currentUserProfile.moderatorOf.forEach((group) => { %>     
                                 
-                                <li><a href="#"><%= group._id.name %></a></li>
-                                
+                                <li><a href="/group/name/<%= group._id.name %>"><%= group._id.name %></a></li>
                             <% }) %>
                         </ul>
                 </li>    
@@ -27,7 +26,7 @@
 
                         <% currentUserProfile.membership.forEach((group) => { %>     
                             
-                                <li><a href="#"><%= group._id.name %></a></li>
+                                <li><a href="/group/name/<%= group._id.name %>"><%= group._id.name %></a></li>
                             
                         <% }) %>
                 </li>                

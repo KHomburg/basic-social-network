@@ -7,10 +7,12 @@
 
 <body>
     <div class="main">
+
         <div class="group-header">
             <div class="group-name">
-            <%= currentGroup.name %>
-        </div>
+                <%= currentGroup.name %>
+            </div>
+            <hr class="divider__b">
 
             <!-- if currentUser is already member of this group, don't sho subscrib button -->
             <% if(membership == false){ %>
@@ -46,23 +48,17 @@
                         <img class="uk-comment-avatar" src="images/maxresdefault.jpg" width="80" height="80" alt="">
                     </div>
                     <div class="uk-width-expand">
-                        <h4 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="#"><%= post.title %></a></h4>
+                        <h4 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="/post/id/<%= post._id %>"><%= post.title %></a></h4>
                         <ul class="uk-comment-meta uk-subnav uk-margin-remove-top">
-                            <li><a href="#">von <%= post.profile.name %></a></li>
+                            <li><a href="/profile/id/<%= post.profile._id %>">von <%= post.profile.name %></a></li>
                             <li><%= post.date.toDateString("de-De") + " " + post.date.toLocaleTimeString("de-De") %></li>
                             
                         </ul>
                     </div>
                 </header>
                 <div class="uk-comment-body">
-                    <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+                    <p><%= post.text %></p>
                 </div>
-
-                <!--
-                <div id="post__reply" class="post__reply">
-                    Antworten
-                </div>
-                -->
 
                 <div class="post__comment-count">
                     <%= post.comments.length %> Kommentare

@@ -1,17 +1,26 @@
 <header>
     <!--Top Navbar-->
     <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
-        <nav class="uk-navbar-container uk-navbar style="top: 0px uk-navbar="mode: click;" >
+        <nav class="uk-navbar-container uk-navbar style="top: 0px uk-navbar="mode: hover;" >
             <div class="uk-navbar-left">
                 <ul class="uk-navbar-nav">
+                    <div class="uk-navbar-left">
+                        <a class="uk-navbar-toggle" uk-navbar-toggle-icon href="/profile/edit"></a>
+                    </div>
+
+
                     <li>
                         <li class="uk-active">
-                            <a href="#">Active</a>
+                            <a href="/profile/id/<%= currentUserProfile._id %>"><%= currentUserProfile.name %></a>
                         </li>
                     </li>
                     <li>
                         <li class="uk-active">
-                            <a href="#">Active</a>
+                            <a href="#">Nachrichten</a>
+                        </li>
+                    </li>
+                        <li class="uk-active">
+                            <a href="#">Kontakte</a>
                         </li>
                     </li>
                 </ul>

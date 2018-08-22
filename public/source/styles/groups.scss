@@ -1,7 +1,7 @@
 .group-header{
-    padding: 20px;
+    padding: 20px 20px 0px 20px;
     font-size: 30px;
-    width: 600px;
+    width: 640px;
 }
 
 .sub-button{
@@ -55,8 +55,29 @@
         transition: .1s ease-in-out;
         transition-property: color,background-color;
     }
+    &__comment{
+        background-color: white;
+        padding: 20px;
+        width: 630px;
+        border: 1px solid #e5e5e5;
+        margin: -8px 8px 8px 8px;
+    }
+    &__sub-comment{
+        background-color: white;
+        padding: 20px;
+        width: 580px;
+        border: 1px solid #e5e5e5;
+        margin: -8px 8px 8px 58px;
+    }
 }
 
 .comment-form{
     display: none;
+}
+
+.uk-card-body {
+    padding: 20px;
+}
+.uk-card {
+    margin: 20px;
 }

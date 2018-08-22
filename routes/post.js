@@ -44,7 +44,7 @@ router.get('/id/:id', authenticate.checkLogIn, authenticate.reqSessionProfile,(r
 });
 
 //post request for form for creating a new comment for post
-//post /post/create; (private)
+//post /post/comment/create; (private)
 router.post("/comment/create", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     Post.findOne({_id: req.body.postId}, (err, post) => {
@@ -54,6 +54,27 @@ router.post("/comment/create", authenticate.checkLogIn, authenticate.reqSessionP
                 text: req.body.text,
             }
             post.comments.push(newComment);
+            post.save(); 
+            res.redirect("/post/id/" +post._id)
+        } else {               
+                console.log(err);
+        }
+    })
+})
+
+//post request for form for creating a new subComment for comment
+//post /post/subcomment/create; (private)
+router.post("/subcomment/create", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    Post.findOne({_id: req.body.postId}, (err, post) => {
+        if(post){
+            const newSubComment = {
+                profile: currentUserProfile,
+                text: req.body.text,
+            }
+            var index = req.body.index.toString()
+
+            post.comments[index].subComments.push(newSubComment);
             post.save(); 
             res.redirect("/post/id/" +post._id)
         } else {               

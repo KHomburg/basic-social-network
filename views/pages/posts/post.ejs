@@ -1,23 +1,89 @@
 <% include ../../partials/head %>
 
 <% include ../../partials/header %>
-Benutzer
-<%= currentUserProfile %>
-</br>
-</br>
-</br>
-Post:
-</br>
-<%= post %>
-</br>
+<% include ../../partials/sidebar %>
+
+
 <body>
-    
-    Comment erstellen:</br>
-    <div class="form-group">
-        <form action="/post/comment/create" method="post">
-            <textarea class="form-control" id="Text" type="text" name="text" placeholder="Text eingeben"></textarea></br>
-            <input type="hidden" name="postId" value="<%= post._id %>"></br>
-            <input class="form-control" type="submit" value="Absenden">
-        </form>
+    <div class="main">
+
+        <!-- Card for post -->
+        <div class="post">
+            <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+                <div class="uk-width-auto">
+                    <img class="uk-comment-avatar" src="images/maxresdefault.jpg" width="80" height="80" alt="">
+                </div>
+                <div class="uk-width-expand">
+                    <h4 class="uk-comment-title uk-margin-remove"><%= post.title %></h4>
+                    <ul class="uk-comment-meta uk-subnav uk-margin-remove-top">
+                        <li><a href="/profile/id/<%= post.profile._id %>">von <%= post.profile.name %></a></li>
+                        <li><%= post.date.toDateString("de-De") + " " + post.date.toLocaleTimeString("de-De") %></li>            
+                    </ul>
+                </div>
+            </header>
+            <div class="uk-comment-body">
+                <p><%=post.text%></p>
+            </div>
+        </div>
+
+        <!-- List comments -->
+        <% var comments = post.comments%>
+        <% var index = 0 %>
+        <% if(comments){ comments.forEach((comment) => { %>
+            <div class="post__comment">
+                <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+                    <div class="uk-width-auto">
+                        <img class="uk-comment-avatar" src="images/maxresdefault.jpg" padding-left="30" width="50" height="50" alt="">
+                    </div>
+                    <div class="uk-width-expand">
+                        <ul class="uk-comment-meta uk-subnav uk-margin-remove-top">
+                            <li><a href="/profile/id/<%= post.profile._id %>">von <%= comment.profile.name %></a></li>
+                            <li><%= comment.date.toDateString("de-De") + " " + comment.date.toLocaleTimeString("de-De") %></li>
+                            
+                        </ul>
+                    </div>
+                </header>
+                <div class="uk-comment-body">
+                    <p><%= comment.text %></p>
+                </div>
+
+                <!-- insert reply button here -->
+
+                <div class="post__comment-count">
+                    <%= comment.subComments.length %> Kommentare
+                </div>
+            </div>
+
+
+            <div class="post">
+                <h4> subComment erstellen:</h4>
+                <form action="/post/subcomment/create" method="post">
+                    <fieldset class="uk-fieldset">
+                        <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben"></textarea>
+                        <input type="hidden" name="postId" value="<%= post._id %>">
+                        <input type="hidden" name="commentId" value="<%= comment._id %>">
+                        <input type="hidden" name="index" value="<%= index %>">
+                        <input class="uk-button uk-button-primary uk-button-small" type="submit" value="Absenden">
+                    </fieldset>
+                </form>
+            </div>
+        <% index= index + 1  })} %>
+
+
+        <!-- Form for creating new 1st level comment -->
+        <div class="post">
+            <h4> Comment erstellen:</h4>
+            <form action="/post/comment/create" method="post">
+                <fieldset class="uk-fieldset">
+                    <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben"></textarea>
+                    <input type="hidden" name="postId" value="<%= post._id %>"></br>
+                    <input class="uk-button uk-button-primary uk-button-small" type="submit" value="Absenden">
+                </fieldset>
+            </form>
+        </div>
+
     </div>
 </body>
+
+
+<% include ../../partials/foot %>

@@ -39,7 +39,6 @@ router.get('/name/:name', authenticate.checkLogIn, authenticate.reqSessionProfil
             } else {
                 var membership = true
             }
-
                 Post.find({group: currentGroup})
                     .populate("profile")
                     .sort({date: -1})
@@ -55,7 +54,7 @@ router.get('/name/:name', authenticate.checkLogIn, authenticate.reqSessionProfil
         }else if (err){
             console.log(err)
         }else{
-            console.log("Diese Gruppe existiert nicht")
+            res.send("This group does not exist")
         }    
     })
 });
@@ -64,7 +63,7 @@ router.get('/name/:name', authenticate.checkLogIn, authenticate.reqSessionProfil
 //get /group/create; (private)
 router.get("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
-    authenticate.sessionProfile(req, res, "pages/group/create")
+    res.render("pages/group/create", {currentUserProfile})
 })
 
 //post request for form for creating a new group
@@ -72,10 +71,9 @@ router.get("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, (
 router.post("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     Group.findOne({name: req.body.name}, (err, group) => {
         if(group){
-            res.send("group already exists")
+            res.send("group already exists") //insert flash message here
         } else {
                 const currentUserProfile = req.currentUserProfile
-                console.log(currentUserProfile)
 
                 //Create and save new Group
                 const newGroup = new Group({
@@ -89,7 +87,7 @@ router.post("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, 
                 currentUserProfile.moderatorOf.push(newGroup);
                 currentUserProfile.save(); 
                 
-                res.send(newGroup);            
+                res.redirect("name/" + newGroup.name)         
         }
     })
 })
@@ -115,7 +113,7 @@ router.post("/subscribe", authenticate.checkLogIn, authenticate.reqSessionProfil
             currentUserProfile.membership.push(group);
             currentUserProfile.save(); 
             
-            res.send("You are a member now");
+            res.redirect("name/" + group.name) ;
     })
 })
 
