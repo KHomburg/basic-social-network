@@ -34,11 +34,26 @@ router.post("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, 
 //Get /post/id/:id
 router.get('/id/:id', authenticate.checkLogIn, authenticate.reqSessionProfile,(req, res) => {
     const currentUserProfile = req.currentUserProfile
-    Post.findOne({_id: req.params.id}, (err,post) => {
+    Post.findOne({_id: req.params.id})
+    .populate([
+        {
+            path: "profile",
+            model: "profile"
+        },
+        {
+            path: "comments.profile",
+            model: "profile"
+        },
+        {
+            path: "comments.subComments.profile",
+            model: "profile"
+        }
+    ])
+    .exec((err,post) => {
         if(post){
             res.render("pages/posts/post", {currentUserProfile, post});
         }else{
-            console.log("err")
+            console.log(err)
         }        
     });
 });

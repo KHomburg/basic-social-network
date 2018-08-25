@@ -12,7 +12,7 @@
                         <img  width="200" height="200" src="images/maxresdefault.jpg">
                     </div>
                     <div class="uk-width-expand">
-                        <h3 class="uk-card-title uk-margin-remove-bottom">Name</h3>
+                        <h3 class="uk-card-title uk-margin-remove-bottom"><%= currentUserProfile.name %></h3>
                         <p class="uk-text-meta uk-margin-remove-top">Unternehmen/Bund</p>
                     </div>
                 </div>
@@ -27,6 +27,7 @@
                 
                 <ul class="uk-switcher uk-margin">
                     <li>
+                    <!--Social Table -->
                         <table class="uk-table uk-table-divider">
                             <tbody>
                                 <tr>
@@ -53,6 +54,7 @@
                         </table>
                     
                     </li>
+                    <!--Education Table -->
                     <li>
                         <table class="uk-table uk-table-divider">
                             <% currentUserProfile.education.forEach((education) => { %>
@@ -68,8 +70,8 @@
                             <% }) %>
                         </table>                    
                     </li>
+                    <!--Experience Table -->
                     <li>
-                    
                         <table class="uk-table uk-table-divider">
                             <% currentUserProfile.experience.forEach((experience) => { %>
                                 <tbody>

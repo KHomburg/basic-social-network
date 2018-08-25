@@ -5,57 +5,172 @@
 <!-- Page content -->
 <div class="main">
 
-    <body>
-        <div class="profile__edit">
-        Profil Bearbeiten:
-        
-            <form class="uk-form-width-large uk-margin-small " action="/profile/edit" method="post">
-                <h3>Allgemeines:</h3>
-                <div class="profile__form">
-                    <input class="uk-input uk-form-small" id="form-horizontal-text" id="Name" type="text" name="name" placeholder="Name"></br>
-                    <input class="uk-input uk-form-small" id="Email" type="text" name="email" placeholder="Email eingeben"></br>
-                    <input class="uk-input uk-form-small" id="Standort" type="text" name="location" placeholder="Standort/Wohnort"></br>
-                    <input class="uk-input uk-form-small" id="Bio" type="text" name="bio" placeholder="Über dich..."></br>
-                </div>
-                <h3>Social</h3>
-                <div class="profile__form">
-                    <input class="uk-input uk-form-small" id="Twitter" type="text" name="twitter" placeholder="Twitter"></br>
-                    <input class="uk-input uk-form-small" id="Facebook" type="text" name="facebook" placeholder="Facebook"></br>
-                    <input class="uk-input uk-form-small" id="LinkdIn" type="text" name="linkedin" placeholder="LinkdIn"></br>
-                    <input class="uk-input uk-form-small" id="Website" type="text" name="website" placeholder="Website"></br>
+    <body>        
+    <div class="profile__edit">
+        <h3>Profil Bearbeiten:</h3>
+        <ul class="uk-subnav uk-tab" uk-switcher>
+            <li><a href="#">Social/General</a></li>
+            <li><a href="#">Education</a></li>
+            <li><a href="#">Experience</a></li>
+        </ul>
+        <ul class="uk-switcher uk-margin">
+            <li>
+                <form class="uk-form-width-large uk-margin-small " action="/profile/edit" method="post">
+                    <h5>General information:</h5>
+                    <table class="uk-table uk-table-hover uk-table-small profile__form">
+                        <tbody>
+                            <tr>
+                                <td class="uk-width-small">Name</td>
+                                <td><input class="uk-input uk-form-small" id="form-horizontal-text" id="Name" type="text" name="name" placeholder="Name" value="<%=currentUserProfile.name%>"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">E-Mail</td>
+                                <td><input class="uk-input uk-form-small" id="Email" type="text" name="email" placeholder="Email eingeben" value="<%=userEmail%>"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">Wohnort</td>
+                                <td><input class="uk-input uk-form-small" id="Standort" type="text" name="location" placeholder="Standort/Wohnort" value="<%=currentUserProfile.location%>"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">Über dich...</td>
+                                <td><textarea class="uk-input  uk-textarea" id="Bio" type="text" name="bio" placeholder="<%=currentUserProfile.bio%>" value="<%=currentUserProfile.bio%>"> <%=currentUserProfile.bio%></textarea></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                
+
+                    <h5>Social</h5>
+                    <table class="uk-table uk-table-hover uk-table-small profile__form">
+                        <tbody>
+                            <tr>
+                                <td class="uk-width-small">Twitter</td>
+                                <td><input class="uk-input uk-form-small" id="Twitter" type="text" name="twitter" placeholder="Twitter" value="<%=currentUserProfile.social.twitter%>"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">Facebook</td>
+                                <td><input class="uk-input uk-form-small" id="Facebook" type="text" name="facebook" placeholder="Facebook" value="<%=currentUserProfile.social.facebook%>"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">LinkedIn</td>
+                                <td><input class="uk-input uk-form-small" id="LinkdIn" type="text" name="linkedin" placeholder="LinkdIn" value="<%=currentUserProfile.social.linkedin%>"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">Xing</td>
+                                <td><input class="uk-input uk-form-small" id="Email" type="text" name="xing" placeholder="Xing" value="<%=currentUserProfile.social.xing%>"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">Website</td>
+                                <td><input class="uk-input uk-form-small" id="Website" type="text" name="website" placeholder="Website" value="<%=currentUserProfile.social.website%>"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <input class="uk-button uk-button-default uk-button-small" type="submit" value="Speichern">
-                </div>
-            </form>
-        </div>
+                </form>        
+            </li>
+    
             
-        <div class="profile__edit">
-            <form class="uk-form-width-large uk-margin-small" action="/profile/experience" method="post">
-                <h3>Berufserfahrung:</h3>
-                <div class="profile__form">
-                    <input class="uk-input uk-form-small" id="Titel" type="text" name="title" placeholder="Berufstitel"></br>
-                    <input class="uk-input uk-form-small" id="Unternehmen" type="text" name="company" placeholder="Unternehmen"></br>
-                    <input class="uk-input uk-form-small" id="Ort" type="text" name="location" placeholder="Ort"></br>
-                    <input class="uk-input uk-form-small" id="Von" type="date" name="from" placeholder="Von (Datum)"></br>
-                    <input class="uk-input uk-form-small" id="Bis" type="date" name="to" placeholder="Bis (Datum)"></br>
+            <li>
+                <h5>Education:</h5>                    
+                <table class="uk-table uk-table-divider">
+                    <% currentUserProfile.education.forEach((education) => { %>
+                        <tbody>
+                            <tr>
+                                <td class="uk-width-small"><%= education.from.getMonth() + "." + education.from.getFullYear()  + " - " + education.to.getMonth() + "." + education.to.getFullYear() %></td>
+                                <td>                                      
+                                    <dt> <%= education.university %> </dt>
+                                    <dl class="profile__dl"> <%= education.fieldOfStudy + " (" + education.degree +")"%></dl>                              
+                                </td>
+                                <td>
+                                    <form action="/profile/edudelete" method="post">
+                                        <button uk-icon="close" name="id" type="submit" value="<%=education._id%>"></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    <% }) %>
+                </table>  
+                <form class="uk-form-width-large uk-margin-small" action="/profile/education" method="post">
+                    <hr>
+                    <h5>Add a new entry:</h5>
+                    <table class="uk-table uk-table-hover uk-table-small profile__form">
+                        <tbody>
+                            <tr>
+                                <td class="uk-width-small">Universität</td>
+                                <td><input class="uk-input uk-form-small" id="Universität" type="text" name="university" placeholder="Universität"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">Studiengang</td>
+                                <td><input class="uk-input uk-form-small" id="Studiengang" type="text" name="fieldOfStudy" placeholder="Studiengang"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">Abschluss</td>
+                                <td><input class="uk-input uk-form-small" id="Abschluss" type="text" name="degree" placeholder="Abschluss"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">Von</td>
+                                <td><input class="uk-input uk-form-small" id="Von" type="date" name="from" placeholder="Von (Datum)"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">bis</td>
+                                <td><input class="uk-input uk-form-small" id="Bis" type="date" name="to" placeholder="Bis (Datum)"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <input class="uk-button uk-button-default uk-button-small" type="submit" value="Speichern">
-                </div>
-            </form>
-        </div>
-
-        <div class="profile__edit">
-            <form class="uk-form-width-large uk-margin-small" action="/profile/education" method="post">
-                <h3>Bildungsweg:</h3>
-                <div class="profile__form">
-                    <input class="uk-input uk-form-small" id="Universität" type="text" name="university" placeholder="Universität"></br>
-                    <input class="uk-input uk-form-small" id="Studiengang" type="text" name="fieldOfStudy" placeholder="Studiengang"></br>
-                    <input class="uk-input uk-form-small" id="Abschluss" type="text" name="degree" placeholder="Abschluss"></br>
-                    <input class="uk-input uk-form-small" id="Von" type="date" name="from" placeholder="Von (Datum)"></br>
-                    <input class="uk-input uk-form-small" id="Bis" type="date" name="to" placeholder="Bis (Datum)"></br>
+                </form>
+            </li>
+            
+            <li>
+                <h5>Experience:</h5>
+                <table class="uk-table uk-table-divider">
+                    <% currentUserProfile.experience.forEach((experience) => { %>
+                        <tbody>
+                            <tr>
+                                <td class="uk-width-small"><%= experience.from.getMonth() + "." + experience.from.getFullYear()  + " - " + experience.to.getMonth() + "." + experience.to.getFullYear() %></td>
+                                <td>                                      
+                                    <dt> <%= experience.company + " (" + experience.location + ")" %> </dt>
+                                    <dl class="profile__dl"> <%= experience.title%></dl>                              
+                                </td>
+                                <td>
+                                    <form action="/profile/expdelete" method="post">
+                                        <button uk-icon="close" name="id" type="submit" value="<%=experience._id%>"></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    <% }) %>
+                </table> 
+                <form class="uk-form-width-large uk-margin-small" action="/profile/experience" method="post">                  
+                    <hr>
+                    <h5>Add a new entry:</h5>                    
+                    <table class="uk-table uk-table-hover uk-table-small profile__form">
+                        <tbody>
+                            <tr>
+                                <td class="uk-width-small">Berufstitel</td>
+                                <td><input class="uk-input uk-form-small" id="Titel" type="text" name="title" placeholder="Berufstitel"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">Unternehmen</td>
+                                <td><input class="uk-input uk-form-small" id="Unternehmen" type="text" name="company" placeholder="Unternehmen"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">Ort</td>
+                                <td><input class="uk-input uk-form-small" id="Ort" type="text" name="location" placeholder="Ort"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">Von</td>
+                                <td><input class="uk-input uk-form-small" id="Von" type="date" name="from" placeholder="Von (Datum)"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">bis</td>
+                                <td><input class="uk-input uk-form-small" id="Bis" type="date" name="to" placeholder="Bis (Datum)"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <input class="uk-button uk-button-default uk-button-small" type="submit" value="Speichern">
-                </div>
-            </form>
-        </div>
-
+                </form>
+            </li>
+        </ul>
     </body>
 </div>
 

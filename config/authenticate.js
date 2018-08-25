@@ -22,14 +22,10 @@ module.exports.checkLogIn = (req, res, next) => {
 
 //checks for current sessions user
 //then renders the template of the path and adds in the user
-module.exports.sessionUser = (req, res, url) => {
+module.exports.sessionUser = (req, res, next) => {
     User.findById(req.session.userId, (err, user) => {
-        var currentUser = user;
-        if(typeof url === "string"){
-            res.render(url, {currentUser})
-        } else if(typeof url === "function"){
-            url
-        }
+        req.currentUser = user;
+        return next()
     })
 }
 

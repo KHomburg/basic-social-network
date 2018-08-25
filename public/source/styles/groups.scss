@@ -17,6 +17,22 @@
     width: 670px;
 }
 
+.subcomment-slider-title{
+    //background-color: #1e87f0;
+    //color: white;
+    border: 1px solid #e5e5e5;
+    padding: 5px;
+}
+
+.subcomment-form{
+    background-color: white;
+    padding-top: 10px;
+    width: 630px;
+    //border-top: 1px solid #e5e5e5;
+    margin: 20px 8px 8px 8px;
+    //display: none;
+}
+
 .post{
     background-color: white;
     padding: 20px;
@@ -60,14 +76,14 @@
         padding: 20px;
         width: 630px;
         border: 1px solid #e5e5e5;
-        margin: -8px 8px 8px 8px;
+        margin: 8px 8px 8px 8px;
     }
     &__sub-comment{
         background-color: white;
-        padding: 20px;
+        //padding: 20px;
         width: 580px;
-        border: 1px solid #e5e5e5;
-        margin: -8px 8px 8px 58px;
+        border-top: 1px solid #e5e5e5;
+        margin: 8px 8px 8px 50px;
     }
 }
 

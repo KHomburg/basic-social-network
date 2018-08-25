@@ -28,9 +28,11 @@ router.get('/id/:id', authenticate.checkLogIn, authenticate.reqSessionProfile, (
 
 //get edit page for profile (Private)
 //get /profile/edit
-router.get("/edit", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.get("/edit", authenticate.checkLogIn, authenticate.reqSessionProfile, authenticate.sessionUser, (req, res) => {
     const currentUserProfile = req.currentUserProfile
-    res.render("pages/profile/edit", {currentUserProfile});
+    const currentUser = req.currentUser
+    const userEmail = currentUser.email
+    res.render("pages/profile/edit", {currentUserProfile, userEmail});
 })
 
 //post changes for profile (Private)
@@ -45,6 +47,7 @@ router.post("/edit", authenticate.checkLogIn, (req, res) => {
                 twitter: req.body.twitter,
                 facebook: req.body.facebook,
                 linkedin: req.body.linkedin,
+                xing: req.body.xing,
                 website: req.body.website
             }
         },
@@ -55,8 +58,8 @@ router.post("/edit", authenticate.checkLogIn, (req, res) => {
     })
 });
 
-////post changes for profile experiences(Private)
-////post /profile/experience
+//adds profile experiences entry(Private)
+//post /profile/experience
 router.post("/experience", authenticate.checkLogIn, (req, res) => {
     Profile.findOne({user: req.session.userId}, (err, profile) => {
         const newExperience =            
@@ -73,7 +76,21 @@ router.post("/experience", authenticate.checkLogIn, (req, res) => {
     })
 });
 
-//post changes for profile education(Private)
+//post delete a single experience entry from profile(Private)
+//post /profile/expdelete
+router.post("/expdelete", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    Profile.findOne({_id: currentUserProfile._id}, (err, profile) => {
+
+        const expIndex = profile.experience.findIndex(i => i._id == req.body.id)
+        profile.experience.splice(expIndex, 1);
+
+        profile.save(); 
+        res.redirect("/profile/edit")       
+    })
+});
+
+//adds profile education entry(Private)
 //post /profile/education
 router.post("/education", authenticate.checkLogIn, (req, res) => {
     Profile.findOne({user: req.session.userId}, (err, profile) => {
@@ -86,6 +103,20 @@ router.post("/education", authenticate.checkLogIn, (req, res) => {
                 to: req.body.to,
             };
         profile.education.push(newEducation);
+        profile.save(); 
+        res.redirect("/profile/edit")       
+    })
+});
+
+//post delete a single education entry from profile(Private)
+//post /profile/edudelete
+router.post("/edudelete", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    Profile.findOne({_id: currentUserProfile._id}, (err, profile) => {
+
+        const eduIndex = profile.education.findIndex(i => i._id == req.body.id)
+        profile.education.splice(eduIndex, 1);
+
         profile.save(); 
         res.redirect("/profile/edit")       
     })
