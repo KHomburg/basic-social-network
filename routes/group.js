@@ -11,12 +11,31 @@ router.get("/test", (req, res) => res.json({msg: "Groups Works"}));
 
 
 //show all created groups
-//get /group/all; (private)
-router.get("/all", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
-    const currentUserProfile = req.currentUserProfile 
-    Group.find().then((groups) => {res.render("pages/group/all", {groups, currentUserProfile})});
+//get /group/all (private)
+router.get("/all/:page", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    
+    //constants for pagination
+    const perPage = 30
+    const page = req.params.page || 1
 
-});
+    const currentUserProfile = req.currentUserProfile ;
+    Group.find()
+        .skip((perPage * page) - perPage)
+        .limit(perPage)    
+        .then((groups) => {
+            Group.count()
+                .exec((err, count) => {
+                    if (err) console.log(next(err))
+                    res.render("pages/group/all", {
+                        groups: groups, 
+                        currentUserProfile: currentUserProfile,
+                        current: page,
+                        pages: Math.ceil(count / perPage)                    
+                    })
+                })            
+        });
+
+})
 
 //get groups by name in params(Private)
 //Get /group/name/:id

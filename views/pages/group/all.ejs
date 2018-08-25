@@ -2,17 +2,66 @@
 
 <% include ../../partials/header %>
 <% include ../../partials/sidebar %>
-
 <body>
     <div class="main">
+    
+        <% groups.forEach((group) => { %>
+            <div class="uk-card uk-card-default uk-card-body">
+                <a class="uk-link-reset" href="/group/name/<%= group.name %>"><h3 class="uk-card-title"><%= group.name %></h3></a>
+                <hr class="divider__b">
+                <p>Lorem ipsum <a href="#">dolor</a> sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+        <% }) %>
+            
+                <% if (pages > 0) { %>
+                    <ul class="uk-pagination uk-flex-center" uk-margin>
+                        <% if (current == 1) { %>
+                            <li class="disabled"><a>First</a></li>
+                        <% } else { %>
+                            <li><a href="/group/all/1">First</a></li>
+                        <% } %>
+                        <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+                        <% if (i !== 1) { %>
+                            <li class="disabled"><a>...</a></li>
+                        <% } %>
+                        <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+                            <% if (i == current) { %>
+                                <li class="active"><a><%= i %></a></li>
+                            <% } else { %>
+                                <li><a href="/group/all/<%= i %>"><%= i %></a></li>
+                            <% } %>
+                            <% if (i == Number(current) + 4 && i < pages) { %>
+                                <li class="disabled"><a>...</a></li>
+                            <% } %>
+                        <% } %>
+                        <% if (current == pages) { %>
+                            <li class="disabled"><a>Last</a></li>
+                        <% } else { %>
+                            <li><a href="/group/all/<%= pages %>">Last</a></li>
+                        <% } %>
+                    </ul>
+                <% } %>
+        </div>
 
-<% groups.forEach((group) => { %>
-    <div class="uk-card uk-card-default uk-card-body">
-        <a class="uk-link-reset" href="/group/name/<%= group.name %>"><h3 class="uk-card-title"><%= group.name %></h3></a>
-        <hr class="divider__b">
-        <p>Lorem ipsum <a href="#">dolor</a> sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-    </div>
-<% }) %>
+
+
+
+
+
+
+
+
+
+
+        <!--
+        <% groups.forEach((group) => { %>
+            <div class="uk-card uk-card-default uk-card-body">
+                <a class="uk-link-reset" href="/group/name/<%= group.name %>"><h3 class="uk-card-title"><%= group.name %></h3></a>
+                <hr class="divider__b">
+                <p>Lorem ipsum <a href="#">dolor</a> sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+        <% }) %>
+        -->
 
     </div>
 <body>

@@ -12,11 +12,9 @@
             <div class="group-name">
                 <%= currentGroup.name %>
             </div>
-            <hr class="divider__b">
-
             <!-- if currentUser is already member of this group, don't sho subscrib button -->
             <% if(membership == false){ %>
-                <!-- form for joining the group -->
+            <!-- form for joining the group -->
                 <div class="sub-button">
                     <form action="/group/subscribe" method="post">
                         <input type="hidden" name="groupName" value="<%= currentGroup.name %>">
@@ -24,6 +22,9 @@
                     </form>
                 </div>
             <% } %>
+            <hr class="divider__b">
+
+
         </div>
 
         <!-- Form for creating a new post in that group -->
@@ -51,11 +52,11 @@
                         <h4 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="/post/id/<%= post._id %>"><%= post.title %></a></h4>
                         <ul class="uk-comment-meta uk-subnav uk-margin-remove-top">
                             <li><a href="/profile/id/<%= post.profile._id %>">von <%= post.profile.name %></a></li>
-                            <li><%= post.date.toDateString("de-De") + " " + post.date.toLocaleTimeString("de-De") %></li>
-                            
+                            <li><%= post.date.toDateString("de-De") + " " + post.date.toLocaleTimeString("de-De") %></li>     
                         </ul>
                     </div>
                 </header>
+                <hr class="divider__b">
                 <div class="uk-comment-body">
                     <p><%= post.text %></p>
                 </div>
