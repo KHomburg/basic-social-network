@@ -63,7 +63,7 @@ router.get('/name/:name', authenticate.checkLogIn, authenticate.reqSessionProfil
                     .sort({date: -1})
                     .exec(function (err, posts) {
                         if(posts){
-                        res.render("pages/group/group", {currentGroup, posts, currentUserProfile, membership});
+                            res.render("pages/group/group", {currentGroup, posts, currentUserProfile, membership});
                         }else if (err){
                             console.log(err)
                         } else {

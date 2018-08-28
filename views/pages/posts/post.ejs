@@ -47,7 +47,6 @@
                         <ul class="uk-comment-meta uk-subnav uk-margin-remove-top">
                             <li><a href="/profile/id/<%= post.profile._id %>">von <%= comment.profile.name %></a></li>
                             <li><%= comment.date.toDateString("de-De") + " " + comment.date.toLocaleTimeString("de-De") %></li>
-                            
                         </ul>
                     </div>
                 </header>
@@ -90,10 +89,12 @@
                                 <p><%= subComment.text %></p>
                             </div>
                             <!-- Delete Button -->
-                            <% if(currentUserProfile._id.toString() === comment.profile._id.toString()) {%>
-                                <form action="/post/post/delete" method="post">
-                                        <input type="hidden" name="postId" value=<%=post._id%>></br>
-                                        <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
+                            <% if(currentUserProfile._id.toString() === subComment.profile._id.toString()) {%>
+                                <form action="/post/subcomment/delete" method="post">
+                                    <input type="hidden" name="postId" value= <%= post._id %>>
+                                    <input type="hidden" name="commentId" value= <%= comment._id%>>
+                                    <input type="hidden" name="subCommentId" value= <%= subComment._id%>>
+                                    <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
                                 </form>
                             <%}%>
                         </div>

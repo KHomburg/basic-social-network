@@ -81,14 +81,11 @@ router.post('/comment/delete', authenticate.checkLogIn, authenticate.reqSessionP
             var comments = post.comments
 
             //find comment in comments array
-            var find = comments.find((comment) => {
+            var findComment = comments.find((comment) => {
                 return comment._id == commentId
             })
-
             //find index of deleting comment
-            var index = comments.indexOf(find);
-            console.log(index)
-
+            var index = comments.indexOf(findComment);
             //splice deleting comment out
             comments.splice(index,1)
             
@@ -97,25 +94,38 @@ router.post('/comment/delete', authenticate.checkLogIn, authenticate.reqSessionP
         })
 });
 
-//post request for deleting a comment-subcomment
+
+//post request for deleting a subcomment
 //post /post/subcomment/delete; (private)
-router.post('/post/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
-    Post.findOneAndRemove({_id: req.body.postId})
-        .populate("group")
+router.post('/subcomment/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    Post.findOne({_id: req.body.postId})
+        .populate("group", "comments")
         .exec((err, post) =>{
-            res.redirect("/group/name/" +post.group.name)
+            var commentId = req.body.commentId
+            var subCommentId = req.body.subCommentId
+            var comments = post.comments
+            //var subComments = findComment.subComments
+
+            //find comment in comments array
+            var findComment = comments.find((comment) => {
+                return comment._id == commentId
+            })
+
+            //find suComment in subComments
+            var findSubComment = findComment.subComments.find((subComment) => {
+                return subComment._id == subCommentId
+            })
+
+            //find index of deleting comment
+            var index = findComment.subComments.indexOf(findSubComment);
+
+            //splice deleting comment out
+            findComment.subComments.splice(index,1)
+
+            post.save()
+            res.redirect("/post/id/" +req.body.postId)
         })
 });
-
-////post request for deleting a post
-////post /post/post/delete; (private)
-//router.post('/post/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
-//    Post.findOneAndRemove({_id: req.body.postId})
-//        .populate("group")
-//        .exec((err, post) =>{
-//            res.redirect("/group/name/" +post.group.name)
-//        })
-//});
 
 //get posts by in in params(Private)
 //Get /post/id/:id
