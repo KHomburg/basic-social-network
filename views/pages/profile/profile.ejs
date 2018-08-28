@@ -57,6 +57,12 @@
                     <!--Education Table -->
                     <li>
                         <table class="uk-table uk-table-divider">
+                            <% //sort array by startdate
+                                currentUserProfile.education.sort(function(a, b) {
+                                    var dateA = new Date(a.from), dateB = new Date(b.from);
+                                    return dateA - dateB;
+                                }); 
+                            %>
                             <% currentUserProfile.education.forEach((education) => { %>
                                 <tbody>
                                     <tr>
@@ -73,6 +79,12 @@
                     <!--Experience Table -->
                     <li>
                         <table class="uk-table uk-table-divider">
+                            <% //sort array by startdate
+                                currentUserProfile.experience.sort(function(a, b) {
+                                    var dateA = new Date(a.from), dateB = new Date(b.from);
+                                    return dateA - dateB;
+                                }); 
+                            %>
                             <% currentUserProfile.experience.forEach((experience) => { %>
                                 <tbody>
                                     <tr>
