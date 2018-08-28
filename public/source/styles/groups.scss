@@ -80,10 +80,11 @@
     }
     &__sub-comment{
         background-color: white;
-        //padding: 20px;
+        padding: 0px 0px 0px 10px;
         width: 580px;
-        border-top: 1px solid #e5e5e5;
-        margin: 8px 8px 8px 50px;
+        border-top: 1px solid #1e87f0;
+        border-left: 8px solid #1e87f0;
+        margin: 20px 8px 20px 50px;
     }
 }
 
@@ -96,4 +97,11 @@
 }
 .uk-card {
     margin: 20px;
+}
+
+.delete-btn{
+    text-align: right;
+    padding: 0px 7px 0px 7px;
+    font-size: 0.65rem;
+    line-height: 20px;
 }

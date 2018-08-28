@@ -10,6 +10,37 @@ const Post = require("../models/Post");
 
 router.get("/test", (req, res) => res.json({msg: "Posts Works"}));
 
+//get request for post stream
+//get /stream/:page; (private)
+router.get("/stream/:page", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+
+    //constants for pagination
+    const perPage = 3
+    const page = req.params.page || 1
+
+    const currentUserProfile = req.currentUserProfile;
+    const membershipArray = currentUserProfile.membership;
+    const moderatorArray = currentUserProfile.moderatorOf;
+
+    //concat => array of groups
+    //find in post matching groups
+    //sort
+    console.log(Post.find());
+
+    Post.find()
+        //.where("profile.membership._id" == )
+        .skip((perPage * page) - perPage)
+        .limit(perPage)  
+        .populate("profile")
+        .then((posts) => {
+            var streamPosts = [];
+
+            //posts.group
+            console.log(posts)
+            res.render("pages/posts/stream", {currentUserProfile, posts});
+        })
+})
+
 //post request for form for creating a new post
 //post /post/create; (private)
 router.post("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
@@ -29,6 +60,62 @@ router.post("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, 
         }
     })
 })
+
+//post request for deleting a post
+//post /post/post/delete; (private)
+router.post('/post/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    Post.findOneAndRemove({_id: req.body.postId})
+        .populate("group")
+        .exec((err, post) =>{
+            res.redirect("/group/name/" +post.group.name)
+        })
+});
+
+//post request for deleting a post-comment
+//post /post/comment/delete; (private)
+router.post('/comment/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    Post.findOne({_id: req.body.postId})
+        .populate("group", "comments")
+        .exec((err, post) =>{
+            var commentId = req.body.commentId
+            var comments = post.comments
+
+            //find comment in comments array
+            var find = comments.find((comment) => {
+                return comment._id == commentId
+            })
+
+            //find index of deleting comment
+            var index = comments.indexOf(find);
+            console.log(index)
+
+            //splice deleting comment out
+            comments.splice(index,1)
+            
+            post.save()
+            res.redirect("/post/id/" +req.body.postId)
+        })
+});
+
+//post request for deleting a comment-subcomment
+//post /post/subcomment/delete; (private)
+router.post('/post/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    Post.findOneAndRemove({_id: req.body.postId})
+        .populate("group")
+        .exec((err, post) =>{
+            res.redirect("/group/name/" +post.group.name)
+        })
+});
+
+////post request for deleting a post
+////post /post/post/delete; (private)
+//router.post('/post/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+//    Post.findOneAndRemove({_id: req.body.postId})
+//        .populate("group")
+//        .exec((err, post) =>{
+//            res.redirect("/group/name/" +post.group.name)
+//        })
+//});
 
 //get posts by in in params(Private)
 //Get /post/id/:id
@@ -96,7 +183,9 @@ router.post("/subcomment/create", authenticate.checkLogIn, authenticate.reqSessi
                 console.log(err);
         }
     })
-})
+});
+
+
 
 
 

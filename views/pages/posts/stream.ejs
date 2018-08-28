@@ -3,43 +3,9 @@
 <% include ../../partials/header %>
 <% include ../../partials/sidebar %>
 
-
-
 <body>
     <div class="main">
-
-        <div class="group-header">
-            <div class="group-name">
-                <%= currentGroup.name %>
-            </div>
-            <!-- if currentUser is already member of this group, don't sho subscrib button -->
-            <% if(membership == false){ %>
-            <!-- form for joining the group -->
-                <div class="sub-button">
-                    <form action="/group/subscribe" method="post">
-                        <input type="hidden" name="groupName" value="<%= currentGroup.name %>">
-                        <input class="uk-button uk-button-primary" type="submit" value="Beitreten">
-                    </form>
-                </div>
-            <% } %>
-            <hr class="divider__b">
-
-
-        </div>
-
-        <!-- Form for creating a new post in that group -->
-        <div class="new-post">
-            <form action="/post/create" method="post">
-                <fieldset class="uk-fieldset">
-                    <input class="uk-input" id="Titel" type="text" name="title" placeholder="Titel des Beitrags">
-                    <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben"></textarea>
-                    <input type="hidden" name="groupName" value="<%= currentGroup.name %>">
-                    <input class="uk-button uk-button-primary uk-button-small" type="submit" value="Absenden">
-                </fieldset>
-            </form>
-        </div>
-
-
+        
         <!-- listing posts -->
         <% if(posts){ posts.forEach((post) => { %>
             <% post.comments %>
@@ -66,7 +32,6 @@
                 </div>
             </div>
         <% })} %>
-
 
 
 
