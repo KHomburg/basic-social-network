@@ -20,6 +20,7 @@ router.get("/all/:page", authenticate.checkLogIn, authenticate.reqSessionProfile
 
     const currentUserProfile = req.currentUserProfile ;
     Group.find()
+        .sort({name: 1})
         .skip((perPage * page) - perPage)
         .limit(perPage)    
         .then((groups) => {
@@ -51,7 +52,6 @@ router.get('/name/:name', authenticate.checkLogIn, authenticate.reqSessionProfil
         const findMods = currentGroup.moderator.find(            
             (groupMods) => {return groupMods._id == currentUserProfile._id.toString()}
         )
-
             //create membership if not already, or mod
             if (findMembership == undefined && findMods == undefined){
                 var membership = false

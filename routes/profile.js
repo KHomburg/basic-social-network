@@ -122,5 +122,56 @@ router.post("/edudelete", authenticate.checkLogIn, authenticate.reqSessionProfil
     })
 });
 
+//get posts created by currentprofile
+//get /profile/mycontent/posts
+router.get("/mycontent/posts/:page", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+
+    //constants for pagination
+    const perPage = 30
+    const page = req.params.page || 1
+
+    Post.find({profile: currentUserProfile._id})
+        .sort({date: -1})
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
+        .exec((err, posts) => {
+
+            console.log(posts)
+            //res.redirect("/profile/edit")       
+    })
+});
+
+//get comments created by currentprofile
+//get /profile/mycontent/comments
+router.get("/mycontent/comments/:page", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+
+        //constants for pagination
+        const perPage = 1
+        const page = req.params.page || 1
+
+    Post.find({"comments.profile": currentUserProfile._id})
+        .sort({date: -1})
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
+        .exec((err, comments) => {
+
+            Post.find({"comments.subComments.profile": currentUserProfile._id})
+                .sort({date: -1})
+                .skip((perPage * page) - perPage)
+                .limit(perPage)
+                .exec((err, subComments) => {
+
+                    console.log(comments)
+                    console.log(subComments)
+
+                    
+                    //res.redirect("/profile/edit")  
+            })  
+    })
+});
+
+
 
 module.exports = router;

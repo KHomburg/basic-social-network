@@ -4,25 +4,46 @@
         <nav class="uk-navbar-container uk-navbar style="top: 0px uk-navbar="mode: hover;" >
             <div class="uk-navbar-left">
                 <ul class="uk-navbar-nav">
-                    <div class="uk-navbar-left">
-                        <a class="uk-navbar-toggle" uk-navbar-toggle-icon href="/profile/edit"></a>
-                    </div>
-
-
                     <li>
-                        <li class="uk-active">
-                            <a href="/profile/id/<%= currentUserProfile._id %>"><%= currentUserProfile.name %></a>
+                        <li class="">
+                            <a href="#"><%= currentUserProfile.name %></a>
+                            <div class="uk-navbar-dropdown uk-active" uk-dropdown="offset: -15">
+                                <ul class="uk-nav uk-navbar-dropdown-nav">
+                                    <li>
+                                        <a href="/profile/id/<%= currentUserProfile._id %>">Dein Profil</a>
+                                    <li>
+                                        <a href="/profile/edit">Profil bearbeiten</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </li>
                     </li>
                     <li>
-                        <li class="uk-active">
+                        <a href="#">Deine Beiträge</a>
+                        <div class="uk-navbar-dropdown uk-active" uk-dropdown="offset: -15">
+                            <ul class="uk-nav uk-navbar-dropdown-nav">
+                                <li>
+                                    <a href="/profile/mycontent/posts/1">Deine Posts</a>
+                                <li>
+                                    <a href="/profile/mycontent/comments/1">Von dir Kommentierte Posts</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <li class="">
                             <a href="#">Nachrichten</a>
                         </li>
                     </li>
-                        <li class="uk-active">
+                        <li class="">
                             <a href="#">Kontakte</a>
                         </li>
                     </li>
+                    </li>
+                    <li class="">
+                        <a href="/group/all/1/">Alle Gruppen</a>
+                    </li>
+                </li>
                 </ul>
             </div>
             <div class="uk-navbar-right">
