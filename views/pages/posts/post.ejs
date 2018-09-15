@@ -67,41 +67,41 @@
 
 
                 <!-- list subComments -->
-                <% if(subComments){%>
-                    <% var subComments = comment.subComments %>
-                        <% subComments.forEach((subComment) => { %>
-                            <% if(subComment != undefined ){%>
-                            <div class="post__sub-comment">
-                                <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+                <% var subComments = comment.subComments %>
+                <% if(subComments != undefined ){%>
+                    <% subComments.forEach((subComment) => { %>
+                        <div class="post__sub-comment">
+                            <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
 
-                                    <div class="uk-width-auto">
-                                        <img class="uk-comment-avatar" src="images/maxresdefault.jpg" padding-left="30" width="50" height="50" alt="">
-                                    </div>
-                                    <div class="uk-width-expand">
-                                        <ul class="uk-comment-meta uk-subnav uk-margin-remove-top">
-                                            <li><a href="/profile/id/<%= post.profile._id %>">von <%= subComment.profile.name %></a></li>
-                                            <li><%= subComment.date.toDateString("de-De") + " " + subComment.date.toLocaleTimeString("de-De") %></li>
-                                            
-                                        </ul>
-                                    </div>
-                                </header>
-                                
-                                <div class="uk-comment-body">
-                                    <p><%= subComment.text %></p>
+                                <div class="uk-width-auto">
+                                    <img class="uk-comment-avatar" src="images/maxresdefault.jpg" padding-left="30" width="50" height="50" alt="">
                                 </div>
-                                <!-- Delete Button -->
-                                <% if(currentUserProfile._id.toString() === subComment.profile._id.toString()) {%>
-                                    <form action="/post/subcomment/delete" method="post">
-                                        <input type="hidden" name="postId" value= <%= post._id %>>
-                                        <input type="hidden" name="commentId" value= <%= comment._id%>>
-                                        <input type="hidden" name="subCommentId" value= <%= subComment._id%>>
-                                        <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
-                                    </form>
-                                <%}%>
+                                <div class="uk-width-expand">
+                                    <ul class="uk-comment-meta uk-subnav uk-margin-remove-top">
+                                        <li><a href="/profile/id/<%= post.profile._id %>">von <%= subComment.profile.name %></a></li>
+                                        <li><%= subComment.date.toDateString("de-De") + " " + subComment.date.toLocaleTimeString("de-De") %></li>
+                                        
+                                    </ul>
+                                </div>
+                            </header>
+                            
+                            <div class="uk-comment-body">
+                                <p><%= subComment.text %></p>
                             </div>
-
-                    <%}}) %>
-                <%} %>
+                            <!-- Delete Button -->
+                            <% if(currentUserProfile._id.toString() === subComment.profile._id.toString()) {%>
+                                <form action="/post/subcomment/delete" method="post">
+                                    <input type="hidden" name="postId" value= <%= post._id %>>
+                                    <input type="hidden" name="commentId" value= <%= comment._id%>>
+                                    <input type="hidden" name="subCommentId" value= <%= subComment._id%>>
+                                    <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
+                                </form>
+                            <%}%>
+                        </div>
+                    <%})%>
+                <%}%>
+                        
+                
                 <div class="subcomment-form">
                 <ul uk-accordion>
                     <li>                        

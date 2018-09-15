@@ -1,6 +1,41 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+//ChildSchema for SubComments
+const SubCommentSchema = new Schema({
+    profile: {
+        type: Schema.Types.ObjectId,
+        ref: "profile"
+    },
+    text: {
+        type: String,
+        required: true
+    },
+    date: {
+        type: Date,
+        default: Date.now
+    }
+})
+
+//ChildSchema for Comments
+const CommentSchema = new Schema({
+    profile: {
+        type: Schema.Types.ObjectId,
+        ref: "profile"
+    },
+    text: {
+        type: String,
+        required: true
+    },
+    date: {
+        type: Date,
+        default: Date.now
+    },
+    subComments: [SubCommentSchema]
+})
+
+
+
 //Schema
 const PostSchema = new Schema({
     profile: {
@@ -20,37 +55,8 @@ const PostSchema = new Schema({
         required: true,
     },
     comments: [
-        {
-            profile: {
-                type: Schema.Types.ObjectId,
-                ref: "profile"
-            },
-            text: {
-                type: String,
-                required: true
-            },
-            date: {
-                type: Date,
-                default: Date.now
-            },
-            subComments: [
-                {
-                    profile: {
-                        type: Schema.Types.ObjectId,
-                        ref: "profile"
-                    },
-                    text: {
-                        type: String,
-                        required: true
-                    },
-                    date: {
-                        type: Date,
-                        default: Date.now
-                    },
-                }
-            ]
-        },
-    ],
+        CommentSchema
+    ],    
     likes: [
         {
             profile: {
