@@ -128,17 +128,27 @@ router.get("/mycontent/posts/:page", authenticate.checkLogIn, authenticate.reqSe
     const currentUserProfile = req.currentUserProfile
 
     //constants for pagination
-    const perPage = 30
+    const perPage = 50
     const page = req.params.page || 1
 
     Post.find({profile: currentUserProfile._id})
         .sort({date: -1})
         .skip((perPage * page) - perPage)
         .limit(perPage)
-        .exec((err, posts) => {
-
-            console.log(posts)
-            //res.redirect("/profile/edit")       
+        .populate("profile")
+        .exec((err1, posts) => {
+            Post.count()
+                .exec((err2, count) => {
+                    if(posts){
+                        res.render("pages/profile/myposts", {posts, currentUserProfile, current: page, pages: Math.ceil(count / perPage) });
+                    }else if(err1){
+                        console.log(err1)
+                    }else if(err2){
+                        console.log(err2)
+                    }else{
+                        console.log("Something went wrong while executing /mycontent/posts/:page")
+                    }   
+                })
     })
 });
 
@@ -148,30 +158,41 @@ router.get("/mycontent/comments/:page", authenticate.checkLogIn, authenticate.re
     const currentUserProfile = req.currentUserProfile
 
         //constants for pagination
-        const perPage = 1
+        const perPage = 2
         const page = req.params.page || 1
 
-    Post.find({"comments.profile": currentUserProfile._id})
+    Post.comments.find({profile: currentUserProfile._id})
         .sort({date: -1})
         .skip((perPage * page) - perPage)
-        .limit(perPage)
-        .exec((err, comments) => {
-
-            Post.find({"comments.subComments.profile": currentUserProfile._id})
-                .sort({date: -1})
-                .skip((perPage * page) - perPage)
-                .limit(perPage)
-                .exec((err, subComments) => {
-
-                    console.log(comments)
-                    console.log(subComments)
-
-                    
-                    //res.redirect("/profile/edit")  
-            })  
+        .populate("profile")
+        .exec((err1, comments) => {
+            Post.count()
+                .exec((err2, count) => {
+                    if(comments){
+                        console.log(comments)
+                        //res.render("pages/profile/myposts", {posts, currentUserProfile, current: page, pages: Math.ceil(count / perPage) });
+                    }else if(err1){
+                        console.log(err1)
+                    }else if(err2){
+                        console.log(err2)
+                    }else{
+                        console.log("Something went wrong while executing /mycontent/posts/:page")
+                    }   
+                })
     })
 });
 
+
+router.get("/test", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+
+    Comments.find({profile: currentUserProfile._id})
+        .sort({date: -1})
+        .populate("profile", "comments")
+        .exec((err1, posts) => {
+            console.log(posts)
+        })
+});
 
 
 module.exports = router;
