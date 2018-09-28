@@ -29,7 +29,8 @@
   padding: 20px;
   width: 630px;
   border: 1px solid #e5e5e5;
-  margin: 8px; }
+  margin: 8px;
+  border-left: 8px solid #1e87f0; }
   .post__autor {
     display: block;
     color: #999;
@@ -63,13 +64,14 @@
     padding: 20px;
     width: 630px;
     border: 1px solid #e5e5e5;
+    border-left: 8px solid #1e87f0;
     margin: 8px 8px 8px 8px; }
   .post__sub-comment {
     background-color: white;
     padding: 0px 0px 0px 10px;
     width: 580px;
-    border-top: 1px solid #1e87f0;
-    border-left: 8px solid #1e87f0;
+    border-top: 1px solid #999;
+    border-left: 4px solid #1e87f0;
     margin: 20px 8px 20px 50px; }
 
 .comment-form {
