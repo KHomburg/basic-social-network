@@ -17,22 +17,22 @@ const SubCommentSchema = new Schema({
     }
 })
 
-//ChildSchema for Comments
-const CommentSchema = new Schema({
-    profile: {
-        type: Schema.Types.ObjectId,
-        ref: "profile"
-    },
-    text: {
-        type: String,
-        required: true
-    },
-    date: {
-        type: Date,
-        default: Date.now
-    },
-    subComments: [SubCommentSchema]
-})
+////ChildSchema for Comments
+//const CommentSchema = new Schema({
+//    profile: {
+//        type: Schema.Types.ObjectId,
+//        ref: "profile"
+//    },
+//    text: {
+//        type: String,
+//        required: true
+//    },
+//    date: {
+//        type: Date,
+//        default: Date.now
+//    },
+//    subComments: [SubCommentSchema]
+//})
 
 
 
@@ -55,7 +55,12 @@ const PostSchema = new Schema({
         required: true,
     },
     comments: [
-        CommentSchema
+        {
+            comment: {
+                type: Schema.Types.ObjectId,
+                ref: "comment"
+            },
+        }
     ],    
     likes: [
         {

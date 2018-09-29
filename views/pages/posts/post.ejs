@@ -45,31 +45,33 @@
                     </div>
                     <div class="uk-width-expand">
                         <ul class="uk-comment-meta uk-subnav uk-margin-remove-top">
-                            <li><a href="/profile/id/<%= post.profile._id %>">von <%= comment.profile.name %></a></li>
-                            <li><%= comment.date.toDateString("de-De") + " " + comment.date.toLocaleTimeString("de-De") %></li>
+                            <li><a href="/profile/id/<%= post.profile._id %>">von <%= comment._id.profile.name %></a></li>
+                            <li><%= comment._id.date.toDateString("de-De") + " " + comment._id.date.toLocaleTimeString("de-De") %></li>
                         </ul>
                     </div>
                 </header>
                 <hr class="divider__b">
                 <div class="uk-comment-body">
-                    <p><%= comment.text %></p>
+                    <p><%= comment._id.text %></p>
                 </div>
 
                 <!-- Delete Button for comment -->
                 
-                <% if(currentUserProfile._id.toString() === comment.profile._id.toString()) {%>
+                <% if(currentUserProfile._id.toString() === comment._id.profile._id.toString()) {%>
                     <form action="/post/comment/delete" method="post">
                         <input type="hidden" name="postId" value= <%= post._id %>>
-                        <input type="hidden" name="commentId" value= <%= comment._id%>>
+                        <input type="hidden" name="commentId" value= <%= comment._id._id%>>
                         <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
                     </form>
                 <%}%>
 
 
                 <!-- list subComments -->
-                <% var subComments = comment.subComments %>
+                <% var subComments = comment._id.subcomments %>
+                
                 <% if(subComments != undefined ){%>
                     <% subComments.forEach((subComment) => { %>
+                    <% console.log(subComment._id.profile)%>
                         <div class="post__sub-comment">
                             <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
 
@@ -78,22 +80,22 @@
                                 </div>
                                 <div class="uk-width-expand">
                                     <ul class="uk-comment-meta uk-subnav uk-margin-remove-top">
-                                        <li><a href="/profile/id/<%= post.profile._id %>">von <%= subComment.profile.name %></a></li>
-                                        <li><%= subComment.date.toDateString("de-De") + " " + subComment.date.toLocaleTimeString("de-De") %></li>
+                                        <li><a href="/profile/id/<%= post.profile._id %>">von <%= subComment._id.profile.name %></a></li>
+                                        <li><%= subComment._id.date.toDateString("de-De") + " " + subComment._id.date.toLocaleTimeString("de-De") %></li>
                                         
                                     </ul>
                                 </div>
                             </header>
                             
                             <div class="uk-comment-body">
-                                <p><%= subComment.text %></p>
+                                <p><%= subComment._id.text %></p>
                             </div>
                             <!-- Delete Button -->
-                            <% if(currentUserProfile._id.toString() === subComment.profile._id.toString()) {%>
+                            <% if(currentUserProfile._id.toString() === subComment._id.profile._id.toString()) {%>
                                 <form action="/post/subcomment/delete" method="post">
                                     <input type="hidden" name="postId" value= <%= post._id %>>
-                                    <input type="hidden" name="commentId" value= <%= comment._id%>>
-                                    <input type="hidden" name="subCommentId" value= <%= subComment._id%>>
+                                    <input type="hidden" name="commentId" value= <%= comment._id._id%>>
+                                    <input type="hidden" name="subCommentId" value= <%= subComment._id._id%>>
                                     <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
                                 </form>
                             <%}%>
@@ -107,13 +109,12 @@
                     <li>                        
                         <a class="uk-accordion-title subcomment-slider-title" href="#">Kommentieren</a>                        
 
-                        <div class="uk-accordion-content">
-                            
+                        <div class="uk-accordion-content">                            
                                 <form action="/post/subcomment/create" method="post">
                                     <fieldset class="uk-fieldset">
                                         <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben"></textarea>
                                         <input type="hidden" name="postId" value="<%= post._id %>">
-                                        <input type="hidden" name="commentId" value="<%= comment._id %>">
+                                        <input type="hidden" name="commentId" value="<%= comment._id._id %>">
                                         <input type="hidden" name="index" value="<%= index %>">
                                         <input class="uk-button uk-button-primary uk-button-small" type="submit" value="Absenden">
                                     </fieldset>

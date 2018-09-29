@@ -7,6 +7,8 @@ const User = require("../models/User");
 const Profile = require("../models/Profile");
 const Group = require("../models/Group");
 const Post = require("../models/Post");
+const Comment = require("../models/Comment");
+const Subcomment = require("../models/Subcomment");
 
 router.get("/test", (req, res) => res.json({msg: "Posts Works"}));
 
@@ -77,10 +79,12 @@ router.post("/comment/create", authenticate.checkLogIn, authenticate.reqSessionP
     const currentUserProfile = req.currentUserProfile
     Post.findOne({_id: req.body.postId}, (err, post) => {
         if(post){
-            const newComment = {
+            const newComment = new Comment({
                 profile: currentUserProfile,
                 text: req.body.text,
-            }
+            })
+            newComment.save();
+
             post.comments.push(newComment);
             post.save(); 
             res.redirect("/post/id/" +post._id)
@@ -94,17 +98,21 @@ router.post("/comment/create", authenticate.checkLogIn, authenticate.reqSessionP
 //post /post/subcomment/create; (private)
 router.post("/subcomment/create", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
-    Post.findOne({_id: req.body.postId}, (err, post) => {
-        if(post){
-            const newSubComment = {
+    Comment.findOne({_id: req.body.commentId}, (err, comment) => {
+        let postID = req.body.postId
+        if(comment){
+            const newSubComment = new Subcomment({
                 profile: currentUserProfile,
                 text: req.body.text,
-            }
-            var index = req.body.index.toString()
+            })
+            //var index = req.body.index.toString()
 
-            post.comments[index].subComments.push(newSubComment);
-            post.save(); 
-            res.redirect("/post/id/" +post._id)
+            newSubComment.save();
+
+            comment.subcomments.push(newSubComment);
+            comment.save(); 
+            res.redirect("/post/id/" +postID)
+
         } else {               
                 console.log(err);
         }
@@ -144,7 +152,6 @@ router.post('/subcomment/delete', authenticate.checkLogIn, authenticate.reqSessi
             var commentId = req.body.commentId
             var subCommentId = req.body.subCommentId
             var comments = post.comments
-            //var subComments = findComment.subComments
 
             //find comment in comments array
             var findComment = comments.find((comment) => {
@@ -172,22 +179,44 @@ router.post('/subcomment/delete', authenticate.checkLogIn, authenticate.reqSessi
 router.get('/id/:id', authenticate.checkLogIn, authenticate.reqSessionProfile,(req, res) => {
     const currentUserProfile = req.currentUserProfile
     Post.findOne({_id: req.params.id})
-    .populate([
-        {
-            path: "profile",
-            model: "profile"
-        },
-        {
-            path: "comments.profile",
-            model: "profile"
-        },
-        {
-            path: "comments.subComments.profile",
-            model: "profile"
-        }
-    ])
+    //.populate("profile", "comments.comment")
+    .populate(
+        [
+            {
+                path: "profile",
+                model: "profile"
+            },
+            {
+                path: "comments._id",
+                model: "comment",
+                populate: [
+                    {
+                        path: "profile",
+                        model: "profile",
+                    },
+                    {
+                        path: "subcomments._id",
+                        model: "subcomment",
+                        populate: {
+                            path: "profile",
+                            model: "profile"
+                        }
+                    }
+                ]
+            }
+        ]
+    )
     .exec((err,post) => {
         if(post){
+            //console.log(post)
+            //console.log("--------------------")
+            //console.log(post.comments)
+            //console.log("--------------------")
+            //console.log(post.comments[0]._id.profile)
+            //console.log("--------------------")
+            //console.log(post.comments[0]._id.subcomments)
+            //console.log("--------------------")
+            //console.log(post.comments[0]._id.subcomments[0]._id)
             res.render("pages/posts/post", {currentUserProfile, post});
         }else{
             console.log(err)
