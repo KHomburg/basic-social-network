@@ -123,7 +123,6 @@ router.post("/subcomment/create", authenticate.checkLogIn, authenticate.reqSessi
 //post /post/comment/delete; (private)
 router.post('/comment/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     Post.findOne({_id: req.body.postId})
-        .populate("group", "comments")
         .exec((err, post) =>{
             var commentId = req.body.commentId
             var comments = post.comments
@@ -132,13 +131,19 @@ router.post('/comment/delete', authenticate.checkLogIn, authenticate.reqSessionP
             var findComment = comments.find((comment) => {
                 return comment._id == commentId
             })
+
             //find index of deleting comment
             var index = comments.indexOf(findComment);
             //splice deleting comment out
-            comments.splice(index,1)
-            
+            comments.splice(index,1)            
             post.save()
-            res.redirect("/post/id/" +req.body.postId)
+
+            //deleting comment in the comment collection
+            Comment.findByIdAndDelete(findComment._id)
+                .exec(
+                    res.redirect("/post/id/" +req.body.postId)
+                )
+
         })
 });
 
@@ -146,31 +151,27 @@ router.post('/comment/delete', authenticate.checkLogIn, authenticate.reqSessionP
 //post request for deleting a subcomment
 //post /post/subcomment/delete; (private)
 router.post('/subcomment/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
-    Post.findOne({_id: req.body.postId})
-        .populate("group", "comments")
-        .exec((err, post) =>{
+    Comment.findOne({_id: req.body.commentId})
+        .exec((err, comment) =>{
             var commentId = req.body.commentId
             var subCommentId = req.body.subCommentId
-            var comments = post.comments
 
-            //find comment in comments array
-            var findComment = comments.find((comment) => {
-                return comment._id == commentId
-            })
-
-            //find suComment in subComments
-            var findSubComment = findComment.subComments.find((subComment) => {
+            //find subComment in subComments            
+            var findSubComment = comment.subcomments.find((subComment) => {
                 return subComment._id == subCommentId
             })
 
             //find index of deleting comment
-            var index = findComment.subComments.indexOf(findSubComment);
+            var index = comment.subcomments.indexOf(findSubComment);
 
             //splice deleting comment out
-            findComment.subComments.splice(index,1)
+            comment.subcomments.splice(index,1)  
+            comment.save()
 
-            post.save()
-            res.redirect("/post/id/" +req.body.postId)
+            Subcomment.findByIdAndDelete(findSubComment._id)
+                .exec(
+                    res.redirect("/post/id/" +req.body.postId)
+                )
         })
 });
 
@@ -208,6 +209,7 @@ router.get('/id/:id', authenticate.checkLogIn, authenticate.reqSessionProfile,(r
     )
     .exec((err,post) => {
         if(post){
+            //queries:
             //console.log(post)
             //console.log("--------------------")
             //console.log(post.comments)
