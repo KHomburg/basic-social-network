@@ -5,6 +5,10 @@ const authenticate = require("../config/authenticate");
 //Load models
 const User = require("../models/User");
 const Profile = require("../models/Profile");
+const Group = require("../models/Group");
+const Post = require("../models/Post");
+const Comment = require("../models/Comment");
+const Subcomment = require("../models/Subcomment");
 
 
 //get all profiles (Private)
@@ -137,6 +141,7 @@ router.get("/mycontent/posts/:page", authenticate.checkLogIn, authenticate.reqSe
         .limit(perPage)
         .populate("profile")
         .exec((err1, posts) => {
+            //count posts for pagination
             Post.count()
                 .exec((err2, count) => {
                     if(posts){
@@ -157,40 +162,100 @@ router.get("/mycontent/posts/:page", authenticate.checkLogIn, authenticate.reqSe
 router.get("/mycontent/comments/:page", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
-        //constants for pagination
-        const perPage = 2
-        const page = req.params.page || 1
+    //constants for pagination
+    const perPage = 15
+    const page = req.params.page || 1
 
-    Post.comments.find({profile: currentUserProfile._id})
+    //find comments
+    Comment.find({profile: currentUserProfile})
         .sort({date: -1})
         .skip((perPage * page) - perPage)
-        .populate("profile")
-        .exec((err1, comments) => {
-            Post.count()
-                .exec((err2, count) => {
-                    if(comments){
-                        console.log(comments)
-                        //res.render("pages/profile/myposts", {posts, currentUserProfile, current: page, pages: Math.ceil(count / perPage) });
-                    }else if(err1){
-                        console.log(err1)
-                    }else if(err2){
-                        console.log(err2)
-                    }else{
-                        console.log("Something went wrong while executing /mycontent/posts/:page")
-                    }   
+        .populate(
+            [
+                {
+                    path: "profile",
+                    model: "profile"
+                },
+                {
+                    path: "parentPost",
+                    model: "post"
+                },
+            ]
+        )
+        .exec((err1, comment) => {
+
+            //count comments for pagination
+            Comment.count()
+                .exec((err2, commentCount) => {
+                    //find subcomments
+
+                    Subcomment.find({profile: currentUserProfile})
+                        .sort({date: -1})
+                        .skip((perPage * page) - perPage)
+                        .populate(
+                            [
+                                {
+                                    path: "profile",
+                                    model: "profile"
+                                },
+                                {
+                                    path: "parentPost",
+                                    model: "post"
+                                },
+                            ]
+                        )
+                        .exec((err3, subComment) => {
+                            
+                            //count subcomments for pagination
+                            Subcomment.count()
+                                .exec((err4, subCommentCount) => {
+
+                                    //merge comments & subcomments
+                                    const mergedComments = comment.concat(subComment);
+
+                                    //sum up comments & subcomments
+                                    const allCount = commentCount + subCommentCount
+
+
+                                    if(comment && subComment){
+                                        console.log(mergedComments)
+                                        //res.render("pages/profile/myposts", {posts, currentUserProfile, current: page, pages: Math.ceil(allCount / perPage) });
+                                    }else if(err1){
+                                        console.log(err1)
+                                    }else if(err2){
+                                        console.log(err2)
+                                    }else if(err3){
+                                        console.log(err3)
+                                    }else if(err4){
+                                        console.log(err4)
+                                    }else{
+                                        console.log("Something went wrong while executing /mycontent/posts/:page")
+                                    }   
+                                })
+
+
+
+                        })
+
+
                 })
+
     })
 });
+
+
 
 
 router.get("/test", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
-    Comments.find({profile: currentUserProfile._id})
-        .sort({date: -1})
-        .populate("profile", "comments")
-        .exec((err1, posts) => {
-            console.log(posts)
+    Comment.find()
+        .exec((err, comments) => {
+            //console.log("Kommentare:" + comments)
+            Post.find({"comments._id": { $in: comments}})
+                .exec((err, post) => {
+                    console.log("Posts:" +post)
+                })
         })
 });
 

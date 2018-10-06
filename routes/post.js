@@ -14,6 +14,18 @@ router.get("/test", (req, res) => res.json({msg: "Posts Works"}));
 
 ////get request for post stream
 ////get /stream/:page; (private)
+router.get("/stream/:page", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+
+    Comment.find()
+        .exec((err, comments) => {
+            //console.log("Kommentare:" + comments)
+            Post.find({"comments._id": { $in: comments}})
+                .exec((err, post) => {
+                    console.log("Posts:" +post)
+                })
+        })
+});
 //router.get("/stream/:page", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
 //
 //    //constants for pagination
@@ -78,16 +90,18 @@ router.post('/post/delete', authenticate.checkLogIn, authenticate.reqSessionProf
 router.post("/comment/create", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     Post.findOne({_id: req.body.postId}, (err, post) => {
+        let postID = req.body.postId
         if(post){
             const newComment = new Comment({
                 profile: currentUserProfile,
                 text: req.body.text,
+                parentPost: req.body.postId,
             })
             newComment.save();
 
             post.comments.push(newComment);
             post.save(); 
-            res.redirect("/post/id/" +post._id)
+            res.redirect("/post/id/" +postID)
         } else {               
                 console.log(err);
         }
@@ -104,6 +118,8 @@ router.post("/subcomment/create", authenticate.checkLogIn, authenticate.reqSessi
             const newSubComment = new Subcomment({
                 profile: currentUserProfile,
                 text: req.body.text,
+                parentPost: req.body.postId,
+                parentComment: req.body.commentId,
             })
             //var index = req.body.index.toString()
 

@@ -22,7 +22,11 @@ const CommentSchema = new Schema({
                 ref: "subcomment"
             },
         }
-    ], 
+    ],
+    parentPost: {
+        type: Schema.Types.ObjectId,
+        ref: "post"
+    }
 })
 
 module.exports = Comment = mongoose.model("comment", CommentSchema);

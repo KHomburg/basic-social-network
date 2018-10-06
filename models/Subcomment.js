@@ -13,6 +13,14 @@ const SubcommentSchema = new Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    parentPost: {
+        type: Schema.Types.ObjectId,
+        ref: "post"
+    },
+    parentComment: {
+        type: Schema.Types.ObjectId,
+        ref: "comment"
     }
 })
 
