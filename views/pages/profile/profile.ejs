@@ -12,7 +12,7 @@
                         <img  width="200" height="200" src="images/maxresdefault.jpg">
                     </div>
                     <div class="uk-width-expand">
-                        <h3 class="uk-card-title uk-margin-remove-bottom"><%= currentUserProfile.name %></h3>
+                        <h3 class="uk-card-title uk-margin-remove-bottom"><%= profile.name %></h3>
                         <p class="uk-text-meta uk-margin-remove-top">Unternehmen/Bund</p>
                     </div>
                 </div>
@@ -32,23 +32,23 @@
                             <tbody>
                                 <tr>
                                     <td class="uk-width-small">Facebook</td>
-                                    <td><%= currentUserProfile.social.facebook %></td>
+                                    <td><%= profile.social.facebook %></td>
                                 </tr>
                                 <tr>
                                     <td class="uk-width-small">Xing</td>
-                                    <td><%= currentUserProfile.social.xing %></td>
+                                    <td><%= profile.social.xing %></td>
                                 </tr>
                                 <tr>
                                     <td class="uk-width-small">Twitter</td>
-                                    <td><%= currentUserProfile.social.twitter %></td>
+                                    <td><%= profile.social.twitter %></td>
                                 </tr>
                                 <tr>
                                     <td class="uk-width-small">LinkedIn</td>
-                                    <td><%= currentUserProfile.social.linkedin %></td>
+                                    <td><%= profile.social.linkedin %></td>
                                 </tr>
                                 <tr>
                                     <td class="uk-width-small">Website</td>
-                                    <td><%= currentUserProfile.social.website %></td>
+                                    <td><%= profile.social.website %></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -58,12 +58,12 @@
                     <li>
                         <table class="uk-table uk-table-divider">
                             <% //sort array by startdate
-                                currentUserProfile.education.sort(function(a, b) {
+                                profile.education.sort(function(a, b) {
                                     var dateA = new Date(a.from), dateB = new Date(b.from);
                                     return dateA - dateB;
                                 }); 
                             %>
-                            <% currentUserProfile.education.forEach((education) => { %>
+                            <% profile.education.forEach((education) => { %>
                                 <tbody>
                                     <tr>
                                         <td class="uk-width-small"><%= education.from.getMonth() + "." + education.from.getFullYear()  + " - " + education.to.getMonth() + "." + education.to.getFullYear() %></td>
@@ -80,12 +80,12 @@
                     <li>
                         <table class="uk-table uk-table-divider">
                             <% //sort array by startdate
-                                currentUserProfile.experience.sort(function(a, b) {
+                                profile.experience.sort(function(a, b) {
                                     var dateA = new Date(a.from), dateB = new Date(b.from);
                                     return dateA - dateB;
                                 }); 
                             %>
-                            <% currentUserProfile.experience.forEach((experience) => { %>
+                            <% profile.experience.forEach((experience) => { %>
                                 <tbody>
                                     <tr>
                                         <td class="uk-width-small"><%= experience.from.getMonth() + "." + experience.from.getFullYear()  + " - " + experience.to.getMonth() + "." + experience.to.getFullYear() %></td>
@@ -102,6 +102,19 @@
                     
                     </li>
                 </ul>
+
+                <% if(profile._id.toString() == currentUserProfile._id.toString()){%>
+                <%} else if(isContact == false) { %>
+                    <form action="/profile/addcontact" method="post">
+                        <input type="hidden" name="profileId" value="<%= profile._id %>">
+                        <button type="submit" value="<%= profile._id %>" class="uk-button uk-button-primary uk-button-small">Kontakt hinzufügen</button>                  
+                    </form>
+                <%} else if(isContact == true) { %>
+                    <form action="/profile/removecontact" method="post">
+                        <input type="hidden" name="profileId" value="<%= profile._id %>">
+                        <button type="submit" value="<%= profile._id %>" class="uk-button uk-button-primary uk-button-small">Kontakt Entfernen</button>                  
+                    </form>
+                <% } %>
 
 
             </div>

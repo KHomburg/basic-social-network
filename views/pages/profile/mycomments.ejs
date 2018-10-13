@@ -1,0 +1,75 @@
+<% include ../../partials/head %>
+
+<% include ../../partials/header %>
+<% include ../../partials/sidebar %>
+
+
+
+<body>
+    <div class="main">
+
+        <!-- listing posts -->
+        <% if(allComments){ allComments.forEach((comment) => { %>
+            <% comment %>
+            <div class="post">
+                <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+                    <div class="uk-width-auto">
+                        <img class="uk-comment-avatar" src="images/maxresdefault.jpg" width="80" height="80" alt="">
+                    </div>
+                    <div class="uk-width-expand">
+                        <h4 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="/post/id/#">platzhalter</a></h4>
+                        <ul class="uk-comment-meta uk-subnav uk-margin-remove-top">
+                            <li><%= comment.date.toDateString("de-De") + " " + comment.date.toLocaleTimeString("de-De") %></li>     
+                        </ul>
+                    </div>
+                </header>
+                <hr class="divider__b">
+                <div class="uk-comment-body">
+                    <p><%= comment.text %></p>
+                </div>
+
+                <div class="post__comment-count">
+                    <%= comment.length %> Kommentare
+                </div>
+            </div>
+        <% })} %>
+
+
+        <!-- Pagination -->
+        <% if (pages > 0) { %>
+            <ul class="uk-pagination uk-flex-center" uk-margin>
+                <% if (current == 1) { %>
+                    <li class="disabled"><a>First</a></li>
+                <% } else { %>
+                    <li><a href="/profile/mycontent/comments/1">First</a></li>
+                <% } %>
+                <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+                <% if (i !== 1) { %>
+                    <li class="disabled"><a>...</a></li>
+                <% } %>
+                <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+                    <% if (i == current) { %>
+                        <li class="active"><a><%= i %></a></li>
+                    <% } else { %>
+                        <li><a href="/profile/mycontent/posts/<%= i %>"><%= i %></a></li>
+                    <% } %>
+                    <% if (i == Number(current) + 4 && i < pages) { %>
+                        <li class="disabled"><a>...</a></li>
+                    <% } %>
+                <% } %>
+                <% if (current == pages) { %>
+                    <li class="disabled"><a>Last</a></li>
+                <% } else { %>
+                    <li><a href="/profile/mycontent/posts/<%= pages %>">Last</a></li>
+                <% } %>
+            </ul>
+        <% } %>
+
+
+
+
+    </div>
+</body>
+
+<% include ../../partials/footer %>
+<% include ../../partials/foot %>

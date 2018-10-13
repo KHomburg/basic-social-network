@@ -20,10 +20,25 @@ router.get("/all", authenticate.checkLogIn, (req, res) => {
 //get users /profile by id in params(Private)
 //Get /profile/id/:id
 router.get('/id/:id', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
     Profile.findOne({_id: req.params.id}, (err, profile) => {
+        
+        //check if currentUser has the now watched profile allready in contacts list
+        const checkContact = () => {
+            if(
+                currentUserProfile.contacts.find(
+                    contact => contact._id._id.toString() == req.params.id.toString()
+                ) != undefined || "") {
+                    return true
+                } else {
+                    return false
+                }
+        }
+        const isContact = checkContact()        
+
+        //currentUserProfile.contacts.find()
         if(profile){
-            const currentUserProfile = req.currentUserProfile
-            res.render("pages/profile/profile", {profile, currentUserProfile});
+            res.render("pages/profile/profile", {profile, currentUserProfile, isContact});
         }else{
             res.send("profile not found")
         }        
@@ -211,15 +226,15 @@ router.get("/mycontent/comments/:page", authenticate.checkLogIn, authenticate.re
                                 .exec((err4, subCommentCount) => {
 
                                     //merge comments & subcomments
-                                    const mergedComments = comment.concat(subComment);
+                                    const allComments = comment.concat(subComment);
 
                                     //sum up comments & subcomments
                                     const allCount = commentCount + subCommentCount
 
 
                                     if(comment && subComment){
-                                        console.log(mergedComments)
-                                        //res.render("pages/profile/myposts", {posts, currentUserProfile, current: page, pages: Math.ceil(allCount / perPage) });
+                                        console.log(allComments)
+                                        res.render("pages/profile/mycomments", {allComments, currentUserProfile, current: page, pages: Math.ceil(allCount / perPage) });
                                     }else if(err1){
                                         console.log(err1)
                                     }else if(err2){
@@ -232,18 +247,25 @@ router.get("/mycontent/comments/:page", authenticate.checkLogIn, authenticate.re
                                         console.log("Something went wrong while executing /mycontent/posts/:page")
                                     }   
                                 })
-
-
-
                         })
-
-
                 })
-
-    })
+        })
 });
 
-
+//post delete a single education entry from profile(Private)
+//post /profile/edudelete
+router.post("/addcontact", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile    
+    Profile.findById({_id: req.body.profileId}, (err, profile) => {
+        if(profile){
+            currentUserProfile.contacts.push(profile);
+            currentUserProfile.save(); 
+        } else {
+            console.log("profile could not be found")
+        }
+        res.redirect("/profile/id/" +req.body.profileId)     
+    })
+});
 
 
 router.get("/test", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {

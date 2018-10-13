@@ -55,6 +55,10 @@ module.exports.reqSessionProfile = (req, res, next) => {
         {
             path: "membership._id",
             model: "group"
+        },
+        {
+            path: "contacts._id",
+            model: "profile"
         }
     ])
     .exec((err, profile) => 
@@ -65,7 +69,7 @@ module.exports.reqSessionProfile = (req, res, next) => {
         }else if(err){ 
             console.log(err)
         }else{
-            res.send("Something went wrong, couldn't find profile!")
+            res.send("Something went wrong, couldn't find your profile (you are not logged in)!")
         }
     })
 }

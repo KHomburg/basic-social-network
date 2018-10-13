@@ -94,6 +94,14 @@ const ProfileSchema = new Schema({
             }
         }
     ],
+    contacts: [
+        {
+            profile: {
+                type: Schema.Types.ObjectId,
+                ref: "profile"
+            },
+        }
+    ],
     date: {
         type: Date,
         default: Date.now

@@ -119,16 +119,10 @@ router.post("/subscribe", authenticate.checkLogIn, authenticate.reqSessionProfil
     Group.findOne({name: req.body.groupName}, (err, group) => {
 
             //Add profile to group as member
-            const newMember = {
-                profile: currentUserProfile
-            }
             group.members.push(currentUserProfile);
             group.save(); 
 
             //add group to profiles memberships
-            const newMembership = {
-                group: group
-            }
             currentUserProfile.membership.push(group);
             currentUserProfile.save(); 
             
