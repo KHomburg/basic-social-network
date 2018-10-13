@@ -252,21 +252,6 @@ router.get("/mycontent/comments/:page", authenticate.checkLogIn, authenticate.re
         })
 });
 
-//post delete a single education entry from profile(Private)
-//post /profile/edudelete
-router.post("/addcontact", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
-    const currentUserProfile = req.currentUserProfile    
-    Profile.findById({_id: req.body.profileId}, (err, profile) => {
-        if(profile){
-            currentUserProfile.contacts.push(profile);
-            currentUserProfile.save(); 
-        } else {
-            console.log("profile could not be found")
-        }
-        res.redirect("/profile/id/" +req.body.profileId)     
-    })
-});
-
 
 router.get("/test", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile

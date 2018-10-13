@@ -15,6 +15,7 @@ const users ={};
 const profile ={};
 const post ={};
 const group ={};
+const contacts ={};
 const statics ={};
 
 //View:
@@ -22,6 +23,7 @@ users.view = require('./routes/users');
 profile.view = require('./routes/profile');
 post.view = require('./routes/post');
 group.view = require('./routes/group');
+contacts.view = require('./routes/contacts');
 statics.view = require('./routes/statics');
 
 
@@ -56,6 +58,7 @@ app.use('/users', users.view, express.static('public'));
 app.use('/profile', profile.view, express.static('public'));
 app.use('/post', post.view, express.static('public'));
 app.use('/group', group.view, express.static('public'));
+app.use('/contacts', contacts.view, express.static('public'));
 app.use('/', statics.view, express.static('public'));
 
 

@@ -1,0 +1,43 @@
+<% include ../../partials/head %>
+
+<% include ../../partials/header %>
+<% include ../../partials/sidebar %>
+
+<body>
+    <div class="main">
+        <h1> contacts list </h1>
+
+        <%console.log(contacts)%>        
+        <% if(contacts){ contacts.forEach((contact) => { %>
+            <div class="uk-card uk-card-default uk-width-1-2@m">
+                <div class="uk-card-header">
+                    <div class="uk-grid-small uk-flex-middle" uk-grid>
+                        <div class="uk-width-auto">
+                            <img class="uk-border-circle" width="40" height="40" src="images/maxresdefault.jpg">
+                        </div>
+                        <div class="uk-width-expand">
+                            <h3 class="uk-card-title uk-margin-remove-bottom"><%= contact._id.name %></h3>
+                            <p class="uk-text-meta uk-margin-remove-top">                    
+                                <form action="/contacts/removecontact" method="post">
+                                    <input type="hidden" name="profileId" value="<%= contact._id._id %>">
+                                    <button type="submit" value="<%= contact._id._id %>" class="uk-button uk-button-primary uk-button-small">Kontakt Entfernen</button>                  
+                                </form>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+
+        <% })} %>
+
+
+
+
+
+
+
+    </div>
+</body>
+
+<% include ../../partials/foot %>

@@ -105,12 +105,12 @@
 
                 <% if(profile._id.toString() == currentUserProfile._id.toString()){%>
                 <%} else if(isContact == false) { %>
-                    <form action="/profile/addcontact" method="post">
+                    <form action="/contacts/addcontact" method="post">
                         <input type="hidden" name="profileId" value="<%= profile._id %>">
                         <button type="submit" value="<%= profile._id %>" class="uk-button uk-button-primary uk-button-small">Kontakt hinzufügen</button>                  
                     </form>
                 <%} else if(isContact == true) { %>
-                    <form action="/profile/removecontact" method="post">
+                    <form action="/contacts/removecontact" method="post">
                         <input type="hidden" name="profileId" value="<%= profile._id %>">
                         <button type="submit" value="<%= profile._id %>" class="uk-button uk-button-primary uk-button-small">Kontakt Entfernen</button>                  
                     </form>
