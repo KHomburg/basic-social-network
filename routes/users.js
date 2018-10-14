@@ -57,7 +57,7 @@ router.post("/register", (req, res) => {
             } else {
                 //else create new User
                 const newUser = new User({
-                    email: req.body.email,
+                    email: req.body.email.toLowerCase(),
                     password: req.body.password
                 });
 
@@ -111,7 +111,7 @@ router.post("/login", (req, res) => {
         return res.status(400).json(errors);
     }
 
-    const email = req.body.email;
+    const email = req.body.email.toLowerCase();
     const password = req.body.password;
 
     //Finde user by email
@@ -129,7 +129,6 @@ router.post("/login", (req, res) => {
                 .then(isMatch => {
                     if (isMatch) {
 
-                        console.log("create session");
                         req.session.userId = user._id;
                         console.log("session created");
                         res.redirect("/users/current");
