@@ -252,6 +252,39 @@ router.get("/mycontent/comments/:page", authenticate.checkLogIn, authenticate.re
         })
 });
 
+//get all users
+//Get /list
+router.get('/list', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    const contacts = currentUserProfile.contacts
+
+    //constants for pagination
+    const perPage = 50
+    const page = req.params.page || 1
+
+    Profile.find()
+        .sort({name: 1})
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
+        .populate("profile")
+        .exec((err1, profiles) => {
+
+
+            Profile.count()
+                .exec((err2, count) => {
+                    if(profiles){
+                        res.render("pages/profile/allusers", {profiles, currentUserProfile, current: page, pages: Math.ceil(count / perPage) });
+                    }else if(err1){
+                        console.log(err1)
+                    }else if(err2){
+                        console.log(err2)
+                    }else{
+                        console.log("Something went wrong while executing /profile/allusers")
+                    }   
+                })
+        })   
+});
+
 
 router.get("/test", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
