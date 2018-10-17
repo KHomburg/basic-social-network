@@ -34,61 +34,71 @@ router.get("/register", (req, res) => res.render("pages/users/register"));
 //registration route (Public)
 //post /users/register
 router.post("/register", (req, res) => {
-    //fill in errors object if any occure and check validation
-    const {
-        errors,
-        isValid
-    } = validateRegisterInput(req.body);
+    
+    //check if registration code is a valid profile id
+    Profile.findById({_id: req.body.code})
+        .exec((err1, profile) => {
+            if(profile){
 
-    //check if everything's valid
-    if (!isValid) {
-        return res.status(400).json(errors);
-    }
+                
+                    //fill in errors object if any occure and check validation
+                    const {
+                        errors,
+                        isValid
+                    } = validateRegisterInput(req.body);
 
-    //look wether the a User with that email adress already exists
-    User.findOne({
-            email: req.body.email
-        })
-        .then(user => {
-            //if user with that email is found, throw error
-            if (user) {
-                errors.email = "Email already exists"
-                return res.status(400).json(errors);
-            } else {
-                //else create new User
-                const newUser = new User({
-                    email: req.body.email.toLowerCase(),
-                    password: req.body.password
-                });
+                    //check if everything's valid
+                    if (!isValid) {
+                        return res.status(400).json(errors);
+                    }
 
-                //initialize password encryption
-                bcrypt.genSalt(10, (err, salt) => {
-                    bcrypt.hash(newUser.password, salt, (err, hash) => {
-                        if (err) throw err;
-                        newUser.password = hash;
-                        //save new User
-                        newUser.save()
-                            .then((user) => {
-                                res.json(user);
-                                const createdUser = user;
-                            })
-                            .catch(err => console.log(err))
-
-                            //Create the profile
-                            .then(createProfile => {
-                                const newProfile = new Profile({
-                                    name: req.body.name,
-                                    user: newUser._id
+                    //look wether the a User with that email adress already exists
+                    User.findOne({
+                            email: req.body.email
+                        })
+                        .then(user => {
+                            //if user with that email is found, throw error
+                            if (user) {
+                                errors.email = "Email already exists"
+                                return res.status(400).json(errors);
+                            } else {
+                                //else create new User
+                                const newUser = new User({
+                                    email: req.body.email.toLowerCase(),
+                                    password: req.body.password
                                 });
-                                newProfile.save()
-                                    .then(console.log("Profile saved:" + newProfile))
-                                    .catch(err => console.log(err));
-                            });
-                    })
-                })
+
+                                //initialize password encryption
+                                bcrypt.genSalt(10, (err, salt) => {
+                                    bcrypt.hash(newUser.password, salt, (err, hash) => {
+                                        if (err) throw err;
+                                        newUser.password = hash;
+                                        //save new User
+                                        newUser.save()
+                                            .then((user) => {
+                                                res.json(user);
+                                                const createdUser = user;
+                                            })
+                                            .catch(err => console.log(err))
+
+                                            //Create the profile
+                                            .then(createProfile => {
+                                                const newProfile = new Profile({
+                                                    name: req.body.name,
+                                                    user: newUser._id
+                                                });
+                                                newProfile.save()
+                                                    .then(console.log("Profile saved:" + newProfile))
+                                                    .catch(err => console.log(err));
+                                            });
+                                    })
+                                })
+                            }
+                        })
+            } else {
+                res.send("wrong registration code")
             }
         })
-
 });
 
 
