@@ -17,20 +17,18 @@ router.get("/test", (req, res) => res.json({msg: "Posts Works"}));
 router.get("/stream/:page", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
-    const streamSubs = []
-    currentUserProfile.membership.forEach((member) =>{
-        streamSubs.push(member._id)
-    })
-    currentUserProfile.moderatorOf.forEach((mod) =>{
-        streamSubs.push(mod._id)
-    })
+    //creating an Array of id's of the subed groups
+    const subedGroups = Array.from(
+        currentUserProfile.membership.concat(currentUserProfile.moderatorOf), 
+        (group) => {group._id._id}
+        )
 
     //constants for pagination
     const perPage = 30
     const page = req.params.page || 1
 
     //search the posts
-    Post.find({"group": { $in: streamSubs}})
+    Post.find({"group": { $in: subedGroups}})
         .sort({date: -1})
         .skip((perPage * page) - perPage)
         .limit(perPage)
@@ -94,8 +92,8 @@ router.post("/comment/create", authenticate.checkLogIn, authenticate.reqSessionP
                 text: req.body.text,
                 parentPost: req.body.postId,
             })
-            newComment.save();
 
+            newComment.save();
             post.comments.push(newComment);
             post.save(); 
             res.redirect("/post/id/" +postID)
@@ -118,14 +116,11 @@ router.post("/subcomment/create", authenticate.checkLogIn, authenticate.reqSessi
                 parentPost: req.body.postId,
                 parentComment: req.body.commentId,
             })
-            //var index = req.body.index.toString()
 
             newSubComment.save();
-
             comment.subcomments.push(newSubComment);
             comment.save(); 
             res.redirect("/post/id/" +postID)
-
         } else {               
                 console.log(err);
         }
@@ -151,7 +146,6 @@ router.post('/comment/delete', authenticate.checkLogIn, authenticate.reqSessionP
             comments.splice(index,1)            
             post.save()
 
-            //deleting comment in the comment collection
             Comment.findByIdAndDelete(findComment._id)
                 .exec(
                     res.redirect("/post/id/" +req.body.postId)
@@ -166,7 +160,6 @@ router.post('/comment/delete', authenticate.checkLogIn, authenticate.reqSessionP
 router.post('/subcomment/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     Comment.findOne({_id: req.body.commentId})
         .exec((err, comment) =>{
-            var commentId = req.body.commentId
             var subCommentId = req.body.subCommentId
 
             //find subComment in subComments            
