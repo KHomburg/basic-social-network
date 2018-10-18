@@ -231,7 +231,6 @@ router.get("/mycontent/comments/:page", authenticate.checkLogIn, authenticate.re
                                     //sum up comments & subcomments
                                     const allCount = commentCount + subCommentCount
 
-
                                     if(comment && subComment){
                                         console.log(allComments)
                                         res.render("pages/profile/mycomments", {allComments, currentUserProfile, current: page, pages: Math.ceil(allCount / perPage) });

@@ -10,9 +10,25 @@
                             <div class="uk-navbar-dropdown uk-active" uk-dropdown="offset: -15">
                                 <ul class="uk-nav uk-navbar-dropdown-nav">
                                     <li>
+                                        <a href="/profile/mycontent/posts/1">Deine Posts</a>
+                                        <li class="uk-nav-divider"></li>
+                                    </li>
+                                    <li>
+                                        <a href="/profile/mycontent/comments/1">Von dir Kommentierte Posts</a>
+                                        <li class="uk-nav-divider"></li>
+                                    </li>
+                                    <li>
+                                        <a href="/contacts/list">Deine Kontakte</a>
+                                        <li class="uk-nav-divider"></li>  
+                                    </li>
+                                    <li>
                                         <a href="/profile/id/<%= currentUserProfile._id %>">Dein Profil</a>
+                                        <li class="uk-nav-divider"></li>  
+                                    </li>
                                     <li>
                                         <a href="/profile/edit">Profil bearbeiten</a>
+                                        <li class="uk-nav-divider"></li>  
+                                    </li>
                                     <li>
                                         <a href="/users/logout">Logout</a>
                                     </li>
@@ -21,38 +37,25 @@
                         </li>
                     </li>
                     <li>
-                        <a>Deine Beiträge</a>
-                        <div class="uk-navbar-dropdown uk-active" uk-dropdown="offset: -15">
-                            <ul class="uk-nav uk-navbar-dropdown-nav">
-                                <li>
-                                    <a href="/profile/mycontent/posts/1">Deine Posts</a>
-                                <li>
-                                    <a href="/profile/mycontent/comments/1">Von dir Kommentierte Posts</a>
-                                </li>
-                            </ul>
-                        </div>
+                        <li class="">
+                            <a href="/post/stream/1">Neue Posts</a>
+                        </li>
                     </li>
                     <li>
                         <li class="">
                             <a href="#">Nachrichten</a>
                         </li>
                     </li>
-                        <li class="">
-                            <a href="/contacts/list">Deine Kontakte</a>
-                        </li>
-                    </li>
-                        <li class="">
-                            <a href="/profile/list">Alle Profile</a>
-                        </li>
-                    </li>
-                    <li class="">
-                        <a href="/group/all/1/">Alle Gruppen</a>
-                    </li>
-                </li>
                 </ul>
             </div>
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
+                <li class="">
+                    <a href="/group/all/1/">Alle Gruppen</a>
+                </li>   
+                <li class="">
+                    <a href="/profile/list">Alle Profile</a>
+                </li>
                     <li>
                         <a href="#">Parent</a>
                         <div class="uk-navbar-dropdown">

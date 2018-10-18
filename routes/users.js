@@ -141,7 +141,7 @@ router.post("/login", (req, res) => {
 
                         req.session.userId = user._id;
                         console.log("session created");
-                        res.redirect("/users/current");
+                        res.redirect("/post/stream/1");
                     } else {
                         errors.password = "Password incorrect";
                         return res.status(400).json(errors);

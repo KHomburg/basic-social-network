@@ -17,43 +17,40 @@ router.get("/test", (req, res) => res.json({msg: "Posts Works"}));
 router.get("/stream/:page", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
-    Comment.find()
-        .exec((err, comments) => {
-            //console.log("Kommentare:" + comments)
-            Post.find({"comments._id": { $in: comments}})
-                .exec((err, post) => {
-                    console.log("Posts:" +post)
-                })
+    const streamSubs = []
+    currentUserProfile.membership.forEach((member) =>{
+        streamSubs.push(member._id)
+    })
+    currentUserProfile.moderatorOf.forEach((mod) =>{
+        streamSubs.push(mod._id)
+    })
+
+    //constants for pagination
+    const perPage = 30
+    const page = req.params.page || 1
+
+    //search the posts
+    Post.find({"group": { $in: streamSubs}})
+        .sort({date: -1})
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
+        .populate(        
+            [
+                {
+                    path: "profile",
+                    model: "profile"
+                },
+                {
+                    path: "group",
+                    model: "group"
+                },
+            ]
+        )
+        .exec((err, posts) => {
+            res.render("pages/posts/stream", {currentUserProfile, posts});
         })
 });
-//router.get("/stream/:page", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
-//
-//    //constants for pagination
-//    const perPage = 3
-//    const page = req.params.page || 1
-//
-//    const currentUserProfile = req.currentUserProfile;
-//    const membershipArray = currentUserProfile.membership;
-//    const moderatorArray = currentUserProfile.moderatorOf;
-//
-//    //concat => array of groups
-//    //find in post matching groups
-//    //sort
-//    
-//
-//    Post.find()
-//        //.populate("profile")
-//        //.$where("profile.membership._id" == "5b7a883e4bfbc849e8defeef")
-//        //.skip((perPage * page) - perPage)
-//        //.limit(perPage)        
-//        .exec((posts) => {
-//            var streamPosts = [];
-//
-//            //posts.group
-//            console.log(posts)
-//            //res.render("pages/posts/stream", {currentUserProfile, posts});
-//        })
-//})
+
 
 //post request for form for creating a new post
 //post /post/create; (private)
@@ -196,7 +193,6 @@ router.post('/subcomment/delete', authenticate.checkLogIn, authenticate.reqSessi
 router.get('/id/:id', authenticate.checkLogIn, authenticate.reqSessionProfile,(req, res) => {
     const currentUserProfile = req.currentUserProfile
     Post.findOne({_id: req.params.id})
-    //.populate("profile", "comments.comment")
     .populate(
         [
             {
