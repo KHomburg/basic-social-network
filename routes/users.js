@@ -7,6 +7,7 @@ const authenticate = require("../config/authenticate");
 //Load Input Validation
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
+const validateChangeEmail = require("../validation/change-email");
 
 //Load models
 const User = require("../models/User");
@@ -39,8 +40,6 @@ router.post("/register", (req, res) => {
     Profile.findById({_id: req.body.code})
         .exec((err1, profile) => {
             if(profile){
-
-                
                     //fill in errors object if any occure and check validation
                     const {
                         errors,
@@ -148,6 +147,71 @@ router.post("/login", (req, res) => {
                     }
                 })
         });
+});
+
+//change email route (Public)
+//post /users/changemail
+router.post("/changemail", (req, res) => {
+    
+    //check if registration code is a valid profile id
+    User.findById({_id: req.body.id})
+        .exec((err1, user) => {
+            if(user){                
+
+                /*TODO:
+                Check valid E-mail is given
+                Check E-mail doesn't already exists
+                */
+                
+                //fill in errors object if any occure and check validation
+                const {
+                    errors,
+                    isValid
+                } = validateChangeEmail(req.body);
+
+                //check if everything's valid
+                if (!isValid) {
+                    return res.status(400).json(errors);
+                }
+
+                    const password = req.body.password;
+                    const newEmail = req.body.newEmail;
+
+                    User.findOne({email: newEmail})
+                        .exec(
+                            (err2, knownUser) => {
+                                console.log(knownUser)
+
+                                //check if email already exists
+                                if(knownUser) {
+                                    res.send("Email Adresse wird schon benutzt")
+                                } else {
+
+                                    //check password
+                                    bcrypt.compare(password, user.password)
+                                    .then(isMatch => {
+                                        if (isMatch) {
+
+                                            //set and save new Email
+                                            user.email = newEmail;
+                                            user.save();
+
+                                            console.log("Email changed");
+                                            res.redirect("back");
+                                        } else {
+                                            errors.password = "Password incorrect";
+                                            return res.status(400).json(errors);
+                                        }
+                                    })
+                                }
+                            }
+                        )
+            } else {
+                console.log(user)
+                res.send("Etwas lief schief")
+            }
+        }
+    )
 });
 
 //logout Route (Private)

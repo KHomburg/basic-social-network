@@ -72,7 +72,6 @@ router.post("/edit", authenticate.checkLogIn, (req, res) => {
         },
         {new: true}, 
         (err, profile) => {
-        //var currentUserProfile = profile
         res.redirect("/profile/edit")
     })
 });
@@ -203,7 +202,6 @@ router.get("/mycontent/comments/:page", authenticate.checkLogIn, authenticate.re
             Comment.count()
                 .exec((err2, commentCount) => {
                     //find subcomments
-
                     Subcomment.find({profile: currentUserProfile})
                         .sort({date: -1})
                         .skip((perPage * page) - perPage)
@@ -267,8 +265,6 @@ router.get('/list', authenticate.checkLogIn, authenticate.reqSessionProfile, (re
         .limit(perPage)
         .populate("profile")
         .exec((err1, profiles) => {
-
-
             Profile.count()
                 .exec((err2, count) => {
                     if(profiles){

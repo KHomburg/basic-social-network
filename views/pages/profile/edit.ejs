@@ -12,6 +12,7 @@
             <li><a href="#">Social/General</a></li>
             <li><a href="#">Education</a></li>
             <li><a href="#">Experience</a></li>
+            <li><a href="#">Allgemeines</a></li>
         </ul>
         <ul class="uk-switcher uk-margin">
             <li>
@@ -179,6 +180,25 @@
                             </tr>
                         </tbody>
                     </table>
+                    <input class="uk-button uk-button-default uk-button-small" type="submit" value="Speichern">
+                </form>
+            </li>
+            <li>
+                <form class="uk-form-width-large uk-margin-small" action="/users/changemail" method="post">                  
+                    <h5>Email Adresse ändern</h5>                    
+                    <table class="uk-table uk-table-hover uk-table-small profile__form">
+                        <tbody>
+                            <tr>
+                                <td class="uk-width-small">E-Mail</td>
+                                <td><input class="uk-input uk-form-small" id="newEmail" type="newEmail" name="newEmail" placeholder="Neue E-Mail Adresse eingeben"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">Passwort</td>
+                                <td><input class="uk-input uk-form-small" id="password" type="password" name="password" placeholder="Passwort zum bestätigen"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <input type="hidden" name="id" value="<%= currentUserProfile.user %>">
                     <input class="uk-button uk-button-default uk-button-small" type="submit" value="Speichern">
                 </form>
             </li>
