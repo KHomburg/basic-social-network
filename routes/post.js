@@ -17,11 +17,11 @@ router.get("/test", (req, res) => res.json({msg: "Posts Works"}));
 router.get("/stream/:page", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
-    //creating an Array of id's of the subed groups
-    const subedGroups = Array.from(
-        currentUserProfile.membership.concat(currentUserProfile.moderatorOf), 
-        (group) => {group._id._id}
-        )
+    const subedGroups = [];
+    currentUserProfile.membership.concat(currentUserProfile.moderatorOf).forEach((group) => {
+        subedGroups.push(group._id._id)
+        }
+    )
 
     //constants for pagination
     const perPage = 30
@@ -45,6 +45,7 @@ router.get("/stream/:page", authenticate.checkLogIn, authenticate.reqSessionProf
             ]
         )
         .exec((err, posts) => {
+            
             res.render("pages/posts/stream", {currentUserProfile, posts});
         })
 });
