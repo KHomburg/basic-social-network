@@ -201,6 +201,30 @@
                     <input type="hidden" name="id" value="<%= currentUserProfile.user %>">
                     <input class="uk-button uk-button-default uk-button-small" type="submit" value="Speichern">
                 </form>
+                
+                </br>
+
+                <form class="uk-form-width-large uk-margin-small" action="/users/changepassword" method="post">  
+                    <h5>Password ändern</h5>                    
+                    <table class="uk-table uk-table-hover uk-table-small profile__form">
+                        <tbody>
+                            <tr>
+                                <td class="uk-width-small">Passwort</td>
+                                <td><input class="uk-input uk-form-small" id="password" type="password" name="password" placeholder="Passwort zum bestätigen"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">Neues Password</td>
+                                <td><input class="uk-input uk-form-small" id="newPW" type="newPW" name="newPW" placeholder="Neues Passwort eingeben"></td>
+                            </tr>
+                            <tr>
+                                <td class="uk-width-small">Bestätige Password</td>
+                                <td><input class="uk-input uk-form-small" id="newPW2" type="newPW2" name="newPW2" placeholder="Neues Passwort bestätigen"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <input type="hidden" name="id" value="<%= currentUserProfile.user %>">
+                    <input class="uk-button uk-button-default uk-button-small" type="submit" value="Speichern">
+                </form>
             </li>
         </ul>
     </body>

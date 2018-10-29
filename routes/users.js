@@ -8,6 +8,7 @@ const authenticate = require("../config/authenticate");
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
 const validateChangeEmail = require("../validation/change-email");
+const validateChangePassword = require("../validation/change-pw");
 
 //Load models
 const User = require("../models/User");
@@ -53,7 +54,7 @@ router.post("/register", (req, res) => {
 
                     //look wether the a User with that email adress already exists
                     User.findOne({
-                            email: req.body.email
+                            email: req.body.email.toLowerCase()
                         })
                         .then(user => {
                             //if user with that email is found, throw error
@@ -157,11 +158,6 @@ router.post("/changemail", (req, res) => {
     User.findById({_id: req.body.id})
         .exec((err1, user) => {
             if(user){                
-
-                /*TODO:
-                Check valid E-mail is given
-                Check E-mail doesn't already exists
-                */
                 
                 //fill in errors object if any occure and check validation
                 const {
@@ -175,7 +171,7 @@ router.post("/changemail", (req, res) => {
                 }
 
                     const password = req.body.password;
-                    const newEmail = req.body.newEmail;
+                    const newEmail = req.body.newEmail.toLowerCase();
 
                     User.findOne({email: newEmail})
                         .exec(
@@ -212,6 +208,61 @@ router.post("/changemail", (req, res) => {
             }
         }
     )
+});
+
+//change password route (Public)
+//post /users/changepassword
+router.post("/changepassword", (req, res) => {
+    console.log(req.body)
+    
+    //check if registration code is a valid profile id
+    User.findById({_id: req.body.id})
+        .exec((err1, user) => {
+            if(user){
+                    //fill in errors object if any occure and check validation
+                    const {
+                        errors,
+                        isValid
+                    } = validateChangePassword(req.body);
+
+                    //check if everything's valid
+                    if (!isValid) {
+                        return res.status(400).json(errors);
+                    }
+
+                    const password = req.body.password;
+                    const newPW = req.body.newPW;
+                    const newPW2 = req.body.newPW2;
+
+                            //check password
+                            bcrypt.compare(password, user.password)
+                            .then(isMatch => {
+                                if (isMatch) {
+
+                                    //initialize password encryption
+                                    bcrypt.genSalt(10, (err, salt) => {
+                                        bcrypt.hash(newPW, salt, (err, hash) => {
+                                            if (err) throw err;
+                                            user.password = hash;
+                                            //save new User
+                                            user.save()
+                                                .then((user) => {
+                                                    res.redirect("back");
+                                                })
+                                                .catch(err => console.log(err))
+                                        })
+                                    })
+
+                                } else {
+                                    errors.password = "Password incorrect";
+                                    return res.status(400).json(errors);
+                                }
+                            })                            
+                        
+            } else {
+                res.send("wrong registration code")
+            }
+        })
 });
 
 //logout Route (Private)
