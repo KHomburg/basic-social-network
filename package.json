@@ -4,7 +4,7 @@
   "description": "reddit like plattform",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --timeout 3000 --recursive"
   },
   "author": "",
   "license": "ISC",
@@ -25,11 +25,14 @@
   },
   "devDependencies": {
     "browser-sync": "^2.24.6",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-livereload": "^3.8.1",
     "gulp-refresh": "^1.1.0",
     "gulp-sass": "^4.0.1",
-    "gulp-uglify": "^3.0.1"
+    "gulp-uglify": "^3.0.1",
+    "mocha": "^5.2.0"
   }
 }
