@@ -56,10 +56,20 @@ router.post("/removecontact", authenticate.checkLogIn, authenticate.reqSessionPr
 //Get /list
 router.get('/list', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
-    const contacts = currentUserProfile.contacts
+    let contacts = currentUserProfile.contacts
+    
+    //check for deleted profiles in contacts list
+    for (var i = 0; i < contacts.length && contacts[i]; i++) {            
+            //console.log(contact._id)
+            if (contacts[i]._id == null){
+                //console.log(contacts.indexOf(contact))
+                contacts.splice(i, 1)
+                i--
+            }
+    }
+    currentUserProfile.save()
 
-    res.render("pages/profile/contacts", {currentUserProfile, contacts});     
-
+    res.render("pages/profile/contacts", {currentUserProfile, contacts});
 });
 
 module.exports = router;
