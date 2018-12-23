@@ -27,19 +27,6 @@ const GroupSchema = new Schema({
             },
         }
     ],
-    entries: [
-        {
-            post: {
-                type: Schema.Types.ObjectId,
-                ref: "posts"
-            },
-            date: {
-                type: Date,
-                default: Date.now
-            }
-        }
-        
-    ],
     date: {
         type: Date,
         default: Date.now

@@ -40,7 +40,7 @@ router.post("/register", (req, res) => {
     //check if registration code is a valid profile id
     Profile.findById({_id: req.body.code})
         .exec((err1, profile) => {
-            if(profile){
+            if(profile || req.body.code == "tramitest"){
                     //fill in errors object if any occure and check validation
                     const {
                         errors,

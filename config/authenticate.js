@@ -69,7 +69,7 @@ module.exports.reqSessionProfile = (req, res, next) => {
         }else if(err){ 
             console.log(err)
         }else{
-            res.send("Something went wrong, couldn't find your profile (you are not logged in)!")
+            res.send("Something went wrong, cannot find your profile (you are not logged in)!")
         }
     })
 }
