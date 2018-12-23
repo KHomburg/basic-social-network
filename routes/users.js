@@ -13,6 +13,10 @@ const validateChangePassword = require("../validation/change-pw");
 //Load models
 const User = require("../models/User");
 const Profile = require("../models/Profile");
+const Group = require("../models/Group");
+const Post = require("../models/Post");
+const Comment = require("../models/Comment");
+const Subcomment = require("../models/Subcomment");
 
 //test route
 router.get("/test", (req, res) => {
@@ -270,6 +274,133 @@ router.post("/changepassword", (req, res) => {
 router.get('/logout', (req,res) => {
     if(req.session.userId){
         req.session.destroy();
+        res.send("You are logged out now")
+    } else {
+        res.send("You are not logged in")
+    }
+});
+
+//User Delete Route (Private)
+//also deletes profile and all comments and posts by User
+//Get users/logout
+router.get('/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req,res) => {
+
+    const currentUserProfile = req.currentUserProfile
+
+    Post.deleteMany({profile: currentUserProfile})
+        .exec((err1, posts) => {console.log("Posts------------------------------ \n" + posts)})
+    
+    Comment.deleteMany({profile: currentUserProfile})
+        .exec((err2, comments) => {console.log("Comments------------------------------ \n" + comments)})
+
+    Subcomment.deleteMany({profile: currentUserProfile})
+        .exec((err2, subcomments) => {console.log("Subcomments------------------------------ \n" + subcomments)})
+
+    User.deleteOne({_id: currentUserProfile.user})
+        .exec((err2, user) => {console.log("User------------------------------ \n" + user)})
+
+    Profile.deleteOne({_id: currentUserProfile._id})
+        .exec((err2, profile) => {console.log("Profile------------------------------ \n" + profile)})
+
+    console.log(currentUserProfile.membership)
+
+
+
+
+
+    //filling an array with all group-ids of memberships
+    const subedGroups = [];
+    currentUserProfile.membership.forEach((group) => {
+        subedGroups.push(group._id._id)
+        }
+    )
+
+    //filling an array with all group-ids of moderations
+    const modedGroups = [];
+    currentUserProfile.moderatorOf.forEach((group) => {
+        modedGroups.push(group._id._id)
+        }
+    )
+    
+    //removing all memberships in groups
+    Group.find({"_id": { $in: subedGroups}})
+        .populate([
+            {
+                path: "members.profile",
+                model: "profile"
+            },
+        ])
+        .exec((err, groups) => {
+            groups.forEach((group) => {
+                let findIndexOfMember = () => {
+                    //finding index of profile's in group's member array
+                    return group.members.indexOf(
+                        //find profile in member array
+                        group.members.find(
+                            member => member.toString() == currentUserProfile._id.toString()
+                        )
+                    )
+                }
+                //splice currentUser out of members array of group
+                group.members.splice(findIndexOfMember(),1);
+
+                //find index of group in profile's membership array
+                let membershipIndex = () => {
+                    return currentUserProfile.membership.indexOf(
+                        currentUserProfile.membership.find(
+                            membership => membership._id._id.toString() == group._id.toString()
+                        )
+                    )
+                };
+                //splice group out of membership- array of profile
+                currentUserProfile.membership.splice(membershipIndex(), 1)
+                
+                group.save();
+            })
+            currentUserProfile.save();
+        })
+
+        //removing all memberships in modedgroups
+        Group.find({"_id": { $in: modedGroups}})
+            .populate([
+                {
+                    path: "moderatorOf.profile",
+                    model: "profile"
+                },
+            ])
+            .exec((err, groups) => {
+                groups.forEach((group) => {
+                    let findIndexOfMod = () => {
+                        //finding index of profile's in group's member array
+                        return group.moderator.indexOf(
+                            //find profile in member array
+                            group.moderator.find(
+                                mod => mod.toString() == currentUserProfile._id.toString()
+                            )
+                        )
+                    }
+                    //splice currentUser out of members array of group
+                    group.moderator.splice(findIndexOfMod(),1);
+
+                    //find index of group in profile's membership array
+                    let modIndex = () => {
+                        return currentUserProfile.moderatorOf.indexOf(
+                            currentUserProfile.moderatorOf.find(
+                                modOf => modOf._id._id.toString() == group._id.toString()
+                            )
+                        )
+                    };
+                    //splice group out of membership-array of profile
+                    currentUserProfile.moderatorOf.splice(modIndex(), 1)
+                    
+                    group.save();
+                })
+                currentUserProfile.save();
+            })
+
+
+    
+    if(req.session.userId){
         res.send("You are logged out now")
     } else {
         res.send("You are not logged in")
