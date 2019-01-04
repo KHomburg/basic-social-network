@@ -88,6 +88,7 @@ const createComment = (req, res) => {
                 profile: currentUserProfile,
                 text: req.body.text,
                 parentPost: req.body.postId,
+                group: req.body.groupId,
             })
 
             newComment.save();
@@ -110,6 +111,7 @@ const createSubComment = (req, res) => {
                 text: req.body.text,
                 parentPost: req.body.postId,
                 parentComment: req.body.commentId,
+                group: req.body.groupId,
             })
 
             newSubComment.save();

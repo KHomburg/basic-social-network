@@ -15,6 +15,10 @@ const CommentSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    group: {
+        type: Schema.Types.ObjectId,
+        ref: "group"
+    },
     subcomments: [
         {
             subcomment: {

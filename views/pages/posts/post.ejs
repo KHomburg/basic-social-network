@@ -5,6 +5,7 @@
 
 
 <body>
+<%const group = post.group%>
     <div class="main">
         <!-- Card for post -->
         <div class="post">
@@ -118,6 +119,7 @@
                                             <input type="hidden" name="postId" value="<%= post._id %>">
                                             <input type="hidden" name="commentId" value="<%= comment._id._id %>">
                                             <input type="hidden" name="index" value="<%= index %>">
+                                            <input type="hidden" name="groupId" value="<%= group %>"></br>
                                             <input class="uk-button uk-button-primary uk-button-small" type="submit" value="Absenden">
                                         </fieldset>
                                     </form>
@@ -139,6 +141,7 @@
                 <fieldset class="uk-fieldset">
                     <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben"></textarea>
                     <input type="hidden" name="postId" value="<%= post._id %>"></br>
+                    <input type="hidden" name="groupId" value="<%= group %>"></br>
                     <input class="uk-button uk-button-primary uk-button-small" type="submit" value="Absenden">
                 </fieldset>
             </form>

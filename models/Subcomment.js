@@ -21,6 +21,10 @@ const SubcommentSchema = new Schema({
     parentComment: {
         type: Schema.Types.ObjectId,
         ref: "comment"
+    },
+    group: {
+        type: Schema.Types.ObjectId,
+        ref: "group"
     }
 })
 
