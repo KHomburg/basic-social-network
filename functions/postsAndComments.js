@@ -131,49 +131,70 @@ const deletePost = (req, res) => {
         })
 }
 
+/*
+deletes a comment object by a id and deletes it from the comments array of the parentPost
+function need the comment id through req.body.commentId and a profile id through req.currentUserProfile
+req.currentUserProfile needs to either the id of the profile in the comment object (the poster)
+or the moderator of the group the parentPost has been posted to
+*/
 const deleteComment = (req, res) => {
     const currentUserProfile = req.currentUserProfile
-    
-    Post.findOne({_id: req.body.postId})
-    .populate(
-            [
-                {
-                    path: "group",
-                    model: "group"
-                },
-                {
-                    path: "comments._id",
-                    model: "comment",
-                }
-            ]
-    )
-    .exec((err, post) =>{
-        var commentId = req.body.commentId
-        var comments = post.comments
+    const commentId = req.body.commentId
 
-        //Check if currentUser is moderate of the group, the comment is in
-        var findModerator = post.group.moderator.find((mod) => {
+    //find comment & populate with parentPost and parentPost.group
+    Comment.findById(commentId)
+    .populate(
+        [
+            {
+                path:"parentPost",
+                model:"post",
+                populate: [
+                    {
+                        path:"group",
+                        model:"group"
+                    }
+                ]
+            }
+        ]
+    )
+    .exec((err, comment) => {
+        const group = comment.parentPost.group;
+        const post = comment.parentPost;
+        const postsComments = post.comments;
+
+        //Check if currentUser is moderator of the group, the comment is in
+        let isModerator = post.group.moderator.find((mod) => {
             return mod._id.toString() == currentUserProfile._id.toString()
         })
 
-        //find comment in comments array
-        var commentToDelete = comments.find((comment) => {
+        //Check if currentUser is OP of the comment
+        let userIsOP = (comment) => {
+            if(currentUserProfile._id.toString() == comment.profile._id.toString()){
+                return true
+            }else{
+                return false
+            }
+        }
+
+        //find comment in posts->comments array
+        let commentInPost = postsComments.find((comment) => {
             return comment._id._id == commentId
         })
 
-        if(commentToDelete || findModerator){
-            //find index of deleting comment
-            var index = comments.indexOf(commentToDelete);
+        //find index of deleting comment
+        const index = postsComments.indexOf(commentInPost);
+                
+        if(commentInPost && (isModerator || userIsOP(comment))){
+
             //splice deleting comment out
-            comments.splice(index,1)            
-            post.save()
+            postsComments.splice(index,1)            
+            post.save().then(comment.remove())
+            res.redirect("/post/id/" +req.body.postId)
 
-            Comment.findByIdAndDelete(commentToDelete._id)
-                .exec(
-                    res.redirect("/post/id/" +req.body.postId)
-                )
+
+        }else{
+            console.log("error in post/comment/delete - not op or mod")
         }
-
     })
 }
 
