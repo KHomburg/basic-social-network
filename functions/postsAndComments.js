@@ -189,40 +189,85 @@ const deleteComment = (req, res) => {
         if(commentInPost && (isModerator || userIsOP(comment))){
 
             //splice deleting comment out
-            postsComments.splice(index,1)            
+            postsComments.splice(index,1)
+            //save post and remove comment         
             post.save().then(comment.remove())
             res.redirect("/post/id/" +req.body.postId)
-
-
         }else{
             console.log("error in post/comment/delete - not op or mod")
         }
     })
 }
 
+
+/*
+deletes a Subcomment object by a id and deletes it from the Subcomments array of the parentComment
+function needs the Subcomment id through req.body.subCommentId and a profile id through req.currentUserProfile
+req.currentUserProfile needs to either the id of the profile in the comment object (the poster)
+or the moderator of the group the parentPost has been posted to
+*/
 const deleteSubComment = (req, res) => {
     const currentUserProfile = req.currentUserProfile
-    Comment.findOne({_id: req.body.commentId})
-        .exec((err, comment) =>{
-            var subCommentId = req.body.subCommentId
+    const subCommentId = req.body.subCommentId
 
-            //find subComment in subComments            
-            var findSubComment = comment.subcomments.find((subComment) => {
-                return subComment._id == subCommentId
-            })
+    //find comment & populate with parentPost and parentPost.group
+    Subcomment.findById(subCommentId)
+    .populate(
+        [
+            {
+                path:"parentComment",
+                model:"comment"
+            },
+            {
+                path:"parentPost",
+                model:"post",
+                populate: [
+                    {
+                        path:"group",
+                        model:"group"
+                    }
+                ]
+            }
+        ]
+    )
+    .exec((err, subComment) => {
+        const comment = subComment.parentComment
+        const group = comment.parentPost.group;
+        const post = subComment.parentPost;
+        const commentsSubcomments = comment.subcomments
 
-            //find index of deleting comment
-            var index = comment.subcomments.indexOf(findSubComment);
-
-            //splice deleting comment out
-            comment.subcomments.splice(index,1)  
-            comment.save()
-
-            Subcomment.findByIdAndDelete(findSubComment._id)
-                .exec(
-                    res.redirect("/post/id/" +req.body.postId)
-                )
+        //Check if currentUser is moderator of the group, the subcomment is in
+        let isModerator = post.group.moderator.find((mod) => {
+            return mod._id.toString() == currentUserProfile._id.toString()
         })
+
+        //Check if currentUser is OP of the subComment
+        let userIsOP = (subComment) => {
+            if(currentUserProfile._id.toString() == subComment.profile._id.toString()){
+                return true
+            }else{
+                return false
+            }
+        }
+
+        //find subComment in parentComment->subComments array
+        let subCommentInComment = commentsSubcomments.find((subComment) => {
+            return subComment._id._id == subCommentId
+        })
+
+        //find index of deleting subcomment
+        const index = commentsSubcomments.indexOf(subCommentInComment);
+                
+        if(subCommentInComment && (isModerator || userIsOP(subComment))){
+            //splice deleting subcomment out
+            commentsSubcomments.splice(index,1)
+            //save comment and remove subcomment            
+            comment.save().then(subComment.remove())
+            res.redirect("/post/id/" +req.body.postId)
+        }else{
+            console.log("error in post/comment/delete - not op or mod")
+        }
+    })
 }
 
 const getStream = (req, res) => {
