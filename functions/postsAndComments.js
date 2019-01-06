@@ -281,6 +281,8 @@ const deleteSubComment = (req, res) => {
     })
 }
 
+
+//Function for showing the stream of new posts on the frontpage
 const getStream = (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
@@ -318,6 +320,49 @@ const getStream = (req, res) => {
 }
 
 
+//function for reporting posts/comments/subcomments
+const reportContent = (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    Group.findById(req.body.groupID, (err, group)=> {
+        if(group){
+            const newReportedContent = {
+                content: req.body.ID,
+                contentType: req.body.contentType,
+                reportedBy: req.body.reportedBy,
+                reason: req.body.reason,
+            }
+
+            //check which kind of content is reported
+            if(req.body.contentType == "post"){
+                group.reprtedContent = group.reportedPosts
+            } else if (req.body.contentType == "comment") {
+                group.reprtedContent = group.reportedComments
+            }else if(req.body.contentType == "subcomment"){
+                group.reprtedContent = group.reportedSubcomments
+            }
+                
+            //check if content has allready been reported
+            const findDoubles = group.reprtedContent.find((report)=>{
+                return report.content.toString() == newReportedContent.content.toString()
+            })
+
+            //if content has not reported => push to group.reportedContent and save
+            if(!findDoubles){
+                group.reprtedContent.push(newReportedContent)
+                group.save()
+                    .then(console.log(newReportedContent + " has been reported!"))
+                    //.catch(console.log("something went wrong while trying to report object:" + newReportedContent))  ALWAYS EXECUTES THE CATCH FOR A REASON
+            }else{
+                console.log("content already reported")
+            }
+
+        }else{
+            console.log("something went wrong: could not find group, on /post/reportContent")
+        }
+    })
+}
+
+
 
 module.exports = {
     createPost,
@@ -328,4 +373,5 @@ module.exports = {
     deleteSubComment,
     getPost,
     getStream,
+    reportContent,
 }

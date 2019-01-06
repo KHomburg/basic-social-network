@@ -84,10 +84,17 @@
   margin: 20px; }
 
 .delete-btn {
-  text-align: right;
+  /*text-align: right;*/
   padding: 0px 7px 0px 7px;
   font-size: 0.65rem;
-  line-height: 20px; }
+  line-height: 20px; 
+  }
+
+.report-btn {
+  padding: 0px 7px 0px 7px;
+  font-size: 0.65rem;
+  line-height: 20px;
+  margin: 5px 2px 5px 2px; }
 
 .login-form {
   background-color: white;

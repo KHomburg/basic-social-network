@@ -27,6 +27,54 @@ const GroupSchema = new Schema({
             },
         }
     ],
+    reportedPosts:[
+        {
+            content:{
+                type: Schema.Types.ObjectId,
+                ref: "post",
+                require: true,
+            },
+            reportedBy: {
+                type: Schema.Types.ObjectId,
+                ref: "profile"
+            },
+            reason: {
+                type: String,
+            }
+        }
+    ],
+    reportedComments:[
+        {
+            content:{
+                type: Schema.Types.ObjectId,
+                ref: "comment",
+                require: true,
+            },
+            reportedBy: {
+                type: Schema.Types.ObjectId,
+                ref: "profile"
+            },
+            reason: {
+                type: String,
+            }
+        }
+    ],
+    reportedSubcomments:[
+        {
+            content:{
+                type: Schema.Types.ObjectId,
+                ref: "subcomment",
+                require: true,
+            },
+            reportedBy: {
+                type: Schema.Types.ObjectId,
+                ref: "profile"
+            },
+            reason: {
+                type: String,
+            }
+        }
+    ],
     date: {
         type: Date,
         default: Date.now

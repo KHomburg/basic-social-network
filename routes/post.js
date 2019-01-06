@@ -65,5 +65,14 @@ router.get('/id/:id', authenticate.checkLogIn, authenticate.reqSessionProfile,(r
     postsAndComments.getPost(req, res)
 });
 
+//report content (posts/comments/subcomments)(Private)
+//POST /post/report
+router.post('/reportcontent', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    postsAndComments.reportContent(req, res)
+});
+
+
+
+
 
 module.exports = router;
