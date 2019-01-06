@@ -91,10 +91,16 @@ const createComment = (req, res) => {
                 group: req.body.groupId,
             })
 
-            newComment.save();
-            post.comments.push(newComment);
-            post.save(); 
-            res.redirect("/post/id/" +postID)
+            newComment.save()
+                .then(()=>{
+                    post.comments.push(newComment);
+                    post.save();
+                    res.redirect("/post/id/" +postID); 
+                })
+                .catch((err)=> {
+                    console.log(err)
+                })
+                
         } else {               
                 console.log(err);
         }
@@ -114,10 +120,15 @@ const createSubComment = (req, res) => {
                 group: req.body.groupId,
             })
 
-            newSubComment.save();
-            comment.subcomments.push(newSubComment);
-            comment.save(); 
-            res.redirect("/post/id/" +postID)
+            newSubComment.save()
+                .then(()=>{
+                    comment.subcomments.push(newSubComment);
+                    comment.save(); 
+                    res.redirect("/post/id/" +postID)
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
         } else {               
                 console.log(err);
         }
