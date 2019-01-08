@@ -60,14 +60,18 @@ router.post("/subcomment/create", authenticate.checkLogIn, authenticate.reqSessi
 //post request for deleting a post-comment
 //post /post/comment/delete; (private)
 router.post('/comment/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
-    postsAndComments.deleteComment(req, res)
+    postsAndComments.deleteComment(req,res, (groupName) => {
+        res.redirect("/group/name/" +groupName)
+    })
 });
 
 
 //post request for deleting a subcomment
 //post /post/subcomment/delete; (private)
 router.post('/subcomment/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
-    postsAndComments.deleteSubComment(req, res)
+    postsAndComments.deleteSubComment(req,res, (groupName) => {
+        res.redirect("/group/name/" +groupName)
+    })
 });
 
 //get posts by in in params(Private)

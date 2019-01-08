@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const authenticate = require("../config/authenticate");
 
+//Load custom functions
+const postsAndComments = require("../functions/postsAndComments");
+
 //Load models
 const User = require("../models/User");
 const Profile = require("../models/Profile");
@@ -131,4 +134,185 @@ router.post("/subscribe", authenticate.checkLogIn, authenticate.reqSessionProfil
     })
 })
 
+
+////get all reported content of a group
+////get /name/mod/reportlist/:name
+router.get("/mod/reportlist/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    Group.findOne({name: req.params.name})
+    .populate(
+        [
+            {
+                path: "reportedPosts.content",
+                model: "post",
+                populate: [
+                    {
+                        path:"profile",
+                        model:"profile"
+                    }
+                ]
+            },
+            {
+                path: "reportedComments.content",
+                model: "comment",
+                populate: [
+                    {
+                        path:"profile",
+                        model:"profile"
+                    }
+                ]
+            },
+            {
+                path: "reportedSubcomments.content",
+                model: "subcomment",
+                populate: [
+                    {
+                        path:"profile",
+                        model:"profile"
+                    }
+                ]
+            },
+        ]
+    )
+    .exec((err, group) => {
+            if(group){
+            const groupID = group._id
+            const reportedPosts= group.reportedPosts
+            const reportedComments= group.reportedComments
+            const reportedSubcomments= group.reportedSubcomments
+            const reported = reportedPosts.concat(reportedComments.concat(reportedSubcomments))
+
+            //check for deleted post in reportedPosts list and splice them out
+            for (var i = 0; i < reportedPosts.length && reportedPosts[i]; i++) {            
+                if (reportedPosts[i].content == null){
+                    reportedPosts.splice(i, 1)
+                    i--
+                }
+            }
+            //check for deleted post in reportedComments list and splice them out
+            for (var i = 0; i < reportedComments.length && reportedComments[i]; i++) {            
+                if (reportedComments[i].content == null){
+                    reportedComments.splice(i, 1)
+                    i--
+                }
+            }
+            //check for deleted post in reportedSubcomments list and splice them out
+            for (var i = 0; i < reportedSubcomments.length && reportedSubcomments[i]; i++) {            
+                if (reportedSubcomments[i].content == null){
+                    reportedSubcomments.splice(i, 1)
+                    i--
+                }
+            }
+            group.save()
+            
+
+            //var content = []
+            //reported.forEach((x) =>{
+            //    content.push(x.content.profile)
+            //})
+            //console.log(content)
+            
+            res.render("pages/group/mod-panel", {currentUserProfile, reportedPosts, reportedComments, reportedSubcomments, groupID})
+        }else{
+            console.log("unable to find group")
+        }
+    })
+});
+
+//post request for deleting a post
+//post /mod/post/delete; (private)
+router.post('/mod/post/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const groupID = req.body.groupID
+    const reportedPost = req.body.reportedPost
+
+    //find group for remove the reported post from reportedPosts list
+    Group.findById(groupID)
+    .exec((err, group)=>{
+
+        //find reported post in reportedPosts array
+        const findReportedPost = group.reportedPosts.find((post) => {
+            return post._id.toString() == reportedPost.toString()
+        })
+
+        //find index of removing reportedPost
+        const postIndex = group.reportedPosts.indexOf(findReportedPost);
+
+        if(findReportedPost){
+            group.reportedPosts.splice(postIndex, 1)
+            group.save()
+                .then(
+                    postsAndComments.deletePost(req, res, (groupName) => {
+                        res.redirect("/group/mod/reportlist/" +groupName)
+                    })
+                )
+        }else{
+            console.log("error in group/mod/post/delete")
+        }
+    })
+});
+
+//post request for deleting a comment
+//post /post/comment/delete; (private)
+router.post('/mod/comment/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const groupID = req.body.groupID
+    const reportedComment = req.body.reportedComment
+
+    //find group for remove the reported post from reportedPosts list
+    Group.findById(groupID)
+    .exec((err, group)=>{
+
+        //find reported post in reportedComments array
+        const findReportedComment = group.reportedComments.find((comment) => {
+            return comment._id.toString() == reportedComment.toString()
+        })
+
+        //find index of removing reportedComment
+        const commentIndex = group.reportedComments.indexOf(findReportedComment);
+
+        if(findReportedComment){
+            group.reportedComments.splice(commentIndex, 1)
+            group.save()
+                .then(
+                    postsAndComments.deleteComment(req, res, (groupName) => {
+                        res.redirect("/group/mod/reportlist/" +groupName)
+                    })
+                )
+        }else{
+            console.log("error in group/mod/comment/delete")
+        }
+    })
+});
+
+
+//post request for deleting a comment
+//post /post/comment/delete; (private)
+router.post('/mod/subcomment/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const groupID = req.body.groupID
+    const reportedSubcomment = req.body.reportedSubcomment
+
+    //find group for remove the reported post from reportedPosts list
+    Group.findById(groupID)
+    .exec((err, group)=>{
+
+        //find reported post in reportedComments array
+        const findReportedSubcomment = group.reportedSubcomments.find((subcomment) => {
+            return subcomment._id.toString() == reportedSubcomment.toString()
+        })
+
+        //find index of removing reportedComment
+        const subcommentIndex = group.reportedSubcomments.indexOf(findReportedSubcomment);
+
+        if(findReportedSubcomment){
+            group.reportedSubcomments.splice(subcommentIndex, 1)
+            group.save()
+                .then(
+                    postsAndComments.deleteSubComment(req, res, (groupName) => {
+                        res.redirect("/group/mod/reportlist/" +groupName)
+                    })
+                )
+        }else{
+            console.log("error in group/mod/subcomment/delete")
+        }
+    })
+});
 module.exports = router;

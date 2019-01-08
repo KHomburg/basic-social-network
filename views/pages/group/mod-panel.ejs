@@ -1,0 +1,121 @@
+<% include ../../partials/head %>
+
+<% include ../../partials/header %>
+<% include ../../partials/sidebar %>
+<body>
+    <div class="main">
+
+    <!-- Cards for post -->
+    <% if(reportedPosts.length > 0){ %>
+    <h3 class="uk-margin-remove">Reported Posts:</h3>        
+    <% reportedPosts.forEach((reportedPost) => { %>
+    <div class="post uk-inline">
+        <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+            <div class="uk-width-auto uk-margin-remove">
+                <img class="uk-comment-avatar" src="images/maxresdefault.jpg" width="80" height="80" alt="">
+            </div>
+            <div class="uk-width-expand uk-margin-remove">
+                <h3 class="uk-comment-title uk-margin-remove"><%= reportedPost.content.title %></h3>                    
+                <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><a href="/profile/id/<%= reportedPost.content.profile._id %>">Von: <%= reportedPost.content.profile.name %></a></p>
+                <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><%= reportedPost.content.date.toDateString("de-De") + " " + reportedPost.content.date.toLocaleTimeString("de-De") %></p>
+            </div>
+        </header>
+        <hr class="divider__b">
+        <div class="uk-comment-body">
+            <p><%= reportedPost.content.text %></p>
+        </div>
+
+        <!-- Delete Button for Post-->
+        <form action="/group/mod/post/delete" method="post">
+            <div class="uk-margin-top" style="display:none">
+                <input type="hidden" name="postId" value= <%= reportedPost.content._id %>></br>
+                <input type="hidden" name="groupID" value= <%= groupID %>></br>
+                <input type="hidden" name="reportedPost" value= <%= reportedPost._id %>></br>
+            </div>
+            <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
+        </form>
+    </div>
+    <% })} %>
+
+    <% if(reportedComments.length > 0){ %>
+    <h3 class="uk-margin-remove">Reported Comments:</h3>        
+    <% reportedComments.forEach((reportedComment) => { %>
+
+    <!--Cards for Comments -->
+    <div class="post uk-inline">
+        <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+            <div class="uk-width-auto uk-margin-remove">
+                <img class="uk-comment-avatar" src="images/maxresdefault.jpg" width="80" height="80" alt="">
+            </div>
+            <div class="uk-width-expand uk-margin-remove">
+                <h3 class="uk-comment-title uk-margin-remove"><a href="/post/id/<%= reportedComment.content.parentPost %>">Zum Post: <%= reportedComment.content.parentPost %></a></h3>                    
+                <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><a href="/profile/id/<%= reportedComment.content.profile._id %>"> Von: <%= reportedComment.content.profile.name %></a></p>
+                <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><%= reportedComment.content.date.toDateString("de-De") + " " + reportedComment.content.date.toLocaleTimeString("de-De") %></p>
+            </div>
+        </header>
+        <hr class="divider__b">
+        <div class="uk-comment-body">
+            <p><%= reportedComment.content.text %></p>
+        </div>
+
+        <!-- Delete Button for Comments-->
+        <form action="/group/mod/comment/delete" method="post">
+            <div class="uk-margin-top" style="display:none">
+                <input type="hidden" name="commentId" value= <%= reportedComment.content._id %>></br>
+                <input type="hidden" name="groupID" value= <%= groupID %>></br>
+                <input type="hidden" name="reportedComment" value= <%= reportedComment._id %>></br>
+            </div>
+            <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
+        </form>
+    </div>
+
+
+    <% })} %>
+
+    <% if(reportedSubcomments.length > 0){ %>
+    <h3 class="uk-margin-remove">Reported Subcomments:</h3>        
+    <% reportedSubcomments.forEach((reportedSubcomment) => { %>
+
+    <!--Cards for Subomments -->
+    <div class="post uk-inline">
+        <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+            <div class="uk-width-auto uk-margin-remove">
+                <img class="uk-comment-avatar" src="images/maxresdefault.jpg" width="80" height="80" alt="">
+            </div>
+            <div class="uk-width-expand uk-margin-remove">
+                <h3 class="uk-comment-title uk-margin-remove"><a href="/post/id/<%= reportedSubcomment.content.parentPost %>">Zum Post: <%= reportedSubcomment.content.parentPost %></a></h3>                    
+                <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><a href="/profile/id/<%= reportedSubcomment.content.profile._id %>"> Von: <%= reportedSubcomment.content.profile.name %></a></p>
+                <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><%= reportedSubcomment.content.date.toDateString("de-De") + " " + reportedSubcomment.content.date.toLocaleTimeString("de-De") %></p>
+            </div>
+        </header>
+        <hr class="divider__b">
+        <div class="uk-comment-body">
+            <p><%= reportedSubcomment.content.text %></p>
+        </div>
+
+        <!-- Delete Button for Subcomments-->
+        <form action="/group/mod/subcomment/delete" method="post">
+            <div class="uk-margin-top" style="display:none">
+                <input type="hidden" name="subCommentId" value= <%= reportedSubcomment.content._id %>></br>
+                <input type="hidden" name="groupID" value= <%= groupID %>></br>
+                <input type="hidden" name="reportedSubcomment" value= <%= reportedSubcomment._id %>></br>
+            </div>
+            <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
+        </form>
+    </div>
+
+
+    <% })} %>
+
+
+
+
+
+
+
+
+    </main>
+</body>
+
+<% include ../../partials/footer %>
+<% include ../../partials/foot %>
