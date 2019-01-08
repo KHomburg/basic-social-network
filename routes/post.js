@@ -28,11 +28,22 @@ router.post("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, 
     postsAndComments.createPost(req, res)
 })
 
+////post request for deleting a post
+////post /post/post/delete; (private)
+//router.post('/post/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+//    postsAndComments.deletePost(req,res, (groupName) => {
+//        res.redirect("/group/name/" +groupName)
+//    })
+//})
+
 //post request for deleting a post
 //post /post/post/delete; (private)
 router.post('/post/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
-    postsAndComments.deletePost(req, res)
-});
+    postsAndComments.deletePost(req,res, (groupName) => {
+        res.redirect("/group/name/" +groupName)
+    })
+})
+
 
 //post request for form for creating a new comment for post
 //post /post/comment/create; (private)
