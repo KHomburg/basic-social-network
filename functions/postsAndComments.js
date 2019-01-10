@@ -245,7 +245,6 @@ or the moderator of the group the parentPost has been posted to
 const deleteSubComment = (req, res, callback) => {
     const currentUserProfile = req.currentUserProfile
     const subCommentId = req.body.subCommentId
-    console.log("test1"+ subCommentId)
 
     //find comment & populate with parentPost and parentPost.group
     Subcomment.findById(subCommentId)
@@ -271,9 +270,7 @@ const deleteSubComment = (req, res, callback) => {
             }
         ]
     )
-    .exec((err, subComment) => {
-        console.log("test2"+ subComment)
-        
+    .exec((err, subComment) => {        
         const group = subComment.group;
         const groupName = group.name
 
@@ -339,7 +336,7 @@ const getStream = (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
     const subedGroups = [];
-    currentUserProfile.membership.concat(currentUserProfile.moderatorOf).forEach((group) => {
+    currentUserProfile.membership.forEach((group) => {
         subedGroups.push(group._id._id)
         }
     )

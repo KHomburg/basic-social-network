@@ -34,6 +34,16 @@
             </div>
             <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
         </form>
+
+        <!-- Accept-Content Button for Post-->
+        <form action="/group/mod/reportlist/removecontent" method="post">
+            <div class="uk-margin-top" style="display:none">
+                <input type="hidden" name="postId" value= <%= reportedPost.content._id %>></br>
+                <input type="hidden" name="groupID" value= <%= groupID %>></br>
+                <input type="hidden" name="reportedPost" value= <%= reportedPost._id %>></br>
+            </div>
+            <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Nicht Löschen">
+        </form>
     </div>
     <% })} %>
 
@@ -66,6 +76,16 @@
                 <input type="hidden" name="reportedComment" value= <%= reportedComment._id %>></br>
             </div>
             <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
+        </form>
+
+        <!-- Accept-Content Button for Comment-->
+        <form action="/group/mod/reportlist/removecontent" method="post">
+            <div class="uk-margin-top" style="display:none">
+                <input type="hidden" name="commentId" value= <%= reportedComment.content._id %>></br>
+                <input type="hidden" name="groupID" value= <%= groupID %>></br>
+                <input type="hidden" name="reportedComment" value= <%= reportedComment._id %>></br>
+            </div>
+            <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Nicht Löschen">
         </form>
     </div>
 
@@ -101,6 +121,16 @@
                 <input type="hidden" name="reportedSubcomment" value= <%= reportedSubcomment._id %>></br>
             </div>
             <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
+        </form>
+
+        <!-- Accept-Content Button for SubComment-->
+        <form action="/group/mod/reportlist/removecontent" method="post">
+            <div class="uk-margin-top" style="display:none">
+                <input type="hidden" name="subCommentId" value= <%= reportedSubcomment.content._id %>></br>
+                <input type="hidden" name="groupID" value= <%= groupID %>></br>
+                <input type="hidden" name="reportedSubcomment" value= <%= reportedSubcomment._id %>></br>
+            </div>
+            <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Nicht Löschen">
         </form>
     </div>
 

@@ -28,14 +28,6 @@ router.post("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, 
     postsAndComments.createPost(req, res)
 })
 
-////post request for deleting a post
-////post /post/post/delete; (private)
-//router.post('/post/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
-//    postsAndComments.deletePost(req,res, (groupName) => {
-//        res.redirect("/group/name/" +groupName)
-//    })
-//})
-
 //post request for deleting a post
 //post /post/post/delete; (private)
 router.post('/post/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
@@ -61,7 +53,7 @@ router.post("/subcomment/create", authenticate.checkLogIn, authenticate.reqSessi
 //post /post/comment/delete; (private)
 router.post('/comment/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     postsAndComments.deleteComment(req,res, (groupName) => {
-        res.redirect("/group/name/" +groupName)
+        res.redirect("/post/id/" +req.body.postId)
     })
 });
 
@@ -70,7 +62,7 @@ router.post('/comment/delete', authenticate.checkLogIn, authenticate.reqSessionP
 //post /post/subcomment/delete; (private)
 router.post('/subcomment/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     postsAndComments.deleteSubComment(req,res, (groupName) => {
-        res.redirect("/group/name/" +groupName)
+        res.redirect("/post/id/" +req.body.postId)
     })
 });
 
