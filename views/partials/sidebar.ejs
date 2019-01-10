@@ -10,9 +10,8 @@
                 <li class="uk-parent">
                     <a href="#">Als Moderator</a>
                         <ul class="uk-nav-sub">
-                            <% currentUserProfile.moderatorOf.forEach((group) => { %>     
-                                
-                                <li><a href="/group/name/<%= group._id.name %>"><%= group._id.name %></a></li>
+                            <% currentUserProfile.moderatorOf.forEach((group) => { %>                                 
+                                <li><a href="/group/mod/reportlist/<%= group._id.name %>"><%= group._id.name %></a></li>
                             <% }) %>
                         </ul>
                 </li>    
