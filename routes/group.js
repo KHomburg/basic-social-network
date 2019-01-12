@@ -145,6 +145,14 @@ router.get("/mod/reportlist/:name", authenticate.checkLogIn, authenticate.reqSes
     .populate(
         [
             {
+                path: "members._id",
+                model:"profile",
+            },
+            {
+                path: "moderator._id",
+                model:"profile",
+            },
+            {
                 path: "reportedPosts.content",
                 model: "post",
                 populate: [
@@ -179,7 +187,7 @@ router.get("/mod/reportlist/:name", authenticate.checkLogIn, authenticate.reqSes
     .exec((err, group) => {
             if(group){
                 const ifUserIsMod = group.moderator.find((moderator)=>{
-                    return moderator._id.toString() == currentUserProfile._id.toString()
+                    return moderator._id._id.toString() == currentUserProfile._id.toString()
                 })
 
                 if(ifUserIsMod){
@@ -212,7 +220,7 @@ router.get("/mod/reportlist/:name", authenticate.checkLogIn, authenticate.reqSes
                     }
                     group.save()
                     
-                    res.render("pages/group/mod-panel", {currentUserProfile, reportedPosts, reportedComments, reportedSubcomments, groupID})
+                    res.render("pages/group/mod-panel", {currentUserProfile, group, reportedPosts, reportedComments, reportedSubcomments, groupID})
                 } else{
                     console.log("cannot show this site: User is not a moderator of this group")
                 }
@@ -324,7 +332,6 @@ router.post('/mod/subcomment/delete', authenticate.checkLogIn, authenticate.reqS
 router.post('/mod/reportlist/removecontent', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const groupID = req.body.groupID
 
-
     //find group for remove the reported post from reportedPosts list
     Group.findById(groupID)
     .exec((err, group)=>{
@@ -358,4 +365,34 @@ router.post('/mod/reportlist/removecontent', authenticate.checkLogIn, authentica
         }
     })
 });
+
+//post request for adding a member of a group to moderators
+//post /name/mod/reportlist/removecontent; (private)
+router.post("/mod/addmod", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    const groupID = req.body.groupId
+    const profileId = req.body.profileId
+    console.log(profileId)
+    Group.findById(groupID)
+        .exec((err1, group) => {
+            if(group){
+                Profile.findById(profileId)
+                    .exec((err2, profile) => {
+                        if(profile){
+
+                            //push group to profile.moderatorOf; push profile to group.moderator
+                            group.moderator.push(profile)
+                            profile.moderatorOf.push(group)
+                            group.save()
+                            profile.save().then(res.redirect('back'))
+                        }else{
+                            console.log(err2)
+                        }
+                    })
+            }else{
+                console.log(err1)
+            }
+        })
+})
+
 module.exports = router;
