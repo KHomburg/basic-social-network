@@ -8,25 +8,36 @@ const imageUpload = require("../functions/image-upload");
 //Load custom functions
 const postsAndComments = require("../functions/postsAndComments");
 
+//Load models
+const Avatar = require("../models/Avatar");
 
-router.get("/test",  authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => { 
+
+router.get("/test", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => { 
     const currentUserProfile = req.currentUserProfile
     res.render("pages/test", {currentUserProfile})
 });
 
 
-router.post('/upload1', function (req, res, next) {
+router.post('/upload1', authenticate.checkLogIn, authenticate.reqSessionProfile, function (req, res, next) {
+    const currentUserProfile = req.currentUserProfile
     var upload = multer({
         storage: imageUpload.avatar
     })
     .single('avatar')
 	upload(req, res, function(err) {
         console.log(req.body)
+        console.log(req.file)
+        const id = req.file.filename.toString()
+        const newAvatar = new Avatar({
+            _id : id,
+            profile : currentUserProfile,
+        })
+        newAvatar.save()
+        currentUserProfile.avatar = newAvatar;
+        currentUserProfile.save()
 
 		res.end('File is uploaded')
-	})
-
-
+    })
 })
 
 router.post('/upload2',  function (req, res, next) {

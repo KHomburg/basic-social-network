@@ -11,6 +11,10 @@ const ProfileSchema = new Schema({
         type: String,
         required: true
     },
+    avatar:{
+        type: Schema.Types.ObjectId,
+        ref: "avatar"
+    },
     location: {
         type: String
     },
