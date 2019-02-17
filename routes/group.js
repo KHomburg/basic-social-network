@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const authenticate = require("../config/authenticate");
+const authenticate = require("../functions/authenticate");
 
 //Load custom functions
 const postsAndComments = require("../functions/postsAndComments");

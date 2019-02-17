@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const keys = require("../config/keys");
-const authenticate = require("../config/authenticate");
+const authenticate = require("../functions/authenticate");
 
 //Load Input Validation
 const validateRegisterInput = require("../validation/register");

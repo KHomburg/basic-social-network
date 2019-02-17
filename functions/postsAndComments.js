@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const authenticate = require("../config/authenticate");
+const authenticate = require("./authenticate");
 
 //Load models
 const User = require("../models/User");
