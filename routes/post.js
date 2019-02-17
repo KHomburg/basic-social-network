@@ -1,19 +1,48 @@
 const express = require("express");
 const router = express.Router();
 const authenticate = require("../config/authenticate");
+const multer = require('multer');
+const imageUpload = require("../functions/image-upload");
+
 
 //Load custom functions
 const postsAndComments = require("../functions/postsAndComments");
 
-//Load models
-const User = require("../models/User");
-const Profile = require("../models/Profile");
-const Group = require("../models/Group");
-const Post = require("../models/Post");
-const Comment = require("../models/Comment");
-const Subcomment = require("../models/Subcomment");
 
-router.get("/test", (req, res) => res.json({msg: "Posts Works"}));
+router.get("/test",  authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => { 
+    const currentUserProfile = req.currentUserProfile
+    res.render("pages/test", {currentUserProfile})
+});
+
+
+router.post('/upload1', function (req, res, next) {
+    var upload = multer({
+        storage: imageUpload.avatar
+    })
+    .single('avatar')
+	upload(req, res, function(err) {
+        console.log(req.body)
+
+		res.end('File is uploaded')
+	})
+
+
+})
+
+router.post('/upload2',  function (req, res, next) {
+    var upload = multer({
+        storage: imageUpload.contentImage
+    })
+    .single('image')
+	upload(req, res, function(err) {
+        console.log(req.body)
+
+
+		res.end('File is uploaded')
+	})
+
+})
+
 
 ////get request for post stream
 ////get /stream/:page; (private)

@@ -1,15 +1,26 @@
-<% include ../../partials/head %>
+<% include ../partials/head %>
 
-<% include ../../partials/header %>
-
-
-
-=> Content here
+<% console.log(currentUserProfile) %>
 
 
 
+<form action="post/upload1" method="post" enctype="multipart/form-data">
+    <input type="file" name='avatar'/>
+    <input type="text" name="text">
+    <button>Submit</button>
+</form>
+</br>
 
-<% include ../../partials/foot %>
+<form action="post/upload2" method="post" enctype="multipart/form-data">
+    <input type="file" name='image'/>
+    <input type="text" name="text">
+    <button>Submit</button>
+</form>
+
+
+
+
+<% include ../partials/foot %>
 
 
 

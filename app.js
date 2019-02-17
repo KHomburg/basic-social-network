@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const keys = require("./config/keys");
 const multer = require('multer');
-const upload = multer(); 
+
 const session = require('express-session'); //for authentication Session
 const cookieParser = require('cookie-parser'); //for creating cookies (prob. not necessary in the future)
 const MongoStore = require('connect-mongo')(session); //for storing sessions server side
@@ -33,8 +33,21 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 
+
+
+//Load models
+const User = require("./models/User");
+const Profile = require("./models/Profile");
+const Group = require("./models/Group");
+const Post = require("./models/Post");
+const Comment = require("./models/Comment");
+const Subcomment = require("./models/Subcomment");
+
+
+
+
 //Cookie middleware
-app.use(upload.array());
+//app.use(upload.single('avatar'));
 app.use(cookieParser());
 app.use(session({secret: keys.secretOrKey, saveUninitialized: false, resave: true, store: new MongoStore({ mongooseConnection: mongoose.connection }) }));
 
