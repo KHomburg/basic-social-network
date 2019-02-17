@@ -78,6 +78,29 @@ router.post("/edit", authenticate.checkLogIn, (req, res) => {
     })
 });
 
+
+//Upload and save avatar for profile
+router.post('/avatar', authenticate.checkLogIn, authenticate.reqSessionProfile, function (req, res, next) {
+    const currentUserProfile = req.currentUserProfile
+    var upload = multer({
+        storage: imageUpload.avatar
+    })
+    .single('avatar')
+	upload(req, res, function(err) {
+        console.log(req.body)
+        console.log(req.file)
+        const id = req.file.filename.toString()
+        const newAvatar = new Avatar({
+            _id : id,
+            profile : currentUserProfile,
+        })
+        newAvatar.save()
+        currentUserProfile.avatar = newAvatar;
+        currentUserProfile.save()
+        res.redirect("/profile/edit")
+    })
+})
+
 //adds profile experiences entry(Private)
 //post /profile/experience
 router.post("/experience", authenticate.checkLogIn, (req, res) => {

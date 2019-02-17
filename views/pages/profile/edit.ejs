@@ -13,6 +13,7 @@
             <li><a href="#">Education</a></li>
             <li><a href="#">Experience</a></li>
             <li><a href="#">Allgemeines</a></li>
+            <li><a href="#">Profilbild</a></li>
         </ul>
         <ul class="uk-switcher uk-margin">
             <li>
@@ -225,6 +226,15 @@
                     <input type="hidden" name="id" value="<%= currentUserProfile.user %>">
                     <input class="uk-button uk-button-default uk-button-small" type="submit" value="Speichern">
                 </form>
+            </li>
+            <li>
+            <form action="profile/avatar" method="post" enctype="multipart/form-data">
+                <div class="js-upload" uk-form-custom>
+                    <input type="file" name='avatar' multiple>
+                    <button class="uk-button uk-button-default" type="button" tabindex="-1">Select</button>
+                </div>
+                <button class="uk-button uk-button-default uk-button" type="submit" value="Speichern">Submit</button>
+            </form>
             </li>
         </ul>
     </body>
