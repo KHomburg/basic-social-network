@@ -3,6 +3,7 @@ const router = express.Router();
 const authenticate = require("../functions/authenticate");
 const multer = require('multer');
 const imageUpload = require("../functions/image-upload");
+const sharp = require("sharp");
 
 //Load models
 const User = require("../models/User");
@@ -94,6 +95,17 @@ router.post('/avatar', authenticate.checkLogIn, authenticate.reqSessionProfile, 
             _id : id,
             profile : currentUserProfile,
         })
+        let file = req.file.destination + "/" + req.file.filename
+        sharp(file)
+            .resize({height: 1000}) //resizing to max. height 1000px autoscaled
+            .toFormat("jpeg")   //changes format to jpeg
+            .jpeg({
+                quality: 60,    //changes image quality to *number* percent
+            })
+            .toFile('./public/images/avatars/' + req.file.filename) // TODO: change upload dir
+            .then(info => { console.log(info)})
+            .catch(err => { console.log(err)});
+
         newAvatar.save()
         currentUserProfile.avatar = newAvatar;
         currentUserProfile.save()
