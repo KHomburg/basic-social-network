@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authenticate = require("../functions/authenticate");
 const multer = require('multer');
-const imageUpload = require("../functions/image-upload");
+const image = require("../functions/image");
 const sharp = require("sharp");
 
 //Load models
@@ -54,7 +54,7 @@ router.get("/edit", authenticate.checkLogIn, authenticate.reqSessionProfile, aut
     const currentUserProfile = req.currentUserProfile
     const currentUser = req.currentUser
     const userEmail = currentUser.email
-    res.render("pages/profile/edit", {currentUserProfile, userEmail});
+    res.render("pages/profile/edit", {currentUserProfile, userEmail, showAvatar:image.showAvatar(currentUserProfile) });
 })
 
 //post changes for profile (Private)
@@ -81,10 +81,11 @@ router.post("/edit", authenticate.checkLogIn, (req, res) => {
 
 
 //Upload and save avatar for profile
+// TODO: delete originally uploaded file
 router.post('/avatar', authenticate.checkLogIn, authenticate.reqSessionProfile, function (req, res, next) {
     const currentUserProfile = req.currentUserProfile
     var upload = multer({
-        storage: imageUpload.avatar
+        storage: image.uploadAvatar
     })
     .single('avatar')
 	upload(req, res, function(err) {

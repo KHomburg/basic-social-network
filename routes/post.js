@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authenticate = require("../functions/authenticate");
 const multer = require('multer');
-const imageUpload = require("../functions/image-upload");
+const image = require("../functions/image");
 
 
 //Load custom functions
@@ -18,10 +18,12 @@ router.get("/test", authenticate.checkLogIn, authenticate.reqSessionProfile, (re
 });
 
 
+
+// TODO: delete following two routes
 router.post('/upload1', authenticate.checkLogIn, authenticate.reqSessionProfile, function (req, res, next) {
     const currentUserProfile = req.currentUserProfile
     var upload = multer({
-        storage: imageUpload.avatar
+        storage: image.uploadAvatar
     })
     .single('avatar')
 	upload(req, res, function(err) {
@@ -42,7 +44,7 @@ router.post('/upload1', authenticate.checkLogIn, authenticate.reqSessionProfile,
 
 router.post('/upload2',  function (req, res, next) {
     var upload = multer({
-        storage: imageUpload.contentImage
+        storage: imageUpload.uploadContentImage
     })
     .single('image')
 	upload(req, res, function(err) {
