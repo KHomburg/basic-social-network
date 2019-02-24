@@ -51,9 +51,6 @@ router.get('/id/:id', authenticate.checkLogIn, authenticate.reqSessionProfile, (
 //get edit page for profile (Private)
 //get /profile/edit
 router.get("/edit", authenticate.checkLogIn, authenticate.reqSessionProfile, authenticate.sessionUser, (req, res) => {
-    const currentUserProfile = req.currentUserProfile
-    const currentUser = req.currentUser
-    const userEmail = currentUser.email
     res.render("pages/profile/edit", {currentUserProfile, userEmail, showAvatar:image.showAvatar(currentUserProfile) });
 })
 

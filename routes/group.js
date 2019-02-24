@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const authenticate = require("../functions/authenticate");
 
 //Load custom functions
 const postsAndComments = require("../functions/postsAndComments");
+const authenticate = require("../functions/authenticate");
+const image = require("../functions/image");
 
 //Load models
 const User = require("../models/User");
@@ -41,7 +42,7 @@ router.get("/all/:page", authenticate.checkLogIn, authenticate.reqSessionProfile
 
 })
 
-//get groups by name in params(Private)
+//get groups by name in params(Private) showing all th posts in that group
 //Get /group/name/:id
 router.get('/name/:name', authenticate.checkLogIn, authenticate.reqSessionProfile,(req, res) => {
     const currentUserProfile = req.currentUserProfile
@@ -67,6 +68,9 @@ router.get('/name/:name', authenticate.checkLogIn, authenticate.reqSessionProfil
                 .sort({date: -1})
                 .exec(function (err, posts) {
                     if(posts){
+                        posts.forEach((post) => {
+                            post.profile.avatarPath = image.showAvatar(post.profile)
+                        })
                         res.render("pages/group/group", {currentGroup, posts, currentUserProfile, membership});
                     }else if (err){
                         console.log(err)

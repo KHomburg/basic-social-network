@@ -70,9 +70,9 @@ const uploadContentImage = multer.diskStorage({
 
 
 //function to return path to avatar if available, need currentUser profile as params
-let showAvatar = (currentUserProfile) => {
-	if(currentUserProfile.avatar){
-		return 'images/avatars/' + currentUserProfile.avatar
+let showAvatar = (userProfile) => {
+	if(userProfile.avatar){
+		return 'images/avatars/' + userProfile.avatar
 	} else {
 		return "images/maxresdefault.jpg"
 	}}
