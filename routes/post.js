@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const authenticate = require("../functions/authenticate");
 const multer = require('multer');
-const image = require("../functions/image");
 
 
 //Load custom functions

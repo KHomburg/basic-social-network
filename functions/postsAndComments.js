@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authenticate = require("./authenticate");
+const image = require("../functions/image");
 
 //Load models
 const User = require("../models/User");
@@ -363,7 +364,9 @@ const getStream = (req, res) => {
             ]
         )
         .exec((err, posts) => {
-            
+            posts.forEach((post) => {
+                post.profile.avatarPath = image.showAvatar(post.profile)
+            })
             res.render("pages/posts/stream", {currentUserProfile, posts});
         })
 }
