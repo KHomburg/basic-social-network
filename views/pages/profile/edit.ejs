@@ -230,11 +230,12 @@
             <li>
             <form action="profile/avatar" method="post" enctype="multipart/form-data">
                 <div class="js-upload" uk-form-custom>
-                    <input type="file" name='avatar' multiple>
-                    <button class="uk-button uk-button-default" type="button" tabindex="-1">Select</button>
+                    <input type="file" name='avatar' single>
+                    <button class="uk-button uk-button-default"  type="button" tabindex="-1">Select</button>
                 </div>
                 <button class="uk-button uk-button-default uk-button" type="submit" value="Speichern">Submit</button>
             </form>
+            
             <div class="uk-width-auto">
                 <img  width="200" height="200" src="<%=showAvatar%>">
             </div>

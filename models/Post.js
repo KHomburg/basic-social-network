@@ -15,6 +15,10 @@ const PostSchema = new Schema({
         type: String,
         required: true,
     },
+    image: {
+        type: Schema.Types.ObjectId,
+        ref: "contentImage"
+    },
     text: {
         type: String,
         required: true,

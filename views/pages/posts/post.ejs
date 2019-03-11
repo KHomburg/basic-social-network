@@ -58,6 +58,12 @@
             <div class="uk-comment-body">
                 <p><%=post.text%></p>
             </div>
+            <% if(post.image){%>
+                </br>
+                <div class="uk-width-auto">
+                    <img  width="100%" src= <%="images/contentImages/" + post.image._id %> >
+                </div>
+            <%}%>
             <!-- Delete Button for Post-->
             <% if(currentUserProfile._id.toString() === post.profile._id.toString()) {%>
                 <form action="/post/post/delete" method="post">

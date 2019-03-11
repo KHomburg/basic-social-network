@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const authenticate = require("./authenticate");
+const multer = require('multer');
 const image = require("../functions/image");
+const sharp = require("sharp");
 
 //Load models
 const User = require("../models/User");
@@ -10,24 +12,82 @@ const Group = require("../models/Group");
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const Subcomment = require("../models/Subcomment");
+const ContentImage = require("../models/Contentimage");
 
 
 //Custom Functions for Posts/Comments/SubComments Routes
 
 const createPost = (req, res) => {
     const currentUserProfile = req.currentUserProfile
-    Group.findOne({name: req.body.groupName}, (err, postGroup) => {
-        if(postGroup){
-            const newPost = new Post({
-                profile: currentUserProfile,
-                group: postGroup,
-                title: req.body.title,
-                text: req.body.text,
+    
+    var upload = multer({
+        storage: image.uploadContentImage
+    })
+    .single('image')
+    upload(req, res, function(err) {
+        if(req.file){
+            console.log(req.file)
+
+            //creating the Post object
+            Group.findOne({name: req.body.groupName}, (err, postGroup) => {
+                if(postGroup){
+
+                    //initialize new ContentImage object
+                    const id = req.file.filename.toString()
+                    const newContentImage = new ContentImage({
+                        _id : id,
+                        profile : currentUserProfile,
+                        group: postGroup,
+                        parentType: "post",
+                    })
+
+                    let file = req.file.destination + "/" + req.file.filename
+                    sharp(file)
+                        .resize({height: 1000}) //resizing to max. height 1000px autoscaled
+                        .toFormat("jpeg")       //changes format to jpeg
+                        .jpeg({
+                            quality: 60,        //changes image quality to *number* percent
+                        })
+                        .toFile('./public/images/contentImages/' + req.file.filename) // TODO: change upload dir
+                        .then(info => { console.log(info)})
+                        .catch(err => { console.log(err)});
+                    
+                    
+                    //create new Post object with image
+                    const newPost = new Post({
+                        profile: currentUserProfile,
+                        group: postGroup,
+                        title: req.body.title,
+                        text: req.body.text,
+                        image: newContentImage,
+                    })
+                    newPost.save();
+
+                    newContentImage.parentPost = newPost;
+                    newContentImage.save()
+                    res.redirect("id/" +newPost._id)
+
+                    
+                } else {               
+                        console.log(err + "test");
+                }
             })
-            newPost.save();
-            res.redirect("id/" +newPost._id)
-        } else {               
-                console.log(err);
+        }else{
+            //creating the Post object without image
+            Group.findOne({name: req.body.groupName}, (err, postGroup) => {
+                if(postGroup){
+                    const newPost = new Post({
+                        profile: currentUserProfile,
+                        group: postGroup,
+                        title: req.body.title,
+                        text: req.body.text,
+                    })
+                    newPost.save();
+                    res.redirect("id/" +newPost._id)
+                } else {               
+                        console.log(err + "test");
+                }
+            })
         }
     })
 }

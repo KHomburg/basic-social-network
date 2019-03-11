@@ -25,7 +25,9 @@ const uploadContentImage = multer.diskStorage({
 		callback(null, './uploads/images')
 	},
 	filename: function(req, file, callback) {
-		callback(null, "fileName (content)" + Date.now())
+		let newContentImage = new ContentImage({
+		})
+		callback(null, newContentImage._id.toString())
 	}
 })
 
@@ -33,7 +35,7 @@ const uploadContentImage = multer.diskStorage({
 //first require the file as imageUpload
 /*
     var upload = multer({
-        storage: imageUpload.avatar
+        storage: image.uploadAvatar
     })
     .single('avatar')
 	upload(req, res, function(err) {

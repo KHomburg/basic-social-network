@@ -12,6 +12,7 @@ const Group = require("../models/Group");
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const Subcomment = require("../models/Subcomment");
+const ContentImage = require("../models/Contentimage");
 
 
 //get all profiles (Private)
@@ -51,6 +52,9 @@ router.get('/id/:id', authenticate.checkLogIn, authenticate.reqSessionProfile, (
 //get edit page for profile (Private)
 //get /profile/edit
 router.get("/edit", authenticate.checkLogIn, authenticate.reqSessionProfile, authenticate.sessionUser, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    const currentUser = req.currentUser
+    const userEmail = currentUser.email
     res.render("pages/profile/edit", {currentUserProfile, userEmail, showAvatar:image.showAvatar(currentUserProfile) });
 })
 
@@ -85,29 +89,32 @@ router.post('/avatar', authenticate.checkLogIn, authenticate.reqSessionProfile, 
         storage: image.uploadAvatar
     })
     .single('avatar')
-	upload(req, res, function(err) {
-        console.log(req.body)
-        console.log(req.file)
-        const id = req.file.filename.toString()
-        const newAvatar = new Avatar({
-            _id : id,
-            profile : currentUserProfile,
-        })
-        let file = req.file.destination + "/" + req.file.filename
-        sharp(file)
-            .resize({height: 1000}) //resizing to max. height 1000px autoscaled
-            .toFormat("jpeg")   //changes format to jpeg
-            .jpeg({
-                quality: 60,    //changes image quality to *number* percent
+    upload(req, res, function(err) {
+        if(req.file){
+            const id = req.file.filename.toString()
+            const newAvatar = new Avatar({
+                _id : id,
+                profile : currentUserProfile,
             })
-            .toFile('./public/images/avatars/' + req.file.filename) // TODO: change upload dir
-            .then(info => { console.log(info)})
-            .catch(err => { console.log(err)});
+        
+            let file = req.file.destination + "/" + req.file.filename
+            sharp(file)
+                .resize({height: 1000}) //resizing to max. height 1000px autoscaled
+                .toFormat("jpeg")   //changes format to jpeg
+                .jpeg({
+                    quality: 60,    //changes image quality to *number* percent
+                })
+                .toFile('./public/images/avatars/' + req.file.filename) // TODO: change upload dir
+                .then(info => { console.log(info)})
+                .catch(err => { console.log(err)});
 
-        newAvatar.save()
-        currentUserProfile.avatar = newAvatar;
-        currentUserProfile.save()
-        res.redirect("/profile/edit")
+            newAvatar.save()
+            currentUserProfile.avatar = newAvatar;
+            currentUserProfile.save()
+            res.redirect("/profile/edit")
+        } else {
+            //TODO: error message
+        }
     })
 })
 

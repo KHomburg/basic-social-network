@@ -48,8 +48,6 @@ router.post('/upload2',  function (req, res, next) {
     .single('image')
 	upload(req, res, function(err) {
         console.log(req.body)
-
-
 		res.end('File is uploaded')
 	})
 
