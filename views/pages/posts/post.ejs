@@ -127,6 +127,12 @@
                     <div class="uk-comment-body">
                         <p><%= comment._id.text %></p>
                     </div>
+                    <% if(comment._id.image){%>
+                        </br>
+                        <div class="uk-width-auto">
+                            <img  width="100%" src= <%="images/contentImages/" + comment._id.image._id %> >
+                        </div>
+                    <%}%>
 
                     <!-- Delete Button for comment -->
                     
@@ -241,11 +247,15 @@
         <!-- Form for creating new 1st level comment -->
         <div class="post">
             <h4> Comment erstellen:</h4>
-            <form action="/post/comment/create" method="post">
+            <form action="/post/comment/create" method="post" enctype="multipart/form-data">
                 <fieldset class="uk-fieldset">
                     <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben"></textarea>
                     <input type="hidden" name="postId" value="<%= post._id %>"></br>
                     <input type="hidden" name="groupId" value="<%= group %>"></br>
+                    <div class="js-upload" uk-form-custom>
+                        <input type="file" name='image' single>
+                        <button class="uk-button uk-button-default"  type="button" tabindex="-1">Select</button>
+                    </div>
                     <input class="uk-button uk-button-primary uk-button-small" type="submit" value="Absenden">
                 </fieldset>
             </form>

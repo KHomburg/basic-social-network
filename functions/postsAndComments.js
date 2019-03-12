@@ -52,7 +52,6 @@ const createPost = (req, res) => {
                         .then(info => { console.log(info)})
                         .catch(err => { console.log(err)});
                     
-                    
                     //create new Post object with image
                     const newPost = new Post({
                         profile: currentUserProfile,
@@ -152,30 +151,103 @@ const getPost = (req, res) => {
 
 const createComment = (req, res) => {
     const currentUserProfile = req.currentUserProfile
-    Post.findOne({_id: req.body.postId}, (err, post) => {
-        let postID = req.body.postId
-        if(post){
-            const newComment = new Comment({
-                profile: currentUserProfile,
-                text: req.body.text,
-                parentPost: req.body.postId,
-                group: req.body.groupId,
-            })
 
-            newComment.save()
-                .then(()=>{
-                    post.comments.push(newComment);
-                    post.save();
-                    res.redirect("/post/id/" +postID); 
-                })
-                .catch((err)=> {
-                    console.log(err)
-                })
-                
-        } else {               
-                console.log(err);
-        }
+    var upload = multer({
+        storage: image.uploadContentImage
     })
+    .single('image')
+    upload(req, res, function(err) {
+        if(req.file){
+            //create new comment with image
+            console.log(req.file)
+
+                Post.findOne({_id: req.body.postId}, (err, post) => {
+                    let postID = req.body.postId
+                    if(post){
+
+                        //initialize new ContentImage object
+                        const id = req.file.filename.toString()
+                        const newContentImage = new ContentImage({
+                            _id : id,
+                            profile : currentUserProfile,
+                            group: req.body.groupId,
+                            parentPost: post,
+                            parentType: "comment",
+                        })
+
+                        let file = req.file.destination + "/" + req.file.filename
+                        sharp(file)
+                            .resize({height: 1000}) //resizing to max. height 1000px autoscaled
+                            .toFormat("jpeg")       //changes format to jpeg
+                            .jpeg({
+                                quality: 60,        //changes image quality to *number* percent
+                            })
+                            .toFile('./public/images/contentImages/' + req.file.filename) // TODO: change upload dir
+                            .then(info => { console.log(info)})
+                            .catch(err => { console.log(err)});
+
+
+                        const newComment = new Comment({
+                            profile: currentUserProfile,
+                            text: req.body.text,
+                            parentPost: req.body.postId,
+                            group: req.body.groupId,
+                            image: newContentImage,
+                        })
+
+                        newComment.save()
+                            .then(()=>{
+                                //push comment to parentPost object
+                                post.comments.push(newComment);
+                                post.save();
+
+                                //finalize and save new image object
+                                newContentImage.parentComment = newComment;
+                                newContentImage.save()
+
+
+                                res.redirect("/post/id/" +postID); 
+                            })
+                            .catch((err)=> {
+                                console.log(err)
+                            })
+                        
+                        
+                            
+                    } else {               
+                            console.log(err);
+                    }
+                })
+            }else{
+                //create new comment without image
+                Post.findOne({_id: req.body.postId}, (err, post) => {
+                    let postID = req.body.postId
+                    if(post){
+                        const newComment = new Comment({
+                            profile: currentUserProfile,
+                            text: req.body.text,
+                            parentPost: req.body.postId,
+                            group: req.body.groupId,
+                        })
+
+                        newComment.save()
+                            .then(()=>{
+                                post.comments.push(newComment);
+                                post.save();
+                                res.redirect("/post/id/" +postID); 
+                            })
+                            .catch((err)=> {
+                                console.log(err)
+                            })
+                            
+                    } else {               
+                            console.log(err);
+                    }
+                })
+            }
+
+
+        })
 }
 
 const createSubComment = (req, res) => {

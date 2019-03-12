@@ -7,6 +7,10 @@ const CommentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "profile"
     },
+    image: {
+        type: Schema.Types.ObjectId,
+        ref: "contentImage"
+    },
     text: {
         type: String,
         required: true
