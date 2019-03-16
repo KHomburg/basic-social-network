@@ -376,7 +376,7 @@ router.post("/mod/addmod", authenticate.checkLogIn, authenticate.reqSessionProfi
     const currentUserProfile = req.currentUserProfile
     const groupID = req.body.groupId
     const profileId = req.body.profileId
-    console.log(profileId)
+
     Group.findById(groupID)
         .exec((err1, group) => {
             if(group){
@@ -397,6 +397,42 @@ router.post("/mod/addmod", authenticate.checkLogIn, authenticate.reqSessionProfi
                 console.log(err1)
             }
         })
+})
+
+//post request to search groups by term
+//POST group/search
+router.post("/search", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    const term = req.body.name;
+
+    //find groups by enterd term
+    Group.find({
+        $text: {$search: term},
+    })
+    .then((groups) => {
+            res.render("pages/group/search", {
+                groups: groups, 
+                currentUserProfile: currentUserProfile,                 
+            })
+        })
+    .catch((err) => console.log(err))
+
+})
+
+//get request to show search view
+//get group/search
+router.get("/search", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+
+
+    const groups = []
+    res.render("pages/group/search", {
+        groups: groups, 
+        currentUserProfile: currentUserProfile,                 
+    })
+
+
+
 })
 
 module.exports = router;
