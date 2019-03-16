@@ -81,4 +81,16 @@ const GroupSchema = new Schema({
     }
 });
 
+GroupSchema.index(
+{
+    name: 'text',
+    description: 'text',
+}, 
+{
+    weights: {
+        name: 5,
+        description: 3,
+    },
+});
+
 module.exports = Group = mongoose.model("group", GroupSchema);

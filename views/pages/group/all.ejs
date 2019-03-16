@@ -4,6 +4,12 @@
 <% include ../../partials/sidebar %>
 <body>
     <div class="main">
+
+    <div class="uk-margin uk-margin-left uk-margin-right uk-background-default">
+        <form class="uk-search uk-search-default uk-width-1-1" action="/group/search" method="post">
+            <input id="Name" type="text" name="name" class="uk-search-input" type="search" placeholder="Search...">
+        </form>
+    </div>
     
         <% groups.forEach((group) => { %>
             <div class="uk-card uk-card-default uk-card-body">
