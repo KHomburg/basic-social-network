@@ -127,6 +127,8 @@
                     <div class="uk-comment-body">
                         <p><%= comment._id.text %></p>
                     </div>
+
+                    <!-- show comment-image if available-->
                     <% if(comment._id.image){%>
                         </br>
                         <div class="uk-width-auto">
@@ -202,6 +204,14 @@
                                     <div class="uk-comment-body">
                                         <p><%= subComment._id.text %></p>
                                     </div>
+
+                                    <!-- show subcomment-image if available-->
+                                    <% if(subComment._id.image){%>
+                                        </br>
+                                        <div class="uk-width-auto">
+                                            <img  width="100%" src= <%="images/contentImages/" + subComment._id.image._id %> >
+                                        </div>
+                                    <%}%>
                                     <!-- Delete Button -->
                                     <% if(currentUserProfile._id.toString() === subComment._id.profile._id.toString()) {%>
                                         <form action="/post/subcomment/delete" method="post">
@@ -223,13 +233,17 @@
                             <a class="uk-accordion-title subcomment-slider-title" href="#">Kommentieren</a>                        
 
                             <div class="uk-accordion-content">                            
-                                    <form action="/post/subcomment/create" method="post">
+                                    <form action="/post/subcomment/create" method="post" enctype="multipart/form-data">
                                         <fieldset class="uk-fieldset">
                                             <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben"></textarea>
                                             <input type="hidden" name="postId" value="<%= post._id %>">
                                             <input type="hidden" name="commentId" value="<%= comment._id._id %>">
                                             <input type="hidden" name="index" value="<%= index %>">
                                             <input type="hidden" name="groupId" value="<%= group %>"></br>
+                                            <div class="js-upload" uk-form-custom>
+                                                <input type="file" name='image' single>
+                                                <button class="uk-button uk-button-default"  type="button" tabindex="-1">Select</button>
+                                            </div>
                                             <input class="uk-button uk-button-primary uk-button-small" type="submit" value="Absenden">
                                         </fieldset>
                                     </form>
@@ -252,6 +266,7 @@
                     <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben"></textarea>
                     <input type="hidden" name="postId" value="<%= post._id %>"></br>
                     <input type="hidden" name="groupId" value="<%= group %>"></br>
+                    <!--upload button -->
                     <div class="js-upload" uk-form-custom>
                         <input type="file" name='image' single>
                         <button class="uk-button uk-button-default"  type="button" tabindex="-1">Select</button>

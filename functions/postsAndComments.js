@@ -205,7 +205,6 @@ const createComment = (req, res) => {
                                 newContentImage.parentComment = newComment;
                                 newContentImage.save()
 
-
                                 res.redirect("/post/id/" +postID); 
                             })
                             .catch((err)=> {
@@ -252,28 +251,95 @@ const createComment = (req, res) => {
 
 const createSubComment = (req, res) => {
     const currentUserProfile = req.currentUserProfile
-    Comment.findOne({_id: req.body.commentId}, (err, comment) => {
-        let postID = req.body.postId
-        if(comment){
-            const newSubComment = new Subcomment({
-                profile: currentUserProfile,
-                text: req.body.text,
-                parentPost: req.body.postId,
-                parentComment: req.body.commentId,
-                group: req.body.groupId,
-            })
 
-            newSubComment.save()
-                .then(()=>{
-                    comment.subcomments.push(newSubComment);
-                    comment.save(); 
-                    res.redirect("/post/id/" +postID)
-                })
-                .catch((err)=>{
-                    console.log(err)
-                })
-        } else {               
-                console.log(err);
+    var upload = multer({
+        storage: image.uploadContentImage
+    })
+    .single('image')
+    upload(req, res, function(err) {
+        if(req.file){
+            //create new comment with image
+            console.log(req.file)
+
+            Comment.findOne({_id: req.body.commentId}, (err, comment) => {
+                let postID = req.body.postId
+                if(comment){
+
+                    //initialize new ContentImage object
+                    const id = req.file.filename.toString()
+                    const newContentImage = new ContentImage({
+                        _id : id,
+                        profile : currentUserProfile,
+                        group: req.body.groupId,
+                        parentPost: comment.parentPost,
+                        parentComment: comment,
+                        parentType: "subcomment",
+                    })
+
+                    let file = req.file.destination + "/" + req.file.filename
+                    sharp(file)
+                        .resize({height: 1000}) //resizing to max. height 1000px autoscaled
+                        .toFormat("jpeg")       //changes format to jpeg
+                        .jpeg({
+                            quality: 60,        //changes image quality to *number* percent
+                        })
+                        .toFile('./public/images/contentImages/' + req.file.filename) // TODO: change upload dir
+                        .then(info => { console.log(info)})
+                        .catch(err => { console.log(err)});
+
+
+                    const newSubComment = new Subcomment({
+                        profile: currentUserProfile,
+                        text: req.body.text,
+                        parentPost: req.body.postId,
+                        parentComment: req.body.commentId,
+                        group: req.body.groupId,
+                        image: newContentImage,
+                    })
+
+                    newSubComment.save()
+                        .then(()=>{
+                            //push subcomment to parentComment object
+                            comment.subcomments.push(newSubComment);
+                            comment.save(); 
+                            //finalize and save new image object
+                            newContentImage.parentSubcomment = newSubComment;
+                            newContentImage.save()
+
+                            res.redirect("/post/id/" +postID)
+                        })
+                        .catch((err)=>{
+                            console.log(err)
+                        })
+                } else {               
+                        console.log(err);
+                }
+            })
+        }else{
+            Comment.findOne({_id: req.body.commentId}, (err, comment) => {
+                let postID = req.body.postId
+                if(comment){
+                    const newSubComment = new Subcomment({
+                        profile: currentUserProfile,
+                        text: req.body.text,
+                        parentPost: req.body.postId,
+                        parentComment: req.body.commentId,
+                        group: req.body.groupId,
+                    })
+
+                    newSubComment.save()
+                        .then(()=>{
+                            comment.subcomments.push(newSubComment);
+                            comment.save(); 
+                            res.redirect("/post/id/" +postID)
+                        })
+                        .catch((err)=>{
+                            console.log(err)
+                        })
+                } else {               
+                        console.log(err);
+                }
+            })
         }
     })
 }

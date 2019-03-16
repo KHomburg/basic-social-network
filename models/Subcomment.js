@@ -10,6 +10,10 @@ const SubcommentSchema = new Schema({
         type: String,
         required: true
     },
+    image: {
+        type: Schema.Types.ObjectId,
+        ref: "contentImage"
+    },
     date: {
         type: Date,
         default: Date.now
