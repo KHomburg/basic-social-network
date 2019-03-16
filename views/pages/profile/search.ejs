@@ -15,8 +15,8 @@
                 <input id="Name" type="text" name="name" class="uk-search-input" type="search" placeholder="Search...">
             </form>
         </div>
-
-        <% if(profiles){ profiles.forEach((profile) => { %>
+        
+        <% if(profiles.length !== 0){ profiles.forEach((profile) => { %>
             <div class="uk-card uk-card-default">
                 <div class="uk-card-header">
                     <div class="uk-grid-small uk-flex-middle" uk-grid>
@@ -47,15 +47,11 @@
                     </div>
                 </div>
             </div>
-        
-
-        <% })} %>
-
-
-
-
-
-
+        <% })}else{ %>
+            <div class="uk-margin uk-margin-left uk-margin-right">
+                <p>No such Users found</p>
+            </div>
+        <% } %>
 
     </div>
 </body>

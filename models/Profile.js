@@ -112,4 +112,16 @@ const ProfileSchema = new Schema({
     }
 });
 
+
+//TODO: include more fields to search for
+ProfileSchema.index(
+    {
+        name: 'text',
+    }, 
+    {
+        weights: {
+            name: 5,
+        },
+    });
+
 module.exports = Profile = mongoose.model("profile", ProfileSchema);

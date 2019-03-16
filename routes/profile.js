@@ -18,11 +18,13 @@ const ContentImage = require("../models/Contentimage");
 //get all profiles (Private)
 //Get /profile/all
 router.get("/all", authenticate.checkLogIn, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
     Profile.find()
         .then((profile) => {
             res.json(profile)
         });
 });
+
 
 //get users /profile by id in params(Private)
 //Get /profile/id/:id
@@ -324,8 +326,39 @@ router.get('/list', authenticate.checkLogIn, authenticate.reqSessionProfile, (re
                         console.log("Something went wrong while executing /profile/allusers")
                     }   
                 })
-        })   
+        })
+        //TODO: pagination in allusers.ejs missing   
 });
+
+
+//post search request to find users by text
+//POST profile/search
+router.post("/search/", authenticate.checkLogIn, authenticate.reqSessionProfile,(req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    const contacts = currentUserProfile.contacts
+    
+    const term = req.body.name;
+    Profile.find({
+        $text: {$search: term},
+    })
+        .then((profiles) => {
+            profiles.forEach((profile) => {
+                profile.avatarPath = image.showAvatar(profile)
+            })
+            res.render("pages/profile/search", {profiles, currentUserProfile});
+        });
+});
+
+//get search view
+//GET profile/search
+router.get("/search/", authenticate.checkLogIn, authenticate.reqSessionProfile,(req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    const contacts = currentUserProfile.contacts
+    var profiles = [];
+    res.render("pages/profile/search", {profiles, currentUserProfile});
+    
+});
+
 
 
 router.get("/test", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
