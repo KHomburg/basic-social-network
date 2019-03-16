@@ -22,7 +22,7 @@ router.post("/addcontact", authenticate.checkLogIn, authenticate.reqSessionProfi
         } else {
             console.log("profile could not be found")
         }
-        res.status(204).send();  
+        res.redirect('back');   
     })
 });
 
@@ -49,7 +49,7 @@ router.post("/removecontact", authenticate.checkLogIn, authenticate.reqSessionPr
     currentUserProfile.save()
 
 
-    res.status(204).send();
+    res.redirect('back');  
 });
 
 
