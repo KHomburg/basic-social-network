@@ -42,7 +42,7 @@ router.get('/id/:id', authenticate.checkLogIn, authenticate.reqSessionProfile, (
 
         //currentUserProfile.contacts.find()
         if(profile){
-            res.render("pages/profile/profile", {profile, currentUserProfile, isContact});
+            res.render("pages/profile/profile", {profile, currentUserProfile, isContact, showAvatar:image.showAvatar(currentUserProfile)});
         }else{
             res.send("profile not found")
         }        
