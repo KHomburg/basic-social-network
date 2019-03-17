@@ -19,85 +19,60 @@
             <% if(reportedPosts.length > 0){ %>
             <h3 class="uk-margin-remove">Reported Posts:</h3>        
             <% reportedPosts.forEach((reportedPost) => { %>
-            <div class="post uk-inline">
-                <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
-                    <div class="uk-width-auto uk-margin-remove">
-                        <img class="uk-comment-avatar" src="images/maxresdefault.jpg" width="80" height="80" alt="">
-                    </div>
-                    <div class="uk-width-expand uk-margin-remove">
-                        <h3 class="uk-comment-title uk-margin-remove"><%= reportedPost.content.title %></h3>                    
-                        <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><a href="/profile/id/<%= reportedPost.content.profile._id %>">Von: <%= reportedPost.content.profile.name %></a></p>
-                        <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><%= reportedPost.content.date.toDateString("de-De") + " " + reportedPost.content.date.toLocaleTimeString("de-De") %></p>
-                    </div>
-                </header>
-                <hr class="divider__b">
-                <div class="uk-comment-body">
-                    <p><%= reportedPost.content.text %></p>
+                <%- include('../../partials/components/single-post-reference', {post: reportedPost.content})%>
+
+                <div class="uk-margin-left uk-margin-right uk-margin-bottom">
+                    <!-- Delete Button for Post-->
+                    <form action="/group/mod/post/delete" method="post">
+                        <div class="uk-margin-top" style="display:none">
+                            <input type="hidden" name="postId" value= <%= reportedPost.content._id %>></br>
+                            <input type="hidden" name="groupID" value= <%= groupID %>></br>
+                            <input type="hidden" name="reportedPost" value= <%= reportedPost._id %>></br>
+                        </div>
+                        <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
+                    </form>
+
+                    <!-- Accept-Content Button for Post-->
+                    <form action="/group/mod/reportlist/removecontent" method="post">
+                        <div class="uk-margin-top" style="display:none">
+                            <input type="hidden" name="postId" value= <%= reportedPost.content._id %>></br>
+                            <input type="hidden" name="groupID" value= <%= groupID %>></br>
+                            <input type="hidden" name="reportedPost" value= <%= reportedPost._id %>></br>
+                        </div>
+                        <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Nicht Löschen">
+                    </form>
                 </div>
-
-                <!-- Delete Button for Post-->
-                <form action="/group/mod/post/delete" method="post">
-                    <div class="uk-margin-top" style="display:none">
-                        <input type="hidden" name="postId" value= <%= reportedPost.content._id %>></br>
-                        <input type="hidden" name="groupID" value= <%= groupID %>></br>
-                        <input type="hidden" name="reportedPost" value= <%= reportedPost._id %>></br>
-                    </div>
-                    <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
-                </form>
-
-                <!-- Accept-Content Button for Post-->
-                <form action="/group/mod/reportlist/removecontent" method="post">
-                    <div class="uk-margin-top" style="display:none">
-                        <input type="hidden" name="postId" value= <%= reportedPost.content._id %>></br>
-                        <input type="hidden" name="groupID" value= <%= groupID %>></br>
-                        <input type="hidden" name="reportedPost" value= <%= reportedPost._id %>></br>
-                    </div>
-                    <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Nicht Löschen">
-                </form>
-            </div>
             <% })} %>
 
             <% if(reportedComments.length > 0){ %>
             <h3 class="uk-margin-remove">Reported Comments:</h3>        
             <% reportedComments.forEach((reportedComment) => { %>
 
-            <!--Cards for Comments -->
-            <div class="post uk-inline">
-                <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
-                    <div class="uk-width-auto uk-margin-remove">
-                        <img class="uk-comment-avatar" src="images/maxresdefault.jpg" width="80" height="80" alt="">
-                    </div>
-                    <div class="uk-width-expand uk-margin-remove">
-                        <h3 class="uk-comment-title uk-margin-remove"><a href="/post/id/<%= reportedComment.content.parentPost %>">Zum Post: <%= reportedComment.content.parentPost %></a></h3>                    
-                        <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><a href="/profile/id/<%= reportedComment.content.profile._id %>"> Von: <%= reportedComment.content.profile.name %></a></p>
-                        <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><%= reportedComment.content.date.toDateString("de-De") + " " + reportedComment.content.date.toLocaleTimeString("de-De") %></p>
-                    </div>
-                </header>
-                <hr class="divider__b">
-                <div class="uk-comment-body">
-                    <p><%= reportedComment.content.text %></p>
+                <!--Cards for Comments -->
+                <%- include('../../partials/components/single-comment-reference', {comment: reportedComment.content})%>
+
+                <div class="uk-margin-left uk-margin-right uk-margin-bottom">
+                    <!-- Delete Button for Comments-->
+                    <form action="/group/mod/comment/delete" method="post">
+                        <div class="uk-margin-top" style="display:none">
+                            <input type="hidden" name="commentId" value= <%= reportedComment.content._id %>></br>
+                            <input type="hidden" name="groupID" value= <%= groupID %>></br>
+                            <input type="hidden" name="reportedComment" value= <%= reportedComment._id %>></br>
+                        </div>
+                        <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
+                    </form>
+
+                    <!-- Accept-Content Button for Comment-->
+                    <form action="/group/mod/reportlist/removecontent" method="post">
+                        <div class="uk-margin-top" style="display:none">
+                            <input type="hidden" name="commentId" value= <%= reportedComment.content._id %>></br>
+                            <input type="hidden" name="groupID" value= <%= groupID %>></br>
+                            <input type="hidden" name="reportedComment" value= <%= reportedComment._id %>></br>
+                        </div>
+                        <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Nicht Löschen">
+                    </form>
                 </div>
-
-                <!-- Delete Button for Comments-->
-                <form action="/group/mod/comment/delete" method="post">
-                    <div class="uk-margin-top" style="display:none">
-                        <input type="hidden" name="commentId" value= <%= reportedComment.content._id %>></br>
-                        <input type="hidden" name="groupID" value= <%= groupID %>></br>
-                        <input type="hidden" name="reportedComment" value= <%= reportedComment._id %>></br>
-                    </div>
-                    <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
-                </form>
-
-                <!-- Accept-Content Button for Comment-->
-                <form action="/group/mod/reportlist/removecontent" method="post">
-                    <div class="uk-margin-top" style="display:none">
-                        <input type="hidden" name="commentId" value= <%= reportedComment.content._id %>></br>
-                        <input type="hidden" name="groupID" value= <%= groupID %>></br>
-                        <input type="hidden" name="reportedComment" value= <%= reportedComment._id %>></br>
-                    </div>
-                    <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Nicht Löschen">
-                </form>
-            </div>
+            
 
 
             <% })} %>
@@ -106,78 +81,38 @@
             <h3 class="uk-margin-remove">Reported Subcomments:</h3>        
             <% reportedSubcomments.forEach((reportedSubcomment) => { %>
 
-            <!--Cards for Subomments -->
-            <div class="post uk-inline">
-                <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
-                    <div class="uk-width-auto uk-margin-remove">
-                        <img class="uk-comment-avatar" src="images/maxresdefault.jpg" width="80" height="80" alt="">
-                    </div>
-                    <div class="uk-width-expand uk-margin-remove">
-                        <h3 class="uk-comment-title uk-margin-remove"><a href="/post/id/<%= reportedSubcomment.content.parentPost %>">Zum Post: <%= reportedSubcomment.content.parentPost %></a></h3>                    
-                        <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><a href="/profile/id/<%= reportedSubcomment.content.profile._id %>"> Von: <%= reportedSubcomment.content.profile.name %></a></p>
-                        <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><%= reportedSubcomment.content.date.toDateString("de-De") + " " + reportedSubcomment.content.date.toLocaleTimeString("de-De") %></p>
-                    </div>
-                </header>
-                <hr class="divider__b">
-                <div class="uk-comment-body">
-                    <p><%= reportedSubcomment.content.text %></p>
+                <!--Cards for Subcomments -->
+                <%- include('../../partials/components/single-comment-reference', {comment: reportedSubcomment.content})%>
+
+                <div class="uk-margin-left uk-margin-right uk-margin-bottom">
+                    <!-- Delete Button for Subcomments-->
+                    <form action="/group/mod/subcomment/delete" method="post">
+                        <div class="uk-margin-top" style="display:none">
+                            <input type="hidden" name="subCommentId" value= <%= reportedSubcomment.content._id %>></br>
+                            <input type="hidden" name="groupID" value= <%= groupID %>></br>
+                            <input type="hidden" name="reportedSubcomment" value= <%= reportedSubcomment._id %>></br>
+                        </div>
+                        <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
+                    </form>
+
+                    <!-- Accept-Content Button for SubComment-->
+                    <form action="/group/mod/reportlist/removecontent" method="post">
+                        <div class="uk-margin-top" style="display:none">
+                            <input type="hidden" name="subCommentId" value= <%= reportedSubcomment.content._id %>></br>
+                            <input type="hidden" name="groupID" value= <%= groupID %>></br>
+                            <input type="hidden" name="reportedSubcomment" value= <%= reportedSubcomment._id %>></br>
+                        </div>
+                        <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Nicht Löschen">
+                    </form>
                 </div>
-
-                <!-- Delete Button for Subcomments-->
-                <form action="/group/mod/subcomment/delete" method="post">
-                    <div class="uk-margin-top" style="display:none">
-                        <input type="hidden" name="subCommentId" value= <%= reportedSubcomment.content._id %>></br>
-                        <input type="hidden" name="groupID" value= <%= groupID %>></br>
-                        <input type="hidden" name="reportedSubcomment" value= <%= reportedSubcomment._id %>></br>
-                    </div>
-                    <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Löschen">
-                </form>
-
-                <!-- Accept-Content Button for SubComment-->
-                <form action="/group/mod/reportlist/removecontent" method="post">
-                    <div class="uk-margin-top" style="display:none">
-                        <input type="hidden" name="subCommentId" value= <%= reportedSubcomment.content._id %>></br>
-                        <input type="hidden" name="groupID" value= <%= groupID %>></br>
-                        <input type="hidden" name="reportedSubcomment" value= <%= reportedSubcomment._id %>></br>
-                    </div>
-                    <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Nicht Löschen">
-                </form>
-            </div>
             <% })} %>
         </li>
 
         <!-- List all Members -->
         <li>
             <% if(group.members){ group.members.forEach((profile) => { %>
-            
-                <div class="uk-card uk-card-default uk-width-1-2@m">
-                    <div class="uk-card-header">
-                        <div class="uk-grid-small uk-flex-middle" uk-grid>
-                            <div class="uk-width-auto">
-                                <img class="uk-border-circle" width="40" height="40" src="images/maxresdefault.jpg">
-                            </div>
-                            <div class="uk-width-expand">
-                                <h3 class="uk-card-title uk-margin-remove-bottom"><%= profile._id.name %></h3>
-
-                                <!-- Button to add Member to Moderator -->
-                                <p class="uk-text-meta uk-margin-remove-top">                        
-                                    <% if(profile._id._id.toString() == currentUserProfile._id.toString()){%>
-                                        <p>(You)</p>
-                                    <%} else if(group.moderator.find((mod) => { return mod._id.toString() == profile._id.toString()}) == undefined) { %>
-                                        <form action="/group/mod/addmod" method="post">
-                                            <input type="hidden" name="profileId" value="<%= profile._id._id %>">
-                                            <input type="hidden" name="groupId" value="<%= group._id %>">
-                                            <button type="submit" class="uk-button uk-button-primary uk-button-small">Moderator hinzufügen</button>                  
-                                        </form>
-                                    <% } else {%>
-                                        <p>(Moderator)</p>
-                                    <%}%>
-                                </p>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <% profile = profile._id%>
+                <%- include('../../partials/components/single-profile-reference', {profile, currentUserProfile})%>
             <%})} %>
         </li>
 
@@ -185,18 +120,8 @@
         <li>
             <!-- List all Moderators -->
             <% if(group.moderator){ group.moderator.forEach((profile) => { %>                
-                <div class="uk-card uk-card-default uk-width-1-2@m">
-                    <div class="uk-card-header">
-                        <div class="uk-grid-small uk-flex-middle" uk-grid>
-                            <div class="uk-width-auto">
-                                <img class="uk-border-circle" width="40" height="40" src="images/maxresdefault.jpg">
-                            </div>
-                            <div class="uk-width-expand">
-                                <h3 class="uk-card-title uk-margin-remove-bottom"><%= profile._id.name %></h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <% profile = profile._id%>
+                <%- include('../../partials/components/single-profile-reference', {profile, currentUserProfile})%>
             <%})} %>
         </li>
 

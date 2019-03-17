@@ -1,0 +1,36 @@
+<%#
+Shows single comment as reference 
+-   shows image if available
+-   without subcomments
+-   without delete button
+
+requires
+-   comment as "comment" variable
+%>
+
+<div class="post uk-inline">
+    <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+        <div class="uk-width-auto uk-margin-remove">
+            <%if(comment.profile.avatar){%>
+                <img class="uk-border" width="80" height="80" src="<%="images/avatars/" + comment.profile.avatar %>">
+            <%}else{%>
+                <img class="uk-border" width="80" height="80" src="images/maxresdefault.jpg">
+            <%}%>
+        </div>
+        <div class="uk-width-expand uk-margin-remove">
+            <h3 class="uk-comment-title uk-margin-remove"><a href="/post/id/<%= comment.parentPost %>">Zum Post: <%= comment.parentPost %></a></h3>                    
+            <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><a href="/profile/id/<%= comment.profile._id %>"> Von: <%= comment.profile.name %></a></p>
+            <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><%= comment.date.toDateString("de-De") + " " + comment.date.toLocaleTimeString("de-De") %></p>
+        </div>
+    </header>
+    <hr class="divider__b">
+    <div class="uk-comment-body">
+        <p><%= comment.text %></p>
+    </div>
+    <% if(comment.image){%>
+        </br>
+        <div class="uk-width-auto">
+            <img  width="100%" src= <%="images/contentImages/" + comment.image._id %> >
+        </div>
+    <%}%>
+</div>

@@ -1,0 +1,44 @@
+<%#
+Shows single post 
+-   shows number of comments
+-   shows image if available
+-   without comments
+-   without delete button
+
+requires
+-   post as "post" variable
+%>
+
+<div class="post">
+    <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+        <div class="uk-width-auto">
+            <%if(post.profile.avatar){%>
+                <img class="uk-border" width="80" height="80" src="<%="images/avatars/" + post.profile.avatar %>">
+            <%}else{%>
+                <img class="uk-border" width="80" height="80" src="images/maxresdefault.jpg">
+            <%}%>
+        </div>
+        <div class="uk-width-expand">
+            <h4 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="/post/id/<%= post._id %>"><%= post.title %></a></h4>
+            <ul class="uk-comment-meta uk-subnav uk-margin-remove-top">
+                <li><a href="/profile/id/<%= post.profile._id %>">von <%= post.profile.name %></a></li></br>
+                <li><a href="/group/name/<%= post.group.name %>">in <%= post.group.name %></a></li>
+                <li><%= post.date.toDateString("de-De") + " " + post.date.toLocaleTimeString("de-De") %></li>     
+            </ul>
+        </div>
+    </header>
+    <hr class="divider__b">
+    <div class="uk-comment-body">
+        <p><%= post.text %></p>
+    </div>
+    <% if(post.image){%>
+        </br>
+        <div class="uk-width-auto">
+            <img  width="100%" src= <%="images/contentImages/" + post.image._id %> >
+        </div>
+    <%}%>
+
+    <div class="post__comment-count">
+        <%= post.comments.length %> Kommentare
+    </div>
+</div>

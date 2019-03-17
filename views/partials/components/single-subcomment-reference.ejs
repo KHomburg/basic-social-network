@@ -1,0 +1,30 @@
+<%#
+Shows single subcomment as reference 
+-   shows image if available
+-   without delete button
+
+requires
+-   subcomment as "subcomment" variable
+%>
+
+<!--Cards for Subcomments -->
+<div class="post uk-inline">
+    <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+        <div class="uk-width-auto uk-margin-remove">
+            <%if(comment.profile.avatar){%>
+                <img class="uk-border" width="80" height="80" src="<%="images/avatars/" + comment.profile.avatar %>">
+            <%}else{%>
+                <img class="uk-border" width="80" height="80" src="images/maxresdefault.jpg">
+            <%}%>
+        </div>
+        <div class="uk-width-expand uk-margin-remove">
+            <h3 class="uk-comment-title uk-margin-remove"><a href="/post/id/<%= subcomment.content.parentPost %>">Zum Post: <%= subcomment.content.parentPost %></a></h3>                    
+            <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><a href="/profile/id/<%= subcomment.content.profile._id %>"> Von: <%= subcomment.content.profile.name %></a></p>
+            <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><%= subcomment.content.date.toDateString("de-De") + " " + subcomment.content.date.toLocaleTimeString("de-De") %></p>
+        </div>
+    </header>
+    <hr class="divider__b">
+    <div class="uk-comment-body">
+        <p><%= subcomment.content.text %></p>
+    </div>
+</div>

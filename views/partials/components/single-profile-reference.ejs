@@ -1,0 +1,44 @@
+<%#
+Shows single profile as reference
+-   shows avatar if available
+-   shows button to add/remove to/from contacts
+
+requires
+-   profile as "profile" variable
+-   currentUserProfile
+%>
+
+<div class="uk-card uk-card-default">
+<div class="uk-card-header">
+    <div class="uk-grid-small uk-flex-middle" uk-grid>
+        <div class="uk-width-auto">
+            <%if(profile.avatar){%>
+                    <img class="uk-border" width="80" height="80" src="<%="images/avatars/" + profile.avatar %>">
+            <%}else{%>
+                <img class="uk-border" width="80" height="80" src="images/maxresdefault.jpg">
+            <%}%>
+        </div>
+        <div class="uk-width-expand">
+            <h3 class="uk-card-title uk-margin-remove-bottom"><%= profile.name %></h3>
+            <p class="uk-text-meta uk-margin-remove-top">
+        
+                <!-- check if rendered users profile is currentUsers profile or allready in contacts list, to render according button -->
+                <% if(profile._id.toString() == currentUserProfile._id.toString()){%>
+                <%} else if(currentUserProfile.contacts.toString().includes(profile._id.toString()) == false) { %>
+                    <form action="/contacts/addcontact" method="post">
+                        <input type="hidden" name="profileId" value="<%= profile._id %>">
+                        <button type="submit" value="<%= profile._id %>" class="uk-button uk-button-primary uk-button-small">Kontakt hinzufügen</button>                  
+                    </form>
+                <%} else if (currentUserProfile.contacts.toString().includes(profile._id.toString()) == true){ %>
+                    <form action="/contacts/removecontact" method="post">
+                        <input type="hidden" name="profileId" value="<%= profile._id %>">
+                        <button type="submit" value="<%= profile._id %>" class="uk-button uk-button-primary uk-button-small">Kontakt Entfernen</button>                  
+                    </form>
+                <% } %>
+
+
+            </p>
+        </div>
+    </div>
+</div>
+</div>
