@@ -14,11 +14,7 @@
         
         <!-- list found groups if any-->
         <% if(groups.length !== 0) {groups.forEach((group) => { %>
-            <div class="uk-card uk-card-default uk-card-body">
-                <a class="uk-link-reset" href="/group/name/<%= group.name %>"><h3 class="uk-card-title"><%= group.name %></h3></a>
-                <hr class="divider__b">
-                <p> <%= group.description %></p>
-            </div>
+            <%- include('../../partials/components/single-group-reference', {group, currentUserProfile})%>
         <% })}else{ %>
             <div class="uk-margin uk-margin-left uk-margin-right">
                 <p>No such groups found</p>

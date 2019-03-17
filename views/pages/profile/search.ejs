@@ -17,36 +17,9 @@
         </div>
         
         <% if(profiles.length !== 0){ profiles.forEach((profile) => { %>
-            <div class="uk-card uk-card-default">
-                <div class="uk-card-header">
-                    <div class="uk-grid-small uk-flex-middle" uk-grid>
-                        <div class="uk-width-auto">
-                            <img class="uk-border" width="80" height="80" src="<%=profile.avatarPath %>">
-                        </div>
-                        <div class="uk-width-expand">
-                            <h3 class="uk-card-title uk-margin-remove-bottom"><%= profile.name %></h3>
-                            <p class="uk-text-meta uk-margin-remove-top">
-                        
-                                <!-- check if rendered users profile is currentUsers profile or allready in contacts list, to render according button -->
-                                <% if(profile._id.toString() == currentUserProfile._id.toString()){%>
-                                <%} else if(currentUserProfile.contacts.toString().includes(profile._id.toString()) == false) { %>
-                                    <form action="/contacts/addcontact" method="post">
-                                        <input type="hidden" name="profileId" value="<%= profile._id %>">
-                                        <button type="submit" value="<%= profile._id %>" class="uk-button uk-button-primary uk-button-small">Kontakt hinzufügen</button>                  
-                                    </form>
-                                <%} else if (currentUserProfile.contacts.toString().includes(profile._id.toString()) == true){ %>
-                                    <form action="/contacts/removecontact" method="post">
-                                        <input type="hidden" name="profileId" value="<%= profile._id %>">
-                                        <button type="submit" value="<%= profile._id %>" class="uk-button uk-button-primary uk-button-small">Kontakt Entfernen</button>                  
-                                    </form>
-                                <% } %>
 
+            <%- include('../../partials/components/single-profile-reference', {profile, currentUserProfile})%>
 
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
         <% })}else{ %>
             <div class="uk-margin uk-margin-left uk-margin-right">
                 <p>No such Users found</p>

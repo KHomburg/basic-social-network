@@ -1,0 +1,12 @@
+<%#
+Shows single group as reference 
+
+
+requires
+-   group as "group" variable
+%>
+<div class="uk-card uk-card-default uk-card-body">
+    <a class="uk-link-reset" href="/group/name/<%= group.name %>"><h3 class="uk-card-title"><%= group.name %></h3></a>
+    <hr class="divider__b">
+    <p> <%= group.description %></p>
+</div>
