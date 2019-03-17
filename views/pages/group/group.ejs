@@ -16,18 +16,18 @@
             <!-- if currentUser is already member of this group, don't sho subscrib button -->
             <% if(membership == false){ %>
             <!-- form for joining the group -->
-                <div class="sub-button uk-margin-left">
+                <div class="sub-button uk-margin-left uk-margin-right uk-margin-bottom">
                     <form action="/group/subscribe" method="post">
                         <input type="hidden" name="groupID" value="<%= currentGroup._id %>">
-                        <input class="uk-button uk-button-primary" type="submit" value="Beitreten">
+                        <input class="uk-button-small uk-button-primary" type="submit" value="Beitreten">
                     </form>
                 </div>
             <% } else {%>
                 <!-- form for unsubscribe from the group -->
-                <div class="sub-button uk-margin-left">
+                <div class="sub-button uk-margin-left uk-margin-right uk-margin-bottom">
                     <form action="/group/unsubscribe" method="post">
                         <input type="hidden" name="groupID" value="<%= currentGroup._id %>">
-                        <input class="uk-button uk-button-primary" type="submit" value="Austreten">
+                        <input class="uk-button-small uk-button-primary" type="submit" value="Austreten">
                     </form>
             </div>
             <% } %>
