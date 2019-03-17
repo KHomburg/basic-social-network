@@ -207,7 +207,6 @@ router.post("/changemail", (req, res) => {
                             }
                         )
             } else {
-                console.log(user)
                 res.send("Etwas lief schief")
             }
         }
@@ -217,7 +216,6 @@ router.post("/changemail", (req, res) => {
 //change password route (Public)
 //post /users/changepassword
 router.post("/changepassword", (req, res) => {
-    console.log(req.body)
     
     //check if registration code is a valid profile id
     User.findById({_id: req.body.id})
