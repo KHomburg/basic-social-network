@@ -23,11 +23,7 @@
                         <tbody>
                             <tr>
                                 <td class="uk-width-small">Name</td>
-                                <td><input class="uk-input uk-form-small" id="form-horizontal-text" id="Name" type="text" name="name" placeholder="Name" value="<%=currentUserProfile.name%>"></td>
-                            </tr>
-                            <tr>
-                                <td class="uk-width-small">E-Mail</td>
-                                <td><input class="uk-input uk-form-small" id="Email" type="text" name="email" placeholder="Email eingeben" value="<%=userEmail%>"></td>
+                                <td><input class="uk-input uk-form-small" id="form-horizontal-text" id="Name" type="text" name="name" placeholder="Name" value="<%=currentUserProfile.name%>" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Wohnort</td>
@@ -35,7 +31,7 @@
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Über dich...</td>
-                                <td><textarea class="uk-input  uk-textarea" id="Bio" type="text" name="bio" placeholder="<%=currentUserProfile.bio%>" value="<%=currentUserProfile.bio%>"> <%=currentUserProfile.bio%></textarea></td>
+                                <td><textarea class="uk-input  uk-textarea" id="Bio" type="text" name="bio" placeholder="<%=currentUserProfile.bio%>" value="<%=currentUserProfile.bio%>"><%=currentUserProfile.bio%></textarea></td>
                             </tr>
                         </tbody>
                     </table>
@@ -104,23 +100,23 @@
                         <tbody>
                             <tr>
                                 <td class="uk-width-small">Universität</td>
-                                <td><input class="uk-input uk-form-small" id="Universität" type="text" name="university" placeholder="Universität"></td>
+                                <td><input class="uk-input uk-form-small" id="Universität" type="text" name="university" placeholder="Universität" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Studiengang</td>
-                                <td><input class="uk-input uk-form-small" id="Studiengang" type="text" name="fieldOfStudy" placeholder="Studiengang"></td>
+                                <td><input class="uk-input uk-form-small" id="Studiengang" type="text" name="fieldOfStudy" placeholder="Studiengang" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Abschluss</td>
-                                <td><input class="uk-input uk-form-small" id="Abschluss" type="text" name="degree" placeholder="Abschluss"></td>
+                                <td><input class="uk-input uk-form-small" id="Abschluss" type="text" name="degree" placeholder="Abschluss" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Von</td>
-                                <td><input class="uk-input uk-form-small" id="Von" type="date" name="from" placeholder="Von (Datum)"></td>
+                                <td><input class="uk-input uk-form-small" id="Von" type="date" name="from" placeholder="Von (Datum)" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">bis</td>
-                                <td><input class="uk-input uk-form-small" id="Bis" type="date" name="to" placeholder="Bis (Datum)"></td>
+                                <td><input class="uk-input uk-form-small" id="Bis" type="date" name="to" placeholder="Bis (Datum)" required></td>
                             </tr>
                         </tbody>
                     </table>
@@ -161,11 +157,11 @@
                         <tbody>
                             <tr>
                                 <td class="uk-width-small">Berufstitel</td>
-                                <td><input class="uk-input uk-form-small" id="Titel" type="text" name="title" placeholder="Berufstitel"></td>
+                                <td><input class="uk-input uk-form-small" id="Titel" type="text" name="title" placeholder="Berufstitel" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Unternehmen</td>
-                                <td><input class="uk-input uk-form-small" id="Unternehmen" type="text" name="company" placeholder="Unternehmen"></td>
+                                <td><input class="uk-input uk-form-small" id="Unternehmen" type="text" name="company" placeholder="Unternehmen" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Ort</td>
@@ -173,11 +169,11 @@
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Von</td>
-                                <td><input class="uk-input uk-form-small" id="Von" type="date" name="from" placeholder="Von (Datum)"></td>
+                                <td><input class="uk-input uk-form-small" id="Von" type="date" name="from" placeholder="Von (Datum)" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">bis</td>
-                                <td><input class="uk-input uk-form-small" id="Bis" type="date" name="to" placeholder="Bis (Datum)"></td>
+                                <td><input class="uk-input uk-form-small" id="Bis" type="date" name="to" placeholder="Bis (Datum)" required></td>
                             </tr>
                         </tbody>
                     </table>
@@ -191,11 +187,11 @@
                         <tbody>
                             <tr>
                                 <td class="uk-width-small">E-Mail</td>
-                                <td><input class="uk-input uk-form-small" id="newEmail" type="newEmail" name="newEmail" placeholder="Neue E-Mail Adresse eingeben"></td>
+                                <td><input class="uk-input uk-form-small" id="newEmail" type="newEmail" name="newEmail" placeholder="Neue E-Mail Adresse eingeben" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Passwort</td>
-                                <td><input class="uk-input uk-form-small" id="password" type="password" name="password" placeholder="Passwort zum bestätigen"></td>
+                                <td><input class="uk-input uk-form-small" id="password" type="password" name="password" placeholder="Passwort zum bestätigen" required></td>
                             </tr>
                         </tbody>
                     </table>
@@ -211,15 +207,15 @@
                         <tbody>
                             <tr>
                                 <td class="uk-width-small">Passwort</td>
-                                <td><input class="uk-input uk-form-small" id="password" type="password" name="password" placeholder="Passwort zum bestätigen"></td>
+                                <td><input class="uk-input uk-form-small" id="password" type="password" name="password" placeholder="Passwort zum bestätigen" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Neues Password</td>
-                                <td><input class="uk-input uk-form-small" id="newPW" type="newPW" name="newPW" placeholder="Neues Passwort eingeben"></td>
+                                <td><input class="uk-input uk-form-small" id="newPW" type="newPW" name="newPW" placeholder="Neues Passwort eingeben" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Bestätige Password</td>
-                                <td><input class="uk-input uk-form-small" id="newPW2" type="newPW2" name="newPW2" placeholder="Neues Passwort bestätigen"></td>
+                                <td><input class="uk-input uk-form-small" id="newPW2" type="newPW2" name="newPW2" placeholder="Neues Passwort bestätigen" required></td>
                             </tr>
                         </tbody>
                     </table>

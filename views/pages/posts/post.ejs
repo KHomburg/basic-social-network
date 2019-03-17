@@ -235,7 +235,7 @@
                             <div class="uk-accordion-content">                            
                                     <form action="/post/subcomment/create" method="post" enctype="multipart/form-data">
                                         <fieldset class="uk-fieldset">
-                                            <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben"></textarea>
+                                            <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben" required></textarea>
                                             <input type="hidden" name="postId" value="<%= post._id %>">
                                             <input type="hidden" name="commentId" value="<%= comment._id._id %>">
                                             <input type="hidden" name="index" value="<%= index %>">
@@ -263,7 +263,7 @@
             <h4> Comment erstellen:</h4>
             <form action="/post/comment/create" method="post" enctype="multipart/form-data">
                 <fieldset class="uk-fieldset">
-                    <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben"></textarea>
+                    <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben" required></textarea>
                     <input type="hidden" name="postId" value="<%= post._id %>"></br>
                     <input type="hidden" name="groupId" value="<%= group %>"></br>
                     <!--upload button -->
