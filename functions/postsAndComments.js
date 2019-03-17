@@ -610,7 +610,10 @@ const reportContent = (req, res) => {
             if(!findDoubles){
                 group.reprtedContent.push(newReportedContent)
                 group.save()
-                    .then(console.log(newReportedContent + " has been reported!"))
+                    .then(() =>{
+                            console.log(newReportedContent + " has been reported!");
+                            res.status(204).send();
+                        })
                     //.catch(console.log("something went wrong while trying to report object:" + newReportedContent))  ALWAYS EXECUTES THE CATCH FOR A REASON
             }else{
                 console.log("content already reported")
