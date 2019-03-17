@@ -123,7 +123,8 @@ router.post("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, 
 router.post("/subscribe", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
-    Group.findOne({name: req.body.groupName}, (err, group) => {
+    Group.findById(req.body.groupID)
+        .exec((err, group) => {
 
             //Add profile to group as member
             group.members.push(currentUserProfile);
@@ -137,6 +138,44 @@ router.post("/subscribe", authenticate.checkLogIn, authenticate.reqSessionProfil
     })
 })
 
+//post delete a single experience entry from profile(Private)
+//post /profile/expdelete
+router.post("/unsubscribe", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    Group.findById(req.body.groupID)
+    .exec((err, group) => {
+
+
+
+        let findIndexOfMember = () => {
+            //finding index of profile's in group's member array
+            return group.members.indexOf(
+                //find profile in member array
+                group.members.find(
+                    member => member.toString() == currentUserProfile._id.toString()
+                )
+            )
+        }
+        //splice currentUser out of members array of group
+        group.members.splice(findIndexOfMember(),1);
+
+        //find index of group in profile's membership array
+        let membershipIndex = () => {
+            return currentUserProfile.membership.indexOf(
+                currentUserProfile.membership.find(
+                    membership => membership._id._id.toString() == group._id.toString()
+                )
+            )
+        };
+        //splice group out of membership- array of profile
+        currentUserProfile.membership.splice(membershipIndex(), 1)
+        
+        group.save();
+        currentUserProfile.save(); 
+        
+        res.redirect("name/" + group.name) ;
+    })
+});
 
 ////get all reported content of a group
 ////get /name/mod/reportlist/:name
