@@ -17,8 +17,15 @@ router.post("/addcontact", authenticate.checkLogIn, authenticate.reqSessionProfi
     const currentUserProfile = req.currentUserProfile    
     Profile.findById({_id: req.body.profileId}, (err, profile) => {
         if(profile){
-            currentUserProfile.contacts.push(profile);
-            currentUserProfile.save(); 
+            const contacts = currentUserProfile.contacts
+            //check if contact is already in contacts list
+            let checkContact = contacts.find((contact) => {return contact._id._id.toString() == req.body.profileId.toString()})
+            if(checkContact == undefined){
+                currentUserProfile.contacts.push(profile);
+                currentUserProfile.save(); 
+            } else {
+                console.log("contact already in contacts list")
+            }
         } else {
             console.log("profile could not be found")
         }
@@ -34,19 +41,25 @@ router.post("/removecontact", authenticate.checkLogIn, authenticate.reqSessionPr
     //this route needs the id of the profile that will be spliced as profileId
 
     const contacts = currentUserProfile.contacts
+    //check if contact is already in contacts list
+    let checkContact = contacts.find((contact) => {return contact._id._id.toString() == req.body.profileId.toString()})
 
-    //find the index of profile in currentUsers contacts list
-    const findIndexOfProfile = () => {
-        return contacts.indexOf(
-            contacts.find(
-                contact => contact._id._id.toString() == req.body.profileId.toString()
+    if(checkContact !== undefined){
+        //find the index of profile in currentUsers contacts list
+        const findIndexOfProfile = () => {
+            return contacts.indexOf(
+                contacts.find(
+                    contact => contact._id._id.toString() == req.body.profileId.toString()
+                )
             )
-        )
-    }
+        }
 
-    //splice the profile out of currentUsers contacts list
-    contacts.splice(findIndexOfProfile(), 1)
-    currentUserProfile.save()
+        //splice the profile out of currentUsers contacts list
+        contacts.splice(findIndexOfProfile(), 1)
+        currentUserProfile.save()
+    }else{
+        console.log("tried to remove contact, that is not in contacts list")
+    }
 
 
     res.status(204).send(); //TODO: add frontend script to change state to addcontact form
