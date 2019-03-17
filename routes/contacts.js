@@ -69,13 +69,6 @@ router.get('/list', authenticate.checkLogIn, authenticate.reqSessionProfile, (re
             }
     }
     currentUserProfile.save()
-        //find matching avatars for profiles in contacts list and attach it to contact.avatarPath
-        .then(
-            contacts.forEach((contact) => {
-                contact.avatarPath = image.showAvatar(contact._id)
-            })
-        )
-
     res.render("pages/profile/contacts", {currentUserProfile, contacts});
 });
 

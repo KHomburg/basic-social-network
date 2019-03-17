@@ -122,16 +122,6 @@ const getPost = (req, res) => {
     )
     .exec((err,post) => {
         if(post){
-
-            post.profile.avatarPath = image.showAvatar(post.profile)
-
-            post.comments.forEach((comment) => {
-                comment._id.profile.avatarPath = image.showAvatar(comment._id.profile)
-                comment._id.subcomments.forEach((subcomment) => {
-                    subcomment._id.profile.avatarPath = image.showAvatar(subcomment._id.profile)
-                })
-            })
-
             //queries:
             //console.log(post)
             //console.log("--------------------")
@@ -572,9 +562,6 @@ const getStream = (req, res) => {
             ]
         )
         .exec((err, posts) => {
-            posts.forEach((post) => {
-                post.profile.avatarPath = image.showAvatar(post.profile)
-            })
             res.render("pages/posts/stream", {currentUserProfile, posts});
         })
 }

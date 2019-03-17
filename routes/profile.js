@@ -314,9 +314,6 @@ router.get('/list', authenticate.checkLogIn, authenticate.reqSessionProfile, (re
             Profile.count()
                 .exec((err2, count) => {
                     if(profiles){
-                        profiles.forEach((profile) => {
-                            profile.avatarPath = image.showAvatar(profile)
-                        })
                         res.render("pages/profile/allusers", {profiles, currentUserProfile, current: page, pages: Math.ceil(count / perPage) });
                     }else if(err1){
                         console.log(err1)
@@ -342,9 +339,6 @@ router.post("/search/", authenticate.checkLogIn, authenticate.reqSessionProfile,
         $text: {$search: term},
     })
         .then((profiles) => {
-            profiles.forEach((profile) => {
-                profile.avatarPath = image.showAvatar(profile)
-            })
             res.render("pages/profile/search", {profiles, currentUserProfile});
         });
 });

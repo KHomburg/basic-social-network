@@ -49,7 +49,11 @@ requires
         </div>
 
         <div class="uk-width-auto uk-margin-remove">
-            <img class="uk-comment-avatar" src="<%= post.profile.avatarPath %>" width="80" height="80" alt="">
+            <%if(post.profile.avatar){%>
+                <img class="uk-border" width="80" height="80" src="<%="images/avatars/" + post.profile.avatar %>">
+            <%}else{%>
+                <img class="uk-border" width="80" height="80" src="images/maxresdefault.jpg">
+            <%}%>
         </div>
         <div class="uk-width-expand uk-margin-remove">
             <h3 class="uk-comment-title uk-margin-remove"><%= post.title %></h3>                    

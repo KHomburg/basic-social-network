@@ -51,7 +51,11 @@ requires
                 </div>
 
                 <div class="uk-width-auto uk-margin-remove">
-                    <img class="uk-comment-avatar" src="<%= comment._id.profile.avatarPath %>" padding-left="30" width="50" height="50" alt="">
+                    <%if(comment._id.profile.avatar){%>
+                        <img class="uk-border" width="80" height="80" src="<%="images/avatars/" + comment._id.profile.avatar %>">
+                    <%}else{%>
+                        <img class="uk-border" width="80" height="80" src="images/maxresdefault.jpg">
+                    <%}%>
                 </div>
                 <div class="uk-width-expand uk-margin-remove">
                     <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><a href="/profile/id/<%= post.profile._id %>">von <%= comment._id.profile.name %></a></p>
@@ -125,7 +129,11 @@ requires
                             </div>
 
                                 <div class="uk-width-auto uk-margin-remove">
-                                    <img class="uk-comment-avatar" src="<%= subComment._id.profile.avatarPath %>" padding-left="30" width="50" height="50" alt="">
+                                    <%if(subComment._id.profile.avatar){%>
+                                        <img class="uk-border" width="80" height="80" src="<%="images/avatars/" + subComment._id.profile.avatar %>">
+                                    <%}else{%>
+                                        <img class="uk-border" width="80" height="80" src="images/maxresdefault.jpg">
+                                    <%}%>
                                 </div>
                                 <div class="uk-width-expand uk-margin-remove">
                                     <ul class="uk-comment-meta uk-subnav uk-margin-remove-top">
