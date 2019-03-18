@@ -5,6 +5,7 @@
 
 <body>
     <div class="main">
+    <% include ../../partials/sidebar %>
         <!-- listing posts -->
         <% if(posts){ posts.forEach((post) => { %>
             <%- include('../../partials/components/single-post-reference', {post: post})%>

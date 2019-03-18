@@ -1,14 +1,15 @@
 body{
     margin: 0px auto 0px auto;
-    width: 960px;
+    max-width: 960px;
     color: #000000;
     background-color: #d6e8e957
 }
 
 /* Style page content */
 .main {
-    margin-left: 200px; /* Same as the width of the sidebar */
-    padding: 20px;
+    margin: 0px auto 0px auto; /* Same as the width of the sidebar */
+    padding: 0px 20px 0px 20px;
+    max-width: 690px;
 }
 
 .deutschland{

@@ -1,36 +1,47 @@
     <!--Sidebar-->
     <!-- Side navigation -->
-    <div class="sidenav">
-        <ul class="uk-nav-default uk-nav-parent-icon" uk-nav="multiple: true">
+    <div id="offcanvas-overlay" uk-offcanvas="container: true">
+        <div class="sidenav uk-offcanvas-bar">
+            <ul class="uk-nav-default uk-nav-parent-icon" uk-nav="multiple: true">
 
-            <li class="uk-active parent">Meine Gruppen</li>
-            <li class="uk-nav-divider"></li>
+                <li class="uk-active parent">Meine Gruppen</li>
+                <li class="uk-nav-divider"></li>
 
-            <%if (currentUserProfile.moderatorOf.length > 0) { %>
-                <li class="uk-parent">
-                    <a href="#">Als Moderator</a>
-                        <ul class="uk-nav-sub">
-                            <% currentUserProfile.moderatorOf.forEach((group) => { %>                                 
-                                <li><a href="/group/mod/reportlist/<%= group._id.name %>"><%= group._id.name %></a></li>
+
+
+                <%if (currentUserProfile.membership.length > 0) { %>
+                    <ul class="uk-nav uk-margin-top uk-nav-default">
+                        <li class="uk-active">Mitglied von:</li>
+
+                            <% currentUserProfile.membership.forEach((group) => { %>     
+                                
+                                    <li><a class="side-link" href="/group/name/<%= group._id.name %> "><span uk-icon="icon: chevron-right"></span> <%= group._id.name %></a></li>
+                                
                             <% }) %>
-                        </ul>
-                </li>    
-                <li class="uk-nav-divider"></li>            
-            <% } %>
+                    
+                        </li>  
+                    </ul>              
+                <% } %>
+                
+                <li class="uk-nav-divider"></li>
+                <%if (currentUserProfile.moderatorOf.length > 0) { %>
+                    <li class="uk-parent">
+                        <a href="#">Als Moderator</a>
+                            <ul class="uk-nav">
+                                <% currentUserProfile.moderatorOf.forEach((group) => { %>                                 
+                                    <li ><a class="side-link" href="/group/mod/reportlist/<%= group._id.name %>"><span uk-icon="icon: chevron-right"></span> <%= group._id.name %></a></li>
+                                <% }) %>
+                            </ul>
+                    </li>    
+                    <li class="uk-nav-divider"></li>            
+                <% } %>
 
+                
 
-            <%if (currentUserProfile.membership.length > 0) { %>
-                <ul class="uk-nav uk-nav-default">
-                    <li class="uk-active">Mitglied von:</li>
+                <li class="uk-nav uk-margin-top">
+                    <a class="side-link" href="/group/all/1/"><span uk-icon="icon: chevron-right"></span> Alle Gruppen</a>
+                </li>   
 
-                        <% currentUserProfile.membership.forEach((group) => { %>     
-                            
-                                <li><a href="/group/name/<%= group._id.name %>"><%= group._id.name %></a></li>
-                            
-                        <% }) %>
-                </li>                
-            <% } %>
-
-        </ul>
-    </div>
+            </ul>
+        </div>
     </div>

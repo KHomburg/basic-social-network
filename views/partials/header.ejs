@@ -4,6 +4,13 @@
         <nav class="uk-navbar-container uk-navbar style="top: 0px uk-navbar="mode: hover;" >
             <div class="uk-navbar-left">
                 <ul class="uk-navbar-nav">
+                <li>
+                    <li class="">
+                        <!-- This is a button toggling the off-canvas -->
+                        <button class="uk-button uk-button-default uk-margin-top uk-margin-small-right" type="button" uk-toggle="target: #offcanvas-overlay">Gruppen</button>
+                        
+                    </li>
+                </li>
                     <li>
                         <li class="">
                             <a href="#"><%= currentUserProfile.name %></a>
@@ -50,34 +57,8 @@
             </div>
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
-                <li class="">
-                    <a href="/group/all/1/">Alle Gruppen</a>
-                </li>   
-                <li class="">
-                    <a href="/profile/list">Alle Profile</a>
-                </li>
-                    <li>
-                        <a href="#">Parent</a>
-                        <div class="uk-navbar-dropdown">
-                            <ul class="uk-nav uk-navbar-dropdown-nav">
-                                <li class="uk-active">
-                                    <a href="#">Active</a>
-                                </li>
-                                <li>
-                                    <a href="#">Item</a>
-                                </li>
-                                <li class="uk-nav-header">Header</li>
-                                <li>
-                                    <a href="#">Item</a>
-                                </li>
-                                <li>
-                                    <a href="#">Item</a>
-                                </li>
-                                <li>
-                                    <a href="#">Item</a>
-                                </li>
-                            </ul>
-                        </div>
+                    <li class="">
+                        <a href="/profile/list">Alle Profile</a>
                     </li>
                 </ul>
             </div>

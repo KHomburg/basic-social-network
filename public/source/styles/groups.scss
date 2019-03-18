@@ -1,7 +1,8 @@
 .group-header{
     padding: 20px 20px 0px 20px;
     font-size: 30px;
-    width: 640px;
+    width: 90%;
+    max-width: 640px;
 }
 
 .sub-button{
@@ -13,8 +14,9 @@
 }
 
 .new-post{
+    width: 100%;
     margin: 8px 8px 20px 8px;
-    width: 670px;
+    max-width: 670px;
 }
 
 .subcomment-slider-title{
@@ -27,7 +29,8 @@
 .subcomment-form{
     background-color: white;
     padding-top: 10px;
-    width: 630px;
+    width: 100%;
+    max-width: 630px;
     //border-top: 1px solid #e5e5e5;
     margin: 20px 8px 8px 8px;
     //display: none;
@@ -36,7 +39,8 @@
 .post{
     background-color: white;
     padding: 20px;
-    width: 630px;
+    width: 90%;
+    max-width: 630px;
     border: 1px solid #e5e5e5;
     margin: 8px;
     border-left: 8px solid #1e87f0;
@@ -53,7 +57,8 @@
         display: inline-block;
         margin-top: 10px;
         margin-bottom: 10px;
-        width: 300px;
+        width: 100%;
+        max-width: 300px;
         color: #999;
         font-size: .75rem;
         text-transform: uppercase;
@@ -65,7 +70,8 @@
         color: #999;
         margin-top: 10px;
         margin-bottom: 10px;
-        width: 300px;
+        width: 100%;
+        max-width: 300px;
         color: #999;
         font-size: .75rem;
         text-transform: uppercase;
@@ -75,7 +81,8 @@
     &__comment{
         background-color: white;
         padding: 20px;
-        width: 630px;
+        width: 90%;
+        max-width: 630px;
         border: 1px solid #e5e5e5;
         border-left: 8px solid #1e87f0;
         margin: 8px 8px 8px 8px;
@@ -83,7 +90,8 @@
     &__sub-comment{
         background-color: white;
         padding: 0px 0px 0px 10px;
-        width: 580px;
+        width: 90%;
+        max-width: 580px;
         border-top: 1px solid #999;
         border-left: 4px solid #1e87f0;
         margin: 20px 8px 20px 50px;

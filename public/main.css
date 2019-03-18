@@ -1,7 +1,8 @@
 .group-header {
   padding: 20px 20px 0px 20px;
   font-size: 30px;
-  width: 640px; }
+  width: 90%;
+  max-width: 640px; }
 
 .sub-button {
   display: inline-block;
@@ -11,8 +12,9 @@
   display: inline-block; }
 
 .new-post {
+  width: 100%;
   margin: 8px 8px 20px 8px;
-  width: 670px; }
+  max-width: 670px; }
 
 .subcomment-slider-title {
   border: 1px solid #e5e5e5;
@@ -21,13 +23,15 @@
 .subcomment-form {
   background-color: white;
   padding-top: 10px;
-  width: 630px;
+  width: 100%;
+  max-width: 630px;
   margin: 20px 8px 8px 8px; }
 
 .post {
   background-color: white;
   padding: 20px;
-  width: 630px;
+  width: 90%;
+  max-width: 630px;
   border: 1px solid #e5e5e5;
   margin: 8px;
   border-left: 8px solid #1e87f0; }
@@ -42,7 +46,8 @@
     display: inline-block;
     margin-top: 10px;
     margin-bottom: 10px;
-    width: 300px;
+    width: 100%;
+    max-width: 300px;
     color: #999;
     font-size: .75rem;
     text-transform: uppercase;
@@ -53,7 +58,8 @@
     color: #999;
     margin-top: 10px;
     margin-bottom: 10px;
-    width: 300px;
+    width: 100%;
+    max-width: 300px;
     color: #999;
     font-size: .75rem;
     text-transform: uppercase;
@@ -62,14 +68,16 @@
   .post__comment {
     background-color: white;
     padding: 20px;
-    width: 630px;
+    width: 90%;
+    max-width: 630px;
     border: 1px solid #e5e5e5;
     border-left: 8px solid #1e87f0;
     margin: 8px 8px 8px 8px; }
   .post__sub-comment {
     background-color: white;
     padding: 0px 0px 0px 10px;
-    width: 580px;
+    width: 90%;
+    max-width: 580px;
     border-top: 1px solid #999;
     border-left: 4px solid #1e87f0;
     margin: 20px 8px 20px 50px; }
@@ -98,15 +106,16 @@
 
 body {
   margin: 0px auto 0px auto;
-  width: 960px;
+  max-width: 960px;
   color: #000000;
   background-color: #d6e8e957; }
 
 /* Style page content */
 .main {
-  margin-left: 200px;
+  margin: 0px auto 0px auto;
   /* Same as the width of the sidebar */
-  padding: 20px; }
+  padding: 0px 20px 0px 20px;
+  max-width: 690px; }
 
 .deutschland {
   width: 260px;
@@ -155,23 +164,15 @@ body {
 .profile__dl {
   margin-top: 5px; }
 
-#output_image {
-  max-width: 300px; }
-
 /* The sidebar menu */
 .sidenav {
   height: 100%;
   /* Full-height: remove this if you want "auto" height */
-  width: 160px;
+  width: 250px;
   /* Set the width of the sidebar */
-  position: fixed;
-  /* Fixed Sidebar (stay in place on scroll) */
-  z-index: 1;
-  /* Stay on top */
   top: 0;
   /* Stay at the top */
-  margin-top: 80px;
-  background-color: #ffffff;
+  background-color: #1e87f0;
   /* Black */
   overflow-x: hidden;
   /* Disable horizontal scroll */
@@ -179,6 +180,13 @@ body {
   border-right: 1px solid #e5e5e5;
   /* The navigation menu links */ }
   .sidenav a {
-    padding: 6px 8px 6px 16px;
+    padding: 30px 8px 6px 16px;
     text-decoration: none;
-    display: block; }
+    display: block;
+    width: 100%;
+    color: white !important;
+    margin: 10px 0px 10px 0px;
+    padding: 3px 3px; }
+
+.side-link {
+  border: 1px solid white; }
