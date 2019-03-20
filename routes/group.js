@@ -280,6 +280,10 @@ router.get("/modpanel/reportlist/:name", authenticate.checkLogIn, authenticate.r
 ////get /name/modpanel/members
 router.get("/modpanel/members/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
+
+
+    //TODO: for all members if they are moderators to adjust to addmod button
+    //TODO: add pagination
     Group.findOne({name: req.params.name})
     .populate(
         [
@@ -456,7 +460,6 @@ router.post('/mod/subcomment/delete', authenticate.checkLogIn, authenticate.reqS
 router.post('/mod/reportlist/removecontent', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const groupID = req.body.groupID
 
-
     //TODO:check if user who wants to remove content is mod
     //find group for remove the reported post from reportedPosts list
     Group.findById(groupID)
@@ -494,32 +497,78 @@ router.post('/mod/reportlist/removecontent', authenticate.checkLogIn, authentica
 
 //post request for adding a member of a group to moderators
 //post /name/mod/reportlist/removecontent; (private)
-router.post("/mod/addmod", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.post("/mod/addmod/:id", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
-    const groupID = req.body.groupId
-    const profileId = req.body.profileId
+    const groupID = req.body.groupID
+    const profileID = req.params.id
 
-    //TODO: check if user who wants to add mod is mod
     //TODO: check if group already is in profiles moderatorOf array
     //TODO: check if profile is already in groups moderators array
 
+    
     Group.findById(groupID)
         .exec((err1, group) => {
             if(group){
-                Profile.findById(profileId)
-                    .exec((err2, profile) => {
-                        if(profile){
+                Profile.findById(profileID)
+                .exec((err2, profile) => {
+                    if(profile){
 
+                        group.members.forEach((member) => {
+                            group.moderators
+                        })
+
+                        //checks if currentUser is mod of the group (returns boolean)
+                        let ifCurrentUserIsMod = undefined
+                        if(group.moderator.find((moderator)=>{ return moderator._id._id.toString() == currentUserProfile._id.toString()})){
+                            ifCurrentUserIsMod = true
+                        } else {
+                            ifCurrentUserIsMod = false
+                        }
+                        console.log(ifCurrentUserIsMod)
+
+                        //checks if the members profile (which shall be added) is already groups moderators array (returns boolean)
+                        let ifMemberIsMod = undefined
+                        if(group.moderator.find((moderator)=>{ return moderator._id._id.toString() == profileID.toString()})){
+                            ifMemberIsMod = true
+                        } else {
+                            ifMemberIsMod = false
+                        }
+                        console.log(ifMemberIsMod)
+
+                        //checks if the group id is already in profiles moderatorOf array (returns boolean)
+                        let ifGroupIsInModeratorOfs = undefined
+                        if(profile.moderatorOf.find((modOfGroup)=>{ return modOfGroup._id._id.toString() == group._id.toString()})){
+                            ifGroupIsInModeratorOfs = true
+                        } else {
+                            ifGroupIsInModeratorOfs = false
+                        }
+                        console.log(ifGroupIsInModeratorOfs)
+
+                        //add member as mod or error
+                        if(ifCurrentUserIsMod && !ifMemberIsMod && !ifGroupIsInModeratorOfs){
+                            //add member as mod
                             //push group to profile.moderatorOf; push profile to group.moderator
                             group.moderator.push(profile)
                             profile.moderatorOf.push(group)
                             group.save()
                             profile.save().then(res.redirect('back'))
-                        }else{
-                            console.log(err2)
+                        } else if (ifCurrentUserIsMod && ifMemberIsMod && ifCurrentUserIsMod){
+                            //user is already mod
+                            console.log("ERROR: user " + profile._id + " is already Moderator of " + group.name)
+                            res.status(204).send();
+                        } else {
+                            //CRUCIAL ERROR: member is assigned as moderator either in group.moderators or profile.moderatorOf, but not the other
+                            console.log("CRUCIAL ERROR: member is assigned as moderator either in group.moderators or profile.moderatorOf, but not the other -> " + "User: " + profile._id + ", Group: " + group._id)
+                            res.status(204).send();
                         }
-                    })
+
+                    }else{
+                        //error finding profile
+                        console.log(err2)
+                    }
+                })
             }else{
+                //error finding group
                 console.log(err1)
             }
         })
