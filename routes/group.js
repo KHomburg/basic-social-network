@@ -281,8 +281,6 @@ router.get("/modpanel/reportlist/:name", authenticate.checkLogIn, authenticate.r
 router.get("/modpanel/members/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
-
-    //TODO: for all members if they are moderators to adjust to addmod button
     //TODO: add pagination
     Group.findOne({name: req.params.name})
     .populate(
@@ -514,10 +512,6 @@ router.post("/mod/addmod/:id", authenticate.checkLogIn, authenticate.reqSessionP
     const currentUserProfile = req.currentUserProfile
     const groupID = req.body.groupID
     const profileID = req.params.id
-
-    //TODO: check if group already is in profiles moderatorOf array
-    //TODO: check if profile is already in groups moderators array
-
     
     Group.findById(groupID)
         .exec((err1, group) => {
@@ -604,20 +598,15 @@ router.post("/search", authenticate.checkLogIn, authenticate.reqSessionProfile, 
 
 })
 
-//get request to show search view
+//get request to show search view for groups
 //get group/search
 router.get("/search", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
-
-
     const groups = []
     res.render("pages/group/search", {
         groups: groups, 
         currentUserProfile: currentUserProfile,                 
     })
-
-
-
 })
 
 module.exports = router;
