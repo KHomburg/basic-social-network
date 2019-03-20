@@ -7,7 +7,7 @@
     <div class="main">
         <h1> contacts list </h1>    
         <% if(contacts){ contacts.forEach((contact) => { %>
-            <%- include('../../partials/components/single-profile-reference', {profile: contact, currentUserProfile})%>
+            <%- include('../../partials/components/single-profile-reference', {profile: contact._id, currentUserProfile})%>
         <% })} %>
 
 
