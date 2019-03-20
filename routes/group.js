@@ -56,8 +56,11 @@ router.get('/name/:name', authenticate.checkLogIn, authenticate.reqSessionProfil
         const findMods = currentGroup.moderator.find(            
             (groupMods) => {return groupMods._id == currentUserProfile._id.toString()}
         )
+        
+        console.log(findMembership)
+        console.log(findMods)
             //create membership if not already, or mod
-            if (findMembership == undefined && findMods == undefined){
+            if (findMembership == undefined){
                 var membership = false
             } else {
                 var membership = true
