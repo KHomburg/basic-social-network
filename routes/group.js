@@ -193,19 +193,11 @@ router.post("/unsubscribe", authenticate.checkLogIn, authenticate.reqSessionProf
 
 ////get all reported content of a group
 ////get /name/mod/reportlist/:name
-router.get("/mod/reportlist/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.get("/modpanel/reportlist/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     Group.findOne({name: req.params.name})
     .populate(
         [
-            {
-                path: "members._id",
-                model:"profile",
-            },
-            {
-                path: "moderator._id",
-                model:"profile",
-            },
             {
                 path: "reportedPosts.content",
                 model: "post",
@@ -274,7 +266,79 @@ router.get("/mod/reportlist/:name", authenticate.checkLogIn, authenticate.reqSes
                     }
                     group.save()
                     
-                    res.render("pages/group/mod-panel", {currentUserProfile, group, reportedPosts, reportedComments, reportedSubcomments, groupID})
+                    res.render("pages/group/modpanel-reportlist", {currentUserProfile, group, reportedPosts, reportedComments, reportedSubcomments, groupID})
+                } else{
+                    console.log("cannot show this site: User is not a moderator of this group")
+                }
+        }else{
+            console.log("unable to find group")
+        }
+    })
+});
+
+////get all members of group shown in mod panel
+////get /name/modpanel/members
+router.get("/modpanel/members/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    Group.findOne({name: req.params.name})
+    .populate(
+        [
+            {
+                path: "members._id",
+                model:"profile",
+            },
+            {
+                path: "moderator._id",
+                model:"profile",
+            }
+        ]
+    )
+    .exec((err, group) => {
+            if(group){
+                const ifUserIsMod = group.moderator.find((moderator)=>{
+                    return moderator._id._id.toString() == currentUserProfile._id.toString()
+                })
+
+                if(ifUserIsMod){
+                    const groupID = group._id
+                    
+                    res.render("pages/group/modpanel-members", {currentUserProfile, group, groupID})
+                } else{
+                    console.log("cannot show this site: User is not a moderator of this group")
+                }
+        }else{
+            console.log("unable to find group")
+        }
+    })
+});
+
+////get all moderators of group shown in mod panel
+////get /name/modpanel/moderators
+router.get("/modpanel/moderators/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    Group.findOne({name: req.params.name})
+    .populate(
+        [
+            {
+                path: "members._id",
+                model:"profile",
+            },
+            {
+                path: "moderator._id",
+                model:"profile",
+            }
+        ]
+    )
+    .exec((err, group) => {
+            if(group){
+                const ifUserIsMod = group.moderator.find((moderator)=>{
+                    return moderator._id._id.toString() == currentUserProfile._id.toString()
+                })
+
+                if(ifUserIsMod){
+                    const groupID = group._id
+                    
+                    res.render("pages/group/modpanel-moderators", {currentUserProfile, group, groupID})
                 } else{
                     console.log("cannot show this site: User is not a moderator of this group")
                 }
@@ -309,7 +373,7 @@ router.post('/mod/post/delete', authenticate.checkLogIn, authenticate.reqSession
             group.save()
                 .then(
                     postsAndComments.deletePost(req, res, (groupName) => {
-                        res.redirect("/group/mod/reportlist/" +groupName)
+                        res.redirect("/group/modpanel/reportlist/" +groupName)
                     })
                 )
         }else{
@@ -343,7 +407,7 @@ router.post('/mod/comment/delete', authenticate.checkLogIn, authenticate.reqSess
             group.save()
                 .then(
                     postsAndComments.deleteComment(req, res, (groupName) => {
-                        res.redirect("/group/mod/reportlist/" +groupName)
+                        res.redirect("/group/modpanel/reportlist/" +groupName)
                     })
                 )
         }else{
@@ -378,7 +442,7 @@ router.post('/mod/subcomment/delete', authenticate.checkLogIn, authenticate.reqS
             group.save()
                 .then(
                     postsAndComments.deleteSubComment(req, res, (groupName) => {
-                        res.redirect("/group/mod/reportlist/" +groupName)
+                        res.redirect("/group/modpanel/reportlist/" +groupName)
                     })
                 )
         }else{
@@ -421,7 +485,7 @@ router.post('/mod/reportlist/removecontent', authenticate.checkLogIn, authentica
         if(findReportedContent){
             reportedContents.splice(contentIndex, 1)
             group.save()
-                .then(res.redirect("/group/mod/reportlist/" +group.name))
+                .then(res.redirect("/group/modpanel/reportlist/" +group.name))
         }else{
             console.log("error in /mod/reportlist/removecontent")
         }
@@ -435,7 +499,9 @@ router.post("/mod/addmod", authenticate.checkLogIn, authenticate.reqSessionProfi
     const groupID = req.body.groupId
     const profileId = req.body.profileId
 
-    //TODO:check if user who wants to add mod is mod
+    //TODO: check if user who wants to add mod is mod
+    //TODO: check if group already is in profiles moderatorOf array
+    //TODO: check if profile is already in groups moderators array
 
     Group.findById(groupID)
         .exec((err1, group) => {

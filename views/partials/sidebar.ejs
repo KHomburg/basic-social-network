@@ -29,7 +29,7 @@
                         <a href="#">Als Moderator</a>
                             <ul class="uk-nav">
                                 <% currentUserProfile.moderatorOf.forEach((group) => { %>                                 
-                                    <li ><a class="side-link" href="/group/mod/reportlist/<%= group._id.name %>"><span uk-icon="icon: chevron-right"></span> <%= group._id.name %></a></li>
+                                    <li ><a class="side-link" href="/group/modpanel/reportlist/<%= group._id.name %>"><span uk-icon="icon: chevron-right"></span> <%= group._id.name %></a></li>
                                 <% }) %>
                             </ul>
                     </li>    
