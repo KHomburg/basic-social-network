@@ -14,18 +14,20 @@
         </div>
 
         <!-- List all Members -->
-        <% if(group.members){ group.members.forEach((profile) => { %>
-            <% profile = profile._id%>
+        <% if(group.members){ group.members.forEach((member) => { %>
+            <% profile = member._id%>
             <%- include('../../partials/components/single-profile-reference', {profile, currentUserProfile})%>
-            <!-- Delete Button for Post-->
-            <div class="uk-margin-left uk-margin-right uk-margin-bottom">
-                <form action="/group/mod/addmod/<%=profile._id%>" method="post">
-                    <div class="uk-margin-top" style="display:none">
-                        <input type="hidden" name="groupID" value= "<%=group._id %>"></br>
-                    </div>
-                    <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Add as Mod">
-                </form>
-            </div>
+            <!-- Button to add Member as Mod-->
+            <%if(profile.isMod == false){%>
+                <div class="uk-margin-left uk-margin-right uk-margin-bottom">
+                    <form action="/group/mod/addmod/<%=profile._id%>" method="post">
+                        <div class="uk-margin-top" style="display:none">
+                            <input type="hidden" name="groupID" value= "<%=group._id %>"></br>
+                        </div>
+                        <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Add as Mod">
+                    </form>
+                </div>
+            <%}%>
         <%})} %>
 
 

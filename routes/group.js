@@ -299,11 +299,24 @@ router.get("/modpanel/members/:name", authenticate.checkLogIn, authenticate.reqS
     )
     .exec((err, group) => {
             if(group){
-                const ifUserIsMod = group.moderator.find((moderator)=>{
+                
+                //check for each member if is mode; if so add member._id.isMod = true
+                group.members.forEach((member) =>{
+                    if (group.moderator.find((mod) => {
+                        return mod._id._id.toString() == member._id._id.toString()
+                    })){
+                        member._id.isMod = true
+                    } else{
+                        member._id.isMod = false
+                    }
+                })
+
+                //check if user that requests this modpanel is mod of this group
+                const ifCurrentUserIsMod = group.moderator.find((moderator)=>{
                     return moderator._id._id.toString() == currentUserProfile._id.toString()
                 })
 
-                if(ifUserIsMod){
+                if(ifCurrentUserIsMod){
                     const groupID = group._id
                     
                     res.render("pages/group/modpanel-members", {currentUserProfile, group, groupID})
@@ -524,7 +537,6 @@ router.post("/mod/addmod/:id", authenticate.checkLogIn, authenticate.reqSessionP
                         } else {
                             ifCurrentUserIsMod = false
                         }
-                        console.log(ifCurrentUserIsMod)
 
                         //checks if the members profile (which shall be added) is already groups moderators array (returns boolean)
                         let ifMemberIsMod = undefined
@@ -533,7 +545,6 @@ router.post("/mod/addmod/:id", authenticate.checkLogIn, authenticate.reqSessionP
                         } else {
                             ifMemberIsMod = false
                         }
-                        console.log(ifMemberIsMod)
 
                         //checks if the group id is already in profiles moderatorOf array (returns boolean)
                         let ifGroupIsInModeratorOfs = undefined
@@ -542,7 +553,6 @@ router.post("/mod/addmod/:id", authenticate.checkLogIn, authenticate.reqSessionP
                         } else {
                             ifGroupIsInModeratorOfs = false
                         }
-                        console.log(ifGroupIsInModeratorOfs)
 
                         //add member as mod or error
                         if(ifCurrentUserIsMod && !ifMemberIsMod && !ifGroupIsInModeratorOfs){
