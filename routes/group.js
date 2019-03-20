@@ -57,8 +57,6 @@ router.get('/name/:name', authenticate.checkLogIn, authenticate.reqSessionProfil
             (groupMods) => {return groupMods._id == currentUserProfile._id.toString()}
         )
         
-        console.log(findMembership)
-        console.log(findMods)
             //create membership if not already, or mod
             if (findMembership == undefined){
                 var membership = false
@@ -147,35 +145,48 @@ router.post("/unsubscribe", authenticate.checkLogIn, authenticate.reqSessionProf
     const currentUserProfile = req.currentUserProfile
     Group.findById(req.body.groupID)
     .exec((err, group) => {
+        //Check wether User is already member/mod
+        const findMembership = group.members.find(
+            (groupMember) => {return groupMember._id.toString() == currentUserProfile._id.toString()}
+        )
+        //console.log(group.members)
+        //console.log(currentUserProfile.membership)
 
-
-
-        let findIndexOfMember = () => {
-            //finding index of profile's in group's member array
-            return group.members.indexOf(
-                //find profile in member array
-                group.members.find(
-                    member => member.toString() == currentUserProfile._id.toString()
+        if (findMembership !== undefined){
+            let findIndexOfMember = () => {
+                //finding index of profile's in group's member array
+                return group.members.indexOf(
+                    //find profile in member array
+                    group.members.find(
+                        (member) => {
+                            return member._id.toString() == currentUserProfile._id.toString()
+                        }
+                    )
                 )
-            )
+            }
+
+            //splice currentUser out of members array of group
+            group.members.splice(findIndexOfMember(),1);
+
+            //find index of group in profile's membership array
+            let membershipIndex = () => {
+                return currentUserProfile.membership.indexOf(
+                    currentUserProfile.membership.find(
+                        (membership) => {
+                            return membership._id._id.toString() == group._id.toString()
+                        }
+                    )
+                )
+            };
+
+            //splice group out of membership- array of profile
+            currentUserProfile.membership.splice(membershipIndex(), 1)
+            
+            group.save();
+            currentUserProfile.save(); 
+        } else{
+            console.log("Error: user tried to unsubscribe a group which user is not member of")
         }
-        //splice currentUser out of members array of group
-        group.members.splice(findIndexOfMember(),1);
-
-        //find index of group in profile's membership array
-        let membershipIndex = () => {
-            return currentUserProfile.membership.indexOf(
-                currentUserProfile.membership.find(
-                    membership => membership._id._id.toString() == group._id.toString()
-                )
-            )
-        };
-        //splice group out of membership- array of profile
-        currentUserProfile.membership.splice(membershipIndex(), 1)
-        
-        group.save();
-        currentUserProfile.save(); 
-        
         res.redirect("name/" + group.name) ;
     })
 });
