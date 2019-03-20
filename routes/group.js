@@ -290,6 +290,8 @@ router.post('/mod/post/delete', authenticate.checkLogIn, authenticate.reqSession
     const groupID = req.body.groupID
     const reportedPost = req.body.reportedPost
 
+    //TODO:check if user who wants to remove content is mod
+
     //find group for remove the reported post from reportedPosts list
     Group.findById(groupID)
     .exec((err, group)=>{
@@ -321,6 +323,8 @@ router.post('/mod/post/delete', authenticate.checkLogIn, authenticate.reqSession
 router.post('/mod/comment/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const groupID = req.body.groupID
     const reportedComment = req.body.reportedComment
+
+    //TODO:check if user who wants to remove content is mod
 
     //find group for remove the reported post from reportedPosts list
     Group.findById(groupID)
@@ -355,6 +359,8 @@ router.post('/mod/subcomment/delete', authenticate.checkLogIn, authenticate.reqS
     const groupID = req.body.groupID
     const reportedSubcomment = req.body.reportedSubcomment
 
+    //TODO:check if user who wants to remove content is mod
+
     //find group for remove the reported post from reportedPosts list
     Group.findById(groupID)
     .exec((err, group)=>{
@@ -386,6 +392,8 @@ router.post('/mod/subcomment/delete', authenticate.checkLogIn, authenticate.reqS
 router.post('/mod/reportlist/removecontent', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const groupID = req.body.groupID
 
+
+    //TODO:check if user who wants to remove content is mod
     //find group for remove the reported post from reportedPosts list
     Group.findById(groupID)
     .exec((err, group)=>{
@@ -426,6 +434,8 @@ router.post("/mod/addmod", authenticate.checkLogIn, authenticate.reqSessionProfi
     const currentUserProfile = req.currentUserProfile
     const groupID = req.body.groupId
     const profileId = req.body.profileId
+
+    //TODO:check if user who wants to add mod is mod
 
     Group.findById(groupID)
         .exec((err1, group) => {
