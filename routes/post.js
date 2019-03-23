@@ -8,7 +8,7 @@ const multer = require('multer');
 const postsAndComments = require("../functions/postsAndComments");
 
 //Load models
-const Avatar = require("../models/Avatar");   
+const Avatar = require("../models/Avatar");
 
 
 router.get("/test", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => { 
@@ -16,42 +16,6 @@ router.get("/test", authenticate.checkLogIn, authenticate.reqSessionProfile, (re
     res.render("pages/test", {currentUserProfile})
 });
 
-
-
-// TODO: delete following two routes
-router.post('/upload1', authenticate.checkLogIn, authenticate.reqSessionProfile, function (req, res, next) {
-    const currentUserProfile = req.currentUserProfile
-    var upload = multer({
-        storage: image.uploadAvatar
-    })
-    .single('avatar')
-	upload(req, res, function(err) {
-        console.log(req.body)
-        console.log(req.file)
-        const id = req.file.filename.toString()
-        const newAvatar = new Avatar({
-            _id : id,
-            profile : currentUserProfile,
-        })
-        newAvatar.save()
-        currentUserProfile.avatar = newAvatar;
-        currentUserProfile.save()
-
-		res.end('File is uploaded')
-    })
-})
-
-router.post('/upload2',  function (req, res, next) {
-    var upload = multer({
-        storage: imageUpload.uploadContentImage
-    })
-    .single('image')
-	upload(req, res, function(err) {
-        console.log(req.body)
-		res.end('File is uploaded')
-	})
-
-})
 
 
 ////get request for post stream
