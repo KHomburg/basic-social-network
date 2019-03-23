@@ -9,10 +9,7 @@
     <div class="main">
         <%- include('../../partials/components/show-post', {post: post, group: group})%>
 
-
         <%- include('../../partials/components/list-comments-with-subcomments', {post: post, group: group})%>
-
-
 
         <!-- Form for creating new 1st level comment -->
         <div class="post">
@@ -21,7 +18,7 @@
                 <fieldset class="uk-fieldset">
                     <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben" required></textarea>
                     <input type="hidden" name="postId" value="<%= post._id %>"></br>
-                    <input type="hidden" name="groupId" value="<%= group %>"></br>
+                    <input type="hidden" name="groupId" value="<%= group._id %>"></br>
                     <!--upload button -->
                     <div class="js-upload" uk-form-custom>
                         <input type="file" name='image' single>
