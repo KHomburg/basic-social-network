@@ -200,7 +200,17 @@ router.get("/mycontent/posts/:page", authenticate.checkLogIn, authenticate.reqSe
         .sort({date: -1})
         .skip((perPage * page) - perPage)
         .limit(perPage)
-        .populate("profile")
+        .populate(
+        [
+            {
+                path: "profile",
+                model: "profile"
+            },
+            {
+                path: "group",
+                model: "group"
+            }
+        ])
         .exec((err1, posts) => {
             //count posts for pagination
             Post.count()
@@ -238,6 +248,10 @@ router.get("/mycontent/comments/:page", authenticate.checkLogIn, authenticate.re
                     model: "profile"
                 },
                 {
+                    path: "group",
+                    model: "group"
+                },
+                {
                     path: "parentPost",
                     model: "post"
                 },
@@ -257,6 +271,10 @@ router.get("/mycontent/comments/:page", authenticate.checkLogIn, authenticate.re
                                 {
                                     path: "profile",
                                     model: "profile"
+                                },
+                                {
+                                    path: "group",
+                                    model: "group"
                                 },
                                 {
                                     path: "parentPost",

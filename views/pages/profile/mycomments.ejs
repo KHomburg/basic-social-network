@@ -8,39 +8,10 @@
 <body>
     <div class="main">
 
-        <!-- listing posts -->
+        <!-- listing comments -->
         <% if(allComments){ allComments.forEach((comment) => { %>
-            <% comment %>
-            <div class="post">
-                <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
-                    <div class="uk-width-auto">
-                        <img class="uk-comment-avatar" src="images/maxresdefault.jpg" width="80" height="80" alt="">
-                    </div>
-                    <div class="uk-width-expand">
-                        <% if(comment.parentPost != null){ %>
-                            <h4 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="/post/id/#"><%=comment.parentPost.title %></a></h4>
-                            <ul class="uk-comment-meta uk-subnav uk-margin-remove-top">
-                                <li><%= comment.date.toDateString("de-De") + " " + comment.date.toLocaleTimeString("de-De") %></li>     
-                            </ul>
-                        <% }else{ %>
-                            <h4 class="uk-comment-title uk-margin-remove">Post Deleted</h4>
-                            <ul class="uk-comment-meta uk-subnav uk-margin-remove-top">
-                                <li></li>     
-                            </ul>
-                        <%}%>
-                    </div>
-                </header>
-                <hr class="divider__b">
-                <div class="uk-comment-body">
-                    <p><%= comment.text %></p>
-                </div>
-
-                <div class="post__comment-count">
-                    <%= comment.length %> Kommentare
-                </div>
-            </div>
+            <%- include('../../partials/components/single-comment-reference', {comment})%>
         <% })} %>
-
 
         <!-- Pagination -->
         <% if (pages > 0) { %>

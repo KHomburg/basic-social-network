@@ -101,6 +101,10 @@ const getPost = (req, res) => {
                 model: "profile"
             },
             {
+                path: "group",
+                model: "group"
+            },
+            {
                 path: "comments._id",
                 model: "comment",
                 populate: [

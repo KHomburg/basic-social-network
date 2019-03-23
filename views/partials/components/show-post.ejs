@@ -57,7 +57,10 @@ requires
         </div>
         <div class="uk-width-expand uk-margin-remove">
             <h3 class="uk-comment-title uk-margin-remove"><%= post.title %></h3>                    
-            <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><a href="/profile/id/<%= post.profile._id %>">Von <%= post.profile.name %></a></p>
+            <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom">
+                <a href="/profile/id/<%= post.profile._id %>">Von: <%= post.profile.name %></a>
+                <a href="/group/name/<%= post.group.name %>"> - In: <%= post.group.name %></a>
+            </p>
             <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><%= post.date.toDateString("de-De") + " " + post.date.toLocaleTimeString("de-De") %></p>           
             
         </div>
