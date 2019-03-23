@@ -31,6 +31,15 @@ const uploadContentImage = multer.diskStorage({
 	}
 })
 
+const imageFilter = function (req, file, cb) {
+    if (file.mimetype !== 'image/png' && file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/jpg') {
+		console.log("wrong filetype")
+        req.fileValidationError = 'goes wrong on the mimetype';
+        return cb(null, false, new Error('goes wrong on the mimetype')); //TODO: check for correct error handling
+    }
+    cb(null, true);
+}
+
 //Example of how to use the avatar-upload in the route:
 //first require the file as imageUpload
 /*
@@ -81,7 +90,8 @@ let showAvatar = (userProfile) => {
 
 
 module.exports = {
-	uploadAvatar, 
+	uploadAvatar,
+	imageFilter, 
 	uploadContentImage,
-	showAvatar
+	showAvatar,
 }

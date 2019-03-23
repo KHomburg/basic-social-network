@@ -21,7 +21,8 @@ const createPost = (req, res) => {
     const currentUserProfile = req.currentUserProfile
     
     var upload = multer({
-        storage: image.uploadContentImage
+        storage: image.uploadContentImage,
+        fileFilter: image.imageFilter,
     })
     .single('image')
     upload(req, res, function(err) {
@@ -147,7 +148,8 @@ const createComment = (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
     var upload = multer({
-        storage: image.uploadContentImage
+        storage: image.uploadContentImage,
+        fileFilter: image.imageFilter,
     })
     .single('image')
     upload(req, res, function(err) {
@@ -247,7 +249,8 @@ const createSubComment = (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
     var upload = multer({
-        storage: image.uploadContentImage
+        storage: image.uploadContentImage,
+        fileFilter: image.imageFilter,
     })
     .single('image')
     upload(req, res, function(err) {

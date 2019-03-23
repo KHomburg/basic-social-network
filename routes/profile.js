@@ -91,7 +91,8 @@ router.post("/edit", authenticate.checkLogIn, (req, res) => {
 router.post('/avatar', authenticate.checkLogIn, authenticate.reqSessionProfile, function (req, res, next) {
     const currentUserProfile = req.currentUserProfile
     var upload = multer({
-        storage: image.uploadAvatar
+        storage: image.uploadAvatar,
+        fileFilter: image.imageFilter,
     })
     .single('avatar')
     upload(req, res, function(err) {
