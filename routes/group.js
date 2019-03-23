@@ -107,20 +107,20 @@ router.post("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, 
                     moderator: currentUserProfile,
                     members: currentUserProfile
                 })
-                newGroup.save();
-
-                //add new Group to creaters profile
-                currentUserProfile.moderatorOf.push(newGroup);
-                currentUserProfile.membership.push(newGroup);
-                currentUserProfile.save(); 
-                
-                res.redirect("name/" + newGroup.name)         
+                newGroup.save().then(()=>{
+                    //add new Group to creators profile
+                    currentUserProfile.moderatorOf.push(newGroup)
+                    currentUserProfile.membership.push(newGroup)
+                    currentUserProfile.save().then(
+                        res.redirect("name/" + newGroup.name)
+                    )
+                })
         }
     })
 })
 
 //post request form for membership for group
-//post /group/create; (private)
+//post /group/subscribe; (private)
 router.post("/subscribe", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
@@ -232,11 +232,11 @@ router.get("/modpanel/reportlist/:name", authenticate.checkLogIn, authenticate.r
     )
     .exec((err, group) => {
             if(group){
-                const ifUserIsMod = group.moderator.find((moderator)=>{
+                const ifCurrentUserIsMod = group.moderator.find((moderator)=>{
                     return moderator._id._id.toString() == currentUserProfile._id.toString()
                 })
 
-                if(ifUserIsMod){
+                if(ifCurrentUserIsMod){
                     const groupID = group._id
                     const reportedPosts= group.reportedPosts
                     const reportedComments= group.reportedComments
@@ -346,14 +346,48 @@ router.get("/modpanel/moderators/:name", authenticate.checkLogIn, authenticate.r
     )
     .exec((err, group) => {
             if(group){
-                const ifUserIsMod = group.moderator.find((moderator)=>{
+                const ifCurrentUserIsMod = group.moderator.find((moderator)=>{
                     return moderator._id._id.toString() == currentUserProfile._id.toString()
                 })
 
-                if(ifUserIsMod){
+                if(ifCurrentUserIsMod){
                     const groupID = group._id
                     
                     res.render("pages/group/modpanel-moderators", {currentUserProfile, group, groupID})
+                } else{
+                    console.log("cannot show this site: User is not a moderator of this group")
+                }
+        }else{
+            console.log("unable to find group")
+        }
+    })
+});
+
+////get page to leave mod status
+////get /name/modpanel/leavemod/:name
+router.get("/modpanel/leavemod/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    Group.findOne({name: req.params.name})
+    .populate(
+        [
+            {
+                path: "moderator._id",
+                model:"profile",
+            }
+        ]
+    )
+    .exec((err, group) => {
+            if(group){
+                //check if user that requests this modpanel is mod of this group
+                const ifCurrentUserIsMod = group.moderator.find((moderator)=>{
+                    return moderator._id._id.toString() == currentUserProfile._id.toString()
+                })
+
+                let modCount = group.moderator.length
+                if(ifCurrentUserIsMod){
+                    const groupID = group._id
+                    
+                    res.render("pages/group/modpanel-leave_mod", {currentUserProfile, group, groupID, modCount, profile: currentUserProfile})
                 } else{
                     console.log("cannot show this site: User is not a moderator of this group")
                 }
@@ -563,6 +597,62 @@ router.post("/mod/addmod/:id", authenticate.checkLogIn, authenticate.reqSessionP
                         } else {
                             //CRUCIAL ERROR: member is assigned as moderator either in group.moderators or profile.moderatorOf, but not the other
                             console.log("CRUCIAL ERROR: member is assigned as moderator either in group.moderators or profile.moderatorOf, but not the other -> " + "User: " + profile._id + ", Group: " + group._id)
+                            res.status(204).send();
+                        }
+
+                    }else{
+                        //error finding profile
+                        console.log(err2)
+                    }
+                })
+            }else{
+                //error finding group
+                console.log(err1)
+            }
+        })
+})
+
+//post request for leaving mod status for the group
+//post /name/mod/reportlist/removecontent; (private)
+router.post("/mod/leavemod/:id", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    const groupID = req.body.groupID
+    const profileID = req.params.id
+    
+    Group.findById(groupID)
+        .exec((err1, group) => {
+            if(group){
+                Profile.findById(profileID)
+                .exec((err2, profile) => {
+                    if(profile && profile._id.toString() == currentUserProfile._id.toString()){
+
+                        //checks if currentUser is mod of the group (returns boolean)
+                        let ifCurrentUserIsMod = undefined
+                        if(group.moderator.find((moderator)=>{ return moderator._id._id.toString() == currentUserProfile._id.toString()})){
+                            ifCurrentUserIsMod = true
+                        } else {
+                            ifCurrentUserIsMod = false
+                        }
+
+                        //add member as mod or error
+                        if(ifCurrentUserIsMod && group.moderator.length > 1){
+                            
+                            //remove group from profile moderatorOf list
+                            profile.moderatorOf.id(groupID).remove()
+                            group.moderator.id(profile).remove()
+                            profile.save((err) => {
+                                if(err) console.log(err)
+                                group.save((err) =>{
+                                    if(err) console.log(err)
+                                })
+                            })
+
+                            res.redirect("/group/name/" +group.name)
+                        } else if (!ifCurrentUserIsMod){
+                            //user is not mod
+                            console.log("ERROR: user " + profile._id + " is not mod of " + group.name)
+                            res.status(204).send();
+                        } else {
                             res.status(204).send();
                         }
 
