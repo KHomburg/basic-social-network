@@ -111,13 +111,19 @@ router.post('/avatar', authenticate.checkLogIn, authenticate.reqSessionProfile, 
                     quality: 60,    //changes image quality to *number* percent
                 })
                 .toFile('./public/images/avatars/' + req.file.filename) // TODO: change upload dir
-                .then(info => { console.log(info)})
+                .then((info) => { 
+                    console.log(info)
+                    newAvatar.save()
+                        .then(() => {
+                            currentUserProfile.avatar = newAvatar;
+                            currentUserProfile.save()
+                                .then(() => {
+                                    res.redirect("/profile/edit")
+                                })
+                        })
+                })
                 .catch(err => { console.log(err)});
 
-            newAvatar.save()
-            currentUserProfile.avatar = newAvatar;
-            currentUserProfile.save()
-            res.redirect("/profile/edit")
         } else {
             //TODO: error message
         }

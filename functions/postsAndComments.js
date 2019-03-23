@@ -50,22 +50,23 @@ const createPost = (req, res) => {
                             quality: 60,        //changes image quality to *number* percent
                         })
                         .toFile('./public/images/contentImages/' + req.file.filename) // TODO: change upload dir
-                        .then(info => { console.log(info)})
-                        .catch(err => { console.log(err)});
-                    
-                    //create new Post object with image
-                    const newPost = new Post({
-                        profile: currentUserProfile,
-                        group: postGroup,
-                        title: req.body.title,
-                        text: req.body.text,
-                        image: newContentImage,
-                    })
-                    newPost.save();
+                        .then((info) => { 
+                            console.log(info)
+                            //create new Post object with image
+                            const newPost = new Post({
+                                profile: currentUserProfile,
+                                group: postGroup,
+                                title: req.body.title,
+                                text: req.body.text,
+                                image: newContentImage,
+                            })
+                            newPost.save();
 
-                    newContentImage.parentPost = newPost;
-                    newContentImage.save()
-                    res.redirect("id/" +newPost._id)
+                            newContentImage.parentPost = newPost;
+                            newContentImage.save()
+                            res.redirect("id/" +newPost._id)
+                        })
+                        .catch(err => { console.log(err)});
 
                     
                 } else {               
@@ -154,65 +155,61 @@ const createComment = (req, res) => {
     .single('image')
     upload(req, res, function(err) {
         if(req.file){
-            //create new comment with image
-            console.log(req.file)
 
-                Post.findOne({_id: req.body.postId}, (err, post) => {
-                    let postID = req.body.postId
-                    if(post){
+            Post.findOne({_id: req.body.postId}, (err, post) => {
+                let postID = req.body.postId
+                if(post){
 
-                        //initialize new ContentImage object
-                        const id = req.file.filename.toString()
-                        const newContentImage = new ContentImage({
-                            _id : id,
-                            profile : currentUserProfile,
-                            group: req.body.groupId,
-                            parentPost: post,
-                            parentType: "comment",
+                    //initialize new ContentImage object
+                    const id = req.file.filename.toString()
+                    const newContentImage = new ContentImage({
+                        _id : id,
+                        profile : currentUserProfile,
+                        group: req.body.groupId,
+                        parentPost: post,
+                        parentType: "comment",
+                    })
+
+                    let file = req.file.destination + "/" + req.file.filename
+                    sharp(file)
+                        .resize({height: 1000}) //resizing to max. height 1000px autoscaled
+                        .toFormat("jpeg")       //changes format to jpeg
+                        .jpeg({
+                            quality: 60,        //changes image quality to *number* percent
                         })
-
-                        let file = req.file.destination + "/" + req.file.filename
-                        sharp(file)
-                            .resize({height: 1000}) //resizing to max. height 1000px autoscaled
-                            .toFormat("jpeg")       //changes format to jpeg
-                            .jpeg({
-                                quality: 60,        //changes image quality to *number* percent
+                        .toFile('./public/images/contentImages/' + req.file.filename) // TODO: change upload dir
+                        .then((info) => { 
+                            console.log(info)
+                            const newComment = new Comment({
+                                profile: currentUserProfile,
+                                text: req.body.text,
+                                parentPost: req.body.postId,
+                                group: req.body.groupId,
+                                image: newContentImage,
                             })
-                            .toFile('./public/images/contentImages/' + req.file.filename) // TODO: change upload dir
-                            .then(info => { console.log(info)})
-                            .catch(err => { console.log(err)});
-
-
-                        const newComment = new Comment({
-                            profile: currentUserProfile,
-                            text: req.body.text,
-                            parentPost: req.body.postId,
-                            group: req.body.groupId,
-                            image: newContentImage,
+    
+                            newComment.save()
+                                .then(()=>{
+                                    //push comment to parentPost object
+                                    post.comments.push(newComment);
+                                    post.save();
+    
+                                    //finalize and save new image object
+                                    newContentImage.parentComment = newComment;
+                                    newContentImage.save()
+    
+                                    res.redirect("/post/id/" +postID); 
+                                })
+                                .catch((err)=> {
+                                    console.log(err)
+                                })                            
                         })
+                        .catch(err => { console.log(err)});
 
-                        newComment.save()
-                            .then(()=>{
-                                //push comment to parentPost object
-                                post.comments.push(newComment);
-                                post.save();
-
-                                //finalize and save new image object
-                                newContentImage.parentComment = newComment;
-                                newContentImage.save()
-
-                                res.redirect("/post/id/" +postID); 
-                            })
-                            .catch((err)=> {
-                                console.log(err)
-                            })
-                        
-                        
-                            
-                    } else {               
-                            console.log(err);
-                    }
-                })
+                } else {               
+                        console.log(err);
+                }
+            })
             }else{
                 //create new comment without image
                 Post.findOne({_id: req.body.postId}, (err, post) => {

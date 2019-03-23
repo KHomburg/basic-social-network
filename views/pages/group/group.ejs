@@ -40,7 +40,7 @@
             <form action="/post/create" method="post" enctype="multipart/form-data">
                 <!--<fieldset class="uk-fieldset">-->
                     <input class="uk-input" id="Titel" type="text" name="title" placeholder="Titel des Beitrags" required>
-                    <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben"></textarea required>
+                    <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben" required></textarea>
                     <input type="hidden" name="groupName" value="<%= currentGroup.name %>">
                     <!--file upload form -->
                     <div class="js-upload" uk-form-custom>
