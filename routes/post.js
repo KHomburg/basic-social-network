@@ -8,7 +8,7 @@ const multer = require('multer');
 const postsAndComments = require("../functions/postsAndComments");
 
 //Load models
-const Avatar = require("../models/Avatar");
+const Avatar = require("../models/Avatar");   
 
 
 router.get("/test", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => { 
