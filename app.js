@@ -18,6 +18,7 @@ const post ={};
 const group ={};
 const contacts ={};
 const statics ={};
+const notification ={};
 
 //View:
 users.view = require('./routes/users');
@@ -26,6 +27,7 @@ post.view = require('./routes/post');
 group.view = require('./routes/group');
 contacts.view = require('./routes/contacts');
 statics.view = require('./routes/statics');
+notification.view = require('./routes/notification');
 
 
 //Middleware
@@ -77,6 +79,7 @@ app.use('/profile', profile.view, express.static('public'));
 app.use('/post', post.view, express.static('public'));
 app.use('/group', group.view, express.static('public'));
 app.use('/contacts', contacts.view, express.static('public'));
+app.use('/notification', notification.view, express.static('public'));
 app.use('/', statics.view, express.static('public'));
 
 
