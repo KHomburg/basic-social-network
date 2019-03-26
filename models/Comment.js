@@ -5,7 +5,8 @@ var Comment = 0;
 const CommentSchema = new Schema({
     profile: {
         type: Schema.Types.ObjectId,
-        ref: "profile"
+        ref: "profile",
+        required: true,
     },
     image: {
         type: Schema.Types.ObjectId,
@@ -31,6 +32,11 @@ const CommentSchema = new Schema({
             },
         }
     ],
+    notification: {
+        type: Schema.Types.ObjectId,
+        ref: "notification",
+        required: true,
+    },
     parentPost: {
         type: Schema.Types.ObjectId,
         ref: "post"

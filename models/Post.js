@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 const PostSchema = new Schema({
     profile: {
         type: Schema.Types.ObjectId,
-        ref: "profile"
+        ref: "profile",
+        required: true,
     },
     group: {
         type: Schema.Types.ObjectId,
@@ -39,6 +40,11 @@ const PostSchema = new Schema({
             }
         }
     ],
+    notification: {
+        type: Schema.Types.ObjectId,
+        ref: "notification",
+        required: true,
+    },
     date: {
         type: Date,
         default: Date.now
