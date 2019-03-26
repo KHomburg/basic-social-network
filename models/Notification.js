@@ -47,7 +47,7 @@ const NotificationSchema = new Schema({
     },
     parentContentType: {
         type: String,
-        enum: ['post', 'comment', 'subcomment']
+        enum: ['post', 'comment', 'subcomment'] //subcomment probably not needed
     },
     lastUpdated: {
         type: Date,

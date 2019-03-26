@@ -177,6 +177,7 @@ const getPost = (req, res) => {
 
 const createComment = (req, res) => {
     const currentUserProfile = req.currentUserProfile
+    let groupID = req.body.groupId
 
     var upload = multer({
         storage: image.uploadContentImage,
@@ -188,15 +189,16 @@ const createComment = (req, res) => {
 
             Post.findOne({_id: req.body.postId}, (err, post) => {
                 let postID = req.body.postId
-                if(post){
 
+                if(post){
                     //initialize new ContentImage object
                     const id = req.file.filename.toString()
                     const newContentImage = new ContentImage({
                         _id : id,
                         profile : currentUserProfile,
-                        group: req.body.groupId,
+                        group: groupID,
                         parentPost: post,
+                        //parentComment gets added down below
                         parentType: "comment",
                     })
 
@@ -213,11 +215,27 @@ const createComment = (req, res) => {
                             const newComment = new Comment({
                                 profile: currentUserProfile,
                                 text: req.body.text,
-                                parentPost: req.body.postId,
-                                group: req.body.groupId,
+                                parentPost: postID,
+                                group: groupID,
                                 image: newContentImage,
                             })
-    
+
+                            //create new Notification with new comment
+                            const newNotification = new Notification({
+                                profile: currentUserProfile,
+                                group: groupID,
+                                refContent: newComment,
+                                refContentType: "comment",
+                                parentContent: postID,
+                                parentContentType: "post",
+                                addressee: currentUserProfile,
+                            })
+
+                            //add notification reference to newComment
+                            newComment.notification = newNotification;
+
+                            //save notification and comment
+                            newNotification.save();    
                             newComment.save()
                                 .then(()=>{
                                     //push comment to parentPost object
@@ -251,6 +269,23 @@ const createComment = (req, res) => {
                             parentPost: req.body.postId,
                             group: req.body.groupId,
                         })
+
+                        //create new Notification with new comment
+                        const newNotification = new Notification({
+                            profile: currentUserProfile,
+                            group: groupID,
+                            refContent: newComment,
+                            refContentType: "comment",
+                            parentContent: postID,
+                            parentContentType: "post",
+                            addressee: currentUserProfile,
+                        })
+
+                        //add notification reference to newComment
+                        newComment.notification = newNotification;
+
+                        //save notification and comment
+                        newNotification.save();  
 
                         newComment.save()
                             .then(()=>{
