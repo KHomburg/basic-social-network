@@ -13,6 +13,7 @@ const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const Subcomment = require("../models/Subcomment");
 const ContentImage = require("../models/Contentimage");
+const Notification = require("../models/Notification");
 
 
 //Custom Functions for Posts/Comments/SubComments Routes
@@ -60,6 +61,20 @@ const createPost = (req, res) => {
                                 text: req.body.text,
                                 image: newContentImage,
                             })
+                            //create new Notification with new Post
+                            const newNotification = new Notification({
+                                profile: currentUserProfile,
+                                group: postGroup,
+                                refContent: newPost,
+                                refContentType: "post",
+                                addressee: currentUserProfile,
+                            })
+
+                            //add notification reference to newPost
+                            newPost.notification = newNotification;
+
+                            //save notification and post
+                            newNotification.save();
                             newPost.save();
 
                             newContentImage.parentPost = newPost;
@@ -83,6 +98,21 @@ const createPost = (req, res) => {
                         title: req.body.title,
                         text: req.body.text,
                     })
+
+                    //create new Notification with new Post
+                    const newNotification = new Notification({
+                        profile: currentUserProfile,
+                        group: postGroup,
+                        refContent: newPost,
+                        refContentType: "post",
+                        addressee: currentUserProfile,
+                    })
+
+                    //add notification reference to newPost
+                    newPost.notification = newNotification;
+
+                    //save notification and post
+                    newNotification.save();
                     newPost.save();
                     res.redirect("id/" +newPost._id)
                 } else {               
