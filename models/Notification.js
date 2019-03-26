@@ -18,7 +18,7 @@ const NotificationSchema = new Schema({
         //the content that initiated the creation of the notification
         type: Schema.Types.ObjectId,
         require: true,
-        refPath: 'refContent'
+        refPath: 'refContentType'
     },
     refContentType: {
         type: String,
@@ -43,7 +43,7 @@ const NotificationSchema = new Schema({
     ],
     parentContent:{
         type: Schema.Types.ObjectId,
-        refPath: 'parentContent'
+        refPath: 'parentContentType'
     },
     parentContentType: {
         type: String,
