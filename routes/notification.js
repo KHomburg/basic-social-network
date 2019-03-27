@@ -29,6 +29,11 @@ router.get("/test", authenticate.checkLogIn, authenticate.reqSessionProfile, (re
 
 });
 
+//get notifications
+router.get("/fetch", (req, res) => { 
+            res.json({msg: "test"});
+});
+
 
 //check wether the User has new notifications
 //get /notification/check (private)
@@ -39,8 +44,6 @@ router.get("/check", authenticate.checkLogIn, authenticate.reqSessionProfile, (r
         .sort({lastUpdated: 'desc'})
         .where("updatedBy").ne(currentUserProfile) //exclude notification that have been updated latest by currentUser
         .exec((err, notification) => {
-            console.log(currentUserProfile.notificationCheck + " test")
-            console.log(notification.lastUpdated)
             if(notification){
                 //check if latest notification updated later than profilenotificationCheck date
                 let alert
@@ -50,9 +53,9 @@ router.get("/check", authenticate.checkLogIn, authenticate.reqSessionProfile, (r
                     alert = "true"
                 }
                 
-                res.send(notification + " ALERT: " + alert);
+                res.json(alert);
             }else{
-                res.send("no Notifications");
+                res.json({msg: "no Notifications"});
             }
         })
 

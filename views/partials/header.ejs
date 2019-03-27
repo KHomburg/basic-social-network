@@ -13,7 +13,7 @@
                 </li>
                     <li>
                         <li class="">
-                            <a href="#"><%= currentUserProfile.name %></a>
+                            <a href="#" uk-icon="icon: user; ratio: 1.5"></a>
                             <div class="uk-navbar-dropdown uk-active" uk-dropdown="offset: -15">
                                 <ul class="uk-nav uk-navbar-dropdown-nav">
                                     <li>
@@ -23,10 +23,6 @@
                                     <li>
                                         <a href="/profile/mycontent/comments/1">Von dir Kommentierte Posts</a>
                                         <li class="uk-nav-divider"></li>
-                                    </li>
-                                    <li>
-                                        <a href="/contacts/list">Deine Kontakte</a>
-                                        <li class="uk-nav-divider"></li>  
                                     </li>
                                     <li>
                                         <a href="/profile/id/<%= currentUserProfile._id %>">Dein Profil</a>
@@ -44,25 +40,61 @@
                         </li>
                     </li>
                     <li>
-                        <li class="">
-                            <a href="/post/stream/1">Neue Posts</a>
+                        <li class="" >
+                            <a href="/post/stream/1" uk-icon="icon: home; ratio: 1.5"></a>
                         </li>
                     </li>
                     <li>
                         <li class="">
-                            <a href="#">Nachrichten</a>
+                            <a href="/post/stream/1" uk-icon="icon: mail; ratio: 1.5"></a>
                         </li>
                     </li>
                 </ul>
             </div>
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
-                    <li class="">
-                        <a href="/profile/list">Alle Profile</a>
+                    <li>
+                        <li class="" >
+                            <a id="notify-icon" style="color: grey" uk-icon="icon: bell; ratio: 1.5"></a>
+                        </li>
                     </li>
+                    <li>
+                        <li class="">
+                            <a href="#" uk-icon="icon: users; ratio: 1.5"></a>
+                            <div class="uk-navbar-dropdown uk-active" uk-dropdown="offset: -15">
+                                <ul class="uk-nav uk-navbar-dropdown-nav">
+                                    <li>
+                                        <a href="/profile/list">Alle Profile</a>
+                                        <li class="uk-nav-divider"></li>
+                                    </li>
+                                    <li>
+                                        <a href="/contacts/list">Deine Kontakte</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </li>
+
                 </ul>
             </div>
         </nav>
     </div>
+    <script>
+        //Check for Notifications
+        function updatePage(){
+            fetch(href="/notification/check")
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(myJson) {
+                    if (myJson.toString() == "false" && document.getElementById("notify-icon").style.color == "red"){
+                        document.getElementById("notify-icon").style.color = "grey"
+                    } else if (myJson.toString() == "true" && document.getElementById("notify-icon").style.color == "grey"){
+                        document.getElementById("notify-icon").style.color = "red"
+                    }else{}
+                });
+            }
+        setInterval(updatePage, 3000);
+    </script>
 
 </header>
