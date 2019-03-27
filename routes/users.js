@@ -274,7 +274,7 @@ router.post("/changepassword", (req, res) => {
 router.get('/logout', (req,res) => {
     if(req.session.userId){
         req.session.destroy();
-        res.send("You are logged out now")
+        res.redirect("/users/login");
     } else {
         res.send("You are not logged in")
     }
