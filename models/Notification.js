@@ -12,18 +12,18 @@ whenever the a new addressee is added the lastUpdated attribute has to be update
 const NotificationSchema = new Schema({
     profile: {
         type: Schema.Types.ObjectId,
-        ref: "profile"
-        require: true,
+        ref: "profile",
+        required: true,
     },
     refContent:{
         //the content that initiated the creation of the notification
         type: Schema.Types.ObjectId,
-        require: true,
+        required: true,
         refPath: 'refContentType'
     },
     refContentType: {
         type: String,
-        require: true,
+        required: true,
         enum: ['post', 'comment', 'subcomment']
     },
     date: {
@@ -53,7 +53,7 @@ const NotificationSchema = new Schema({
     updatedBy:{
         type: Schema.Types.ObjectId,
         ref: "profile",
-        require: true,
+        required: true,
     },
     lastUpdated: {
         type: Date,
