@@ -106,10 +106,14 @@ const ProfileSchema = new Schema({
             },
         }
     ],
+    notificationCheck: { //last time the User checked the notifications
+        type: Date,
+        default: Date.now
+    },
     date: {
         type: Date,
         default: Date.now
-    }
+    },
 });
 
 

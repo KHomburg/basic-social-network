@@ -68,6 +68,7 @@ const createPost = (req, res) => {
                                 refContent: newPost,
                                 refContentType: "post",
                                 addressee: currentUserProfile,
+                                updatedBy: currentUserProfile
                             })
 
                             //add notification reference to newPost
@@ -106,6 +107,7 @@ const createPost = (req, res) => {
                         refContent: newPost,
                         refContentType: "post",
                         addressee: currentUserProfile,
+                        updatedBy: currentUserProfile
                     })
 
                     //add notification reference to newPost
@@ -229,6 +231,7 @@ const createComment = (req, res) => {
                                 parentContent: postID,
                                 parentContentType: "post",
                                 addressee: currentUserProfile,
+                                updatedBy: currentUserProfile
                             })
 
                             //add notification reference to newComment
@@ -279,6 +282,7 @@ const createComment = (req, res) => {
                             parentContent: postID,
                             parentContentType: "post",
                             addressee: currentUserProfile,
+                            updatedBy: currentUserProfile
                         })
 
                         //add notification reference to newComment

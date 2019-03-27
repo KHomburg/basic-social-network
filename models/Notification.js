@@ -13,6 +13,7 @@ const NotificationSchema = new Schema({
     profile: {
         type: Schema.Types.ObjectId,
         ref: "profile"
+        require: true,
     },
     refContent:{
         //the content that initiated the creation of the notification
@@ -49,10 +50,17 @@ const NotificationSchema = new Schema({
         type: String,
         enum: ['post', 'comment', 'subcomment'] //subcomment probably not needed
     },
+    updatedBy:{
+        type: Schema.Types.ObjectId,
+        ref: "profile",
+        require: true,
+    },
     lastUpdated: {
         type: Date,
         default: Date.now
     }
 })
+
+//TODO: create index by last updated
 
 module.exports = Notification = mongoose.model("notification", NotificationSchema);
