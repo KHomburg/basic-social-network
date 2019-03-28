@@ -195,8 +195,8 @@ const createComment = (req, res) => {
                 .exec(
                     (err, post) => {
                         let postID = req.body.postId
+                        let groupID = req.body.groupId
                         if(post){
-                            console.log(post)
                             //initialize new ContentImage object
                             const id = req.file.filename.toString()
                             const newContentImage = new ContentImage({

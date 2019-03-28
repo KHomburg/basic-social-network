@@ -22,7 +22,8 @@ const CommentSchema = new Schema({
     },
     group: {
         type: Schema.Types.ObjectId,
-        ref: "group"
+        ref: "group",
+        required: true
     },
     subcomments: [
         {
@@ -39,7 +40,8 @@ const CommentSchema = new Schema({
     },
     parentPost: {
         type: Schema.Types.ObjectId,
-        ref: "post"
+        ref: "post",
+        required: true
     }
 })
 
