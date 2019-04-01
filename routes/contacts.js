@@ -14,7 +14,8 @@ const Subcomment = require("../models/Subcomment");
 //post add the profile of another user to currentUsers contacts list
 //post /contacs/addcontact
 router.post("/addcontact", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
-    const currentUserProfile = req.currentUserProfile    
+    const currentUserProfile = req.currentUserProfile
+    //find profile to be added as currentUsers contact    
     Profile.findById({_id: req.body.profileId}, (err, profile) => {
         if(profile){
             const contacts = currentUserProfile.contacts
@@ -33,34 +34,25 @@ router.post("/addcontact", authenticate.checkLogIn, authenticate.reqSessionProfi
     })
 });
 
-//post add the profile of another user to currentUsers contacts list
+
+//post to remove the profile of another user to currentUsers contacts list
 //post /contacs/addcontact
 router.post("/removecontact", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile    
 
     //this route needs the id of the profile that will be spliced as profileId
 
-    const contacts = currentUserProfile.contacts
     //check if contact is already in contacts list
-    let checkContact = contacts.find((contact) => {return contact._id._id.toString() == req.body.profileId.toString()})
+    let checkContact = currentUserProfile.contacts.find((contact) => {return contact._id._id.toString() == req.body.profileId.toString()})
 
     if(checkContact !== undefined){
-        //find the index of profile in currentUsers contacts list
-        const findIndexOfProfile = () => {
-            return contacts.indexOf(
-                contacts.find(
-                    contact => contact._id._id.toString() == req.body.profileId.toString()
-                )
-            )
-        }
-
-        //splice the profile out of currentUsers contacts list
-        contacts.splice(findIndexOfProfile(), 1)
+        //remove contact from contacts list
+        currentUserProfile.contacts.pull({_id: req.body.profileId})
         currentUserProfile.save()
+
     }else{
         console.log("tried to remove contact, that is not in contacts list")
     }
-
 
     res.status(204).send(); //TODO: add frontend script to change state to addcontact form
 });
@@ -72,16 +64,16 @@ router.get('/list', authenticate.checkLogIn, authenticate.reqSessionProfile, (re
     const currentUserProfile = req.currentUserProfile
     let contacts = currentUserProfile.contacts
     
-    //check for deleted profiles in contacts list
-    for (var i = 0; i < contacts.length && contacts[i]; i++) {            
+    //check if there are profile in contacts list, that are deleted and remove them from contacts list
+    async function removeDeletedContacts() {for (var i = 0; i < contacts.length && contacts[i]; i++) {            
             //console.log(contact._id)
             if (contacts[i]._id == null){
                 //console.log(contacts.indexOf(contact))
                 contacts.splice(i, 1)
                 i--
             }
-    }
-    currentUserProfile.save()
+    }}
+    removeDeletedContacts().then(currentUserProfile.save())
     res.render("pages/profile/contacts", {currentUserProfile, contacts});
 });
 
