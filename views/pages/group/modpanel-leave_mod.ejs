@@ -16,7 +16,7 @@
 
         <% if (modCount>1){%>
         <div class="uk-margin uk-margin-top uk-flex uk-flex-center">
-            <form action="/group/mod/leavemod/<%=profile._id%>" method="post">
+            <form action="/group/mod/leavemod/<%=currentUserProfile._id%>" method="post">
                 <div class="uk-margin-top" style="display:none">
                     <input type="hidden" name="groupID" value= "<%=group._id %>"></br>
                 </div>
