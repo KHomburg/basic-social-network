@@ -1,1 +1,2 @@
-plenty of work still needs to be done
+TODO:
+- implement error handling strategie
