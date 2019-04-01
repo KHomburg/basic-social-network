@@ -1,0 +1,9 @@
+<%# takes a string as text and outputs it trimmed to 90 characters if too long %>
+<%if(text.length > 100){
+    let newLength = 90
+    text = text.substring(0, newLength) + " . . ."
+%>
+    <%= text %>
+<%}else{%>
+    <%= text %>
+<%}%>

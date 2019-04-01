@@ -67,21 +67,32 @@ router.get("/notifications", authenticate.checkLogIn, authenticate.reqSessionPro
     const currentUserProfile = req.currentUserProfile
     
     Notification.find({"addressee._id": currentUserProfile})
-        .sort('-date')
-        //.where("updatedBy").ne(currentUserProfile) //exclude notification that have been updated latest by currentUser
+        .sort({lastUpdated: 'desc'})
         .limit(5)
-        //.populate(
-        //    [
-        //        {
-        //            path: 'refContent'
-        //        }
-        //    ]
-        //)
+        .$where("this.addressee.length >1")
+        .populate(
+            [
+                {
+                    path: 'refContent'
+                }
+            ]
+        )
         .exec((err, notifications) => {
             //update notificationCheck date
             currentUserProfile.notificationCheck = new Date()
             currentUserProfile.save()
-            res.json(notifications);
+
+
+            ////check for delted refContent for each notification and delete if none existing       
+            //for (var i = 0; i < notifications.length && notifications[i]; i++) {            
+            //    console.log("test")
+            //    if (notifications[i].refContent == null){
+            //        console.log("test2")
+            //        notifications[i].remove()
+            //    }
+            //}
+            
+            res.render("pages/notification/all-notifications", {currentUserProfile, notifications});
         })
 
 });

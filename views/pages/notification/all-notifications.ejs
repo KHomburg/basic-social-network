@@ -1,0 +1,61 @@
+<% include ../../partials/head %>
+
+<% include ../../partials/header %>
+<% include ../../partials/sidebar %>
+
+
+<body>
+
+    <div class="main">
+
+    <% notifications.forEach((notification) => {%>
+        <div class="full-notification uk-inline">
+            <div class="uk-comment-body">
+                <p class="uk-margin-remove">
+
+                    <% if (notification.updatedBy.toString() == currentUserProfile._id.toString()){%>
+                        You
+                    <%}else if (notification.updatedBy.toString() != currentUserProfile._id.toString()){%>
+                        Someone
+                    <%}%>
+
+                    <% if (notification.profile.toString() != currentUserProfile._id.toString()){%>
+                        also
+                    <%}else{%>
+                    <%}%>
+
+                    <% if (notification.refContentType =="post"){%>
+                        commented on 
+                    <%}else if (notification.refContentType == "comment"){%>
+                        replied to
+                    <%}%>
+
+                    <% if (notification.profile.toString() != currentUserProfile._id.toString()){%>
+                        the
+                    <%}else{%>
+                        your
+                    <%}%>
+
+                    <% if (notification.refContentType =="post"){%>
+                        post: 
+                    <%}else if (notification.refContentType == "comment"){%>
+                        comment: 
+                    <%}%>
+
+                    <% if (notification.refContentType =="post"){%>
+                        <%- include('../../partials/helpers/trim-text', {text: notification.refContent.title})%>
+                    <%}else if (notification.refContentType == "comment"){%>
+                        <%- include('../../partials/helpers/trim-text', {text: notification.refContent.text})%>
+                    <%}%>
+                </p>
+                <p class="uk-text-meta uk-margin-remove"><%= notification.refContent.date.toDateString("de-De") + " " + notification.refContent.date.toLocaleTimeString("de-De")%></p>
+                
+                
+            </div>
+        </div>
+    <%})%>
+    </div>
+</body>
+
+
+<% include ../../partials/foot %>
