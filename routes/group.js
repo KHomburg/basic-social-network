@@ -5,6 +5,7 @@ const router = express.Router();
 const postsAndComments = require("../functions/postsAndComments");
 const authenticate = require("../functions/authenticate");
 const image = require("../functions/image");
+const helpers = require("../functions/group-helpers");
 
 //Load models
 const User = require("../models/User");
@@ -49,16 +50,11 @@ router.get('/name/:name', authenticate.checkLogIn, authenticate.reqSessionProfil
     Group.findOne({name: req.params.name}, (err,currentGroup) => {
         if(currentGroup){
             
-        //Check wether User is already member/mod
-        const findMembership = currentGroup.members.find(
-            (groupMember) => {return groupMember._id == currentUserProfile._id.toString()}
-        )
-        const findMods = currentGroup.moderator.find(            
-            (groupMods) => {return groupMods._id == currentUserProfile._id.toString()}
-        )
-        
-            //create membership if not already, or mod
-            if (findMembership == undefined){
+            //Check wether User is already member
+            let findMembershipInProfile = helpers.findMembershipInProfile(currentGroup, currentUserProfile)
+
+            //for signaling in frontend wether currentUser is member or not
+            if (findMembershipInProfile == undefined){
                 var membership = false
             } else {
                 var membership = true
@@ -109,6 +105,7 @@ router.post("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, 
                 })
                 newGroup.save().then(()=>{
                     //add new Group to creators profile
+                    //make currentUser member and moderator of newly created group
                     currentUserProfile.moderatorOf.push(newGroup)
                     currentUserProfile.membership.push(newGroup)
                     currentUserProfile.save().then(
@@ -126,14 +123,20 @@ router.post("/subscribe", authenticate.checkLogIn, authenticate.reqSessionProfil
 
     Group.findById(req.body.groupID)
         .exec((err, group) => {
+            //Check wether User is already member
+            let findMembershipInProfile = helpers.findMembershipInProfile(group, currentUserProfile)
 
-            //Add profile to group as member
-            group.members.push(currentUserProfile);
-            group.save(); 
+            if (findMembershipInProfile == undefined){
+                //Add profile to group as member
+                group.members.push(currentUserProfile);
+                group.save(); 
 
-            //add group to profiles memberships
-            currentUserProfile.membership.push(group);
-            currentUserProfile.save(); 
+                //add group to profiles memberships
+                currentUserProfile.membership.push(group);
+                currentUserProfile.save(); 
+            } else {
+                console.log("Error: currentUser is already member of the group")
+            }
             
             res.redirect("name/" + group.name) ;
     })
@@ -144,51 +147,27 @@ router.post("/subscribe", authenticate.checkLogIn, authenticate.reqSessionProfil
 router.post("/unsubscribe", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     Group.findById(req.body.groupID)
-    .exec((err, group) => {
-        //Check wether User is already member/mod
-        const findMembership = group.members.find(
-            (groupMember) => {return groupMember._id.toString() == currentUserProfile._id.toString()}
-        )
-        //console.log(group.members)
-        //console.log(currentUserProfile.membership)
-
-        if (findMembership !== undefined){
-            let findIndexOfMember = () => {
-                //finding index of profile's in group's member array
-                return group.members.indexOf(
-                    //find profile in member array
-                    group.members.find(
-                        (member) => {
-                            return member._id.toString() == currentUserProfile._id.toString()
-                        }
-                    )
-                )
-            }
-
-            //splice currentUser out of members array of group
-            group.members.splice(findIndexOfMember(),1);
-
-            //find index of group in profile's membership array
-            let membershipIndex = () => {
-                return currentUserProfile.membership.indexOf(
-                    currentUserProfile.membership.find(
-                        (membership) => {
-                            return membership._id._id.toString() == group._id.toString()
-                        }
-                    )
-                )
-            };
-
-            //splice group out of membership- array of profile
-            currentUserProfile.membership.splice(membershipIndex(), 1)
+        .exec((err, group) => {
+            //Check wether User is already member
+            let findMembershipInProfile = helpers.findMembershipInProfile(group, currentUserProfile)
             
-            group.save();
-            currentUserProfile.save(); 
-        } else{
-            console.log("Error: user tried to unsubscribe a group which user is not member of")
-        }
-        res.redirect("name/" + group.name) ;
-    })
+
+            if (findMembershipInProfile !== undefined){
+
+                //remove currentUser from group as member
+                //remove group from currentUser membership
+
+                group.members.pull({_id: currentUserProfile._id})
+                currentUserProfile.membership.pull({_id: req.body.groupID})
+
+                group.save();
+                currentUserProfile.save(); 
+
+            } else{
+                console.log("Error: user tried to unsubscribe a group which user is not member of")
+            }
+            res.redirect("name/" + group.name) ;
+        })
 });
 
 ////get all reported content of a group
@@ -196,52 +175,50 @@ router.post("/unsubscribe", authenticate.checkLogIn, authenticate.reqSessionProf
 router.get("/modpanel/reportlist/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     Group.findOne({name: req.params.name})
-    .populate(
-        [
-            {
-                path: "reportedPosts.content",
-                model: "post",
-                populate: [
-                    {
-                        path:"profile",
-                        model:"profile"
-                    }
-                ]
-            },
-            {
-                path: "reportedComments.content",
-                model: "comment",
-                populate: [
-                    {
-                        path:"profile",
-                        model:"profile"
-                    }
-                ]
-            },
-            {
-                path: "reportedSubcomments.content",
-                model: "subcomment",
-                populate: [
-                    {
-                        path:"profile",
-                        model:"profile"
-                    }
-                ]
-            },
-        ]
-    )
-    .exec((err, group) => {
+        .populate(
+            [
+                {
+                    path: "reportedPosts.content",
+                    model: "post",
+                    populate: [
+                        {
+                            path:"profile",
+                            model:"profile"
+                        }
+                    ]
+                },
+                {
+                    path: "reportedComments.content",
+                    model: "comment",
+                    populate: [
+                        {
+                            path:"profile",
+                            model:"profile"
+                        }
+                    ]
+                },
+                {
+                    path: "reportedSubcomments.content",
+                    model: "subcomment",
+                    populate: [
+                        {
+                            path:"profile",
+                            model:"profile"
+                        }
+                    ]
+                },
+            ]
+        )
+        .exec((err, group) => {
             if(group){
-                const ifCurrentUserIsMod = group.moderator.find((moderator)=>{
-                    return moderator._id._id.toString() == currentUserProfile._id.toString()
-                })
+                //check if currentUser is mod
+                let ifCurrentUserIsMod = helpers.ifCurrentUserIsMod(group, currentUserProfile)
 
                 if(ifCurrentUserIsMod){
                     const groupID = group._id
                     const reportedPosts= group.reportedPosts
                     const reportedComments= group.reportedComments
                     const reportedSubcomments= group.reportedSubcomments
-                    const reported = reportedPosts.concat(reportedComments.concat(reportedSubcomments))
         
                     //check for deleted post in reportedPosts list and splice them out
                     for (var i = 0; i < reportedPosts.length && reportedPosts[i]; i++) {            
@@ -270,10 +247,10 @@ router.get("/modpanel/reportlist/:name", authenticate.checkLogIn, authenticate.r
                 } else{
                     console.log("cannot show this site: User is not a moderator of this group")
                 }
-        }else{
-            console.log("unable to find group")
-        }
-    })
+            }else{
+                console.log("unable to find group")
+            }
+        })
 });
 
 ////get all members of group shown in mod panel
@@ -298,7 +275,7 @@ router.get("/modpanel/members/:name", authenticate.checkLogIn, authenticate.reqS
     .exec((err, group) => {
             if(group){
                 
-                //check for each member if is mode; if so add member._id.isMod = true
+                //check for each member if is mod; if so add member._id.isMod = true
                 group.members.forEach((member) =>{
                     if (group.moderator.find((mod) => {
                         return mod._id._id.toString() == member._id._id.toString()
@@ -309,10 +286,8 @@ router.get("/modpanel/members/:name", authenticate.checkLogIn, authenticate.reqS
                     }
                 })
 
-                //check if user that requests this modpanel is mod of this group
-                const ifCurrentUserIsMod = group.moderator.find((moderator)=>{
-                    return moderator._id._id.toString() == currentUserProfile._id.toString()
-                })
+                //check if currentUser is mod
+                let ifCurrentUserIsMod = helpers.ifCurrentUserIsMod(group, currentUserProfile)
 
                 if(ifCurrentUserIsMod){
                     const groupID = group._id
@@ -332,35 +307,34 @@ router.get("/modpanel/members/:name", authenticate.checkLogIn, authenticate.reqS
 router.get("/modpanel/moderators/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     Group.findOne({name: req.params.name})
-    .populate(
-        [
-            {
-                path: "members._id",
-                model:"profile",
-            },
-            {
-                path: "moderator._id",
-                model:"profile",
-            }
-        ]
-    )
-    .exec((err, group) => {
-            if(group){
-                const ifCurrentUserIsMod = group.moderator.find((moderator)=>{
-                    return moderator._id._id.toString() == currentUserProfile._id.toString()
-                })
-
-                if(ifCurrentUserIsMod){
-                    const groupID = group._id
-                    
-                    res.render("pages/group/modpanel-moderators", {currentUserProfile, group, groupID})
-                } else{
-                    console.log("cannot show this site: User is not a moderator of this group")
+        .populate(
+            [
+                {
+                    path: "members._id",
+                    model:"profile",
+                },
+                {
+                    path: "moderator._id",
+                    model:"profile",
                 }
-        }else{
-            console.log("unable to find group")
-        }
-    })
+            ]
+        )
+        .exec((err, group) => {
+                if(group){
+                    //check if currentUser is mod
+                    let ifCurrentUserIsMod = helpers.ifCurrentUserIsMod(group, currentUserProfile)
+
+                    if(ifCurrentUserIsMod){
+                        const groupID = group._id
+                        
+                        res.render("pages/group/modpanel-moderators", {currentUserProfile, group, groupID})
+                    } else{
+                        console.log("cannot show this site: User is not a moderator of this group")
+                    }
+            }else{
+                console.log("unable to find group")
+            }
+        })
 });
 
 ////get page to leave mod status
@@ -378,16 +352,13 @@ router.get("/modpanel/leavemod/:name", authenticate.checkLogIn, authenticate.req
     )
     .exec((err, group) => {
             if(group){
-                //check if user that requests this modpanel is mod of this group
-                const ifCurrentUserIsMod = group.moderator.find((moderator)=>{
-                    return moderator._id._id.toString() == currentUserProfile._id.toString()
-                })
+                //check if currentUser is mod
+                let ifCurrentUserIsMod = helpers.ifCurrentUserIsMod(group, currentUserProfile)
 
+                //count mods, to make user unable to leave mod status if last mod
                 let modCount = group.moderator.length
                 if(ifCurrentUserIsMod){
-                    const groupID = group._id
-                    
-                    res.render("pages/group/modpanel-leave_mod", {currentUserProfile, group, groupID, modCount, profile: currentUserProfile})
+                    res.render("pages/group/modpanel-leave_mod", {currentUserProfile, group, modCount})
                 } else{
                     console.log("cannot show this site: User is not a moderator of this group")
                 }
@@ -407,28 +378,28 @@ router.post('/mod/post/delete', authenticate.checkLogIn, authenticate.reqSession
 
     //find group for remove the reported post from reportedPosts list
     Group.findById(groupID)
-    .exec((err, group)=>{
+        .exec((err, group)=>{
 
-        //find reported post in reportedPosts array
-        const findReportedPost = group.reportedPosts.find((post) => {
-            return post._id.toString() == reportedPost.toString()
+            //find reported post in reportedPosts array
+            const findReportedPost = group.reportedPosts.find((post) => {
+                return post._id.toString() == reportedPost.toString()
+            })
+
+            //find index of removing reportedPost
+            const postIndex = group.reportedPosts.indexOf(findReportedPost);
+
+            if(findReportedPost){
+                group.reportedPosts.splice(postIndex, 1)
+                group.save()
+                    .then(
+                        postsAndComments.deletePost(req, res, (groupName) => {
+                            res.redirect("/group/modpanel/reportlist/" +groupName)
+                        })
+                    )
+            }else{
+                console.log("error in group/mod/post/delete")
+            }
         })
-
-        //find index of removing reportedPost
-        const postIndex = group.reportedPosts.indexOf(findReportedPost);
-
-        if(findReportedPost){
-            group.reportedPosts.splice(postIndex, 1)
-            group.save()
-                .then(
-                    postsAndComments.deletePost(req, res, (groupName) => {
-                        res.redirect("/group/modpanel/reportlist/" +groupName)
-                    })
-                )
-        }else{
-            console.log("error in group/mod/post/delete")
-        }
-    })
 });
 
 //post request for deleting a comment
