@@ -368,107 +368,63 @@ router.get("/modpanel/leavemod/:name", authenticate.checkLogIn, authenticate.req
     })
 });
 
-//post request for deleting a post
-//post /mod/post/delete; (private)
-router.post('/mod/post/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+
+
+//post request for deleting reportedCintent
+//post /mod/content/delete; (private)
+router.post('/mod/content/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const groupID = req.body.groupID
-    const reportedPost = req.body.reportedPost
 
     //TODO:check if user who wants to remove content is mod
 
     //find group for remove the reported post from reportedPosts list
     Group.findById(groupID)
         .exec((err, group)=>{
+            if(req.body.reportedSubcomment){
+                var reportedContent = req.body.reportedSubcomment
+                var reportedContents = group.reportedSubcomments
+            }else if(req.body.reportedComment){
+                var reportedContent = req.body.reportedComment
+                var reportedContents = group.reportedComments
+            }else if(req.body.reportedPost){
+                var reportedContent = req.body.reportedPost
+                var reportedContents = group.reportedPosts
+            } else {
+                console.log("problem")
+            }
 
-            //find reported post in reportedPosts array
-            const findReportedPost = group.reportedPosts.find((post) => {
-                return post._id.toString() == reportedPost.toString()
-            })
+            //find reported content in according reported content array (if exists)
+            let findReportedContent = helpers.findReportedContent(reportedContents, reportedContent)
 
-            //find index of removing reportedPost
-            const postIndex = group.reportedPosts.indexOf(findReportedPost);
+            if(findReportedContent){
+                //remove reported content from list of reported content
+                reportedContents.pull({_id: reportedContent})
 
-            if(findReportedPost){
-                group.reportedPosts.splice(postIndex, 1)
+                //delete reported content
                 group.save()
                     .then(
-                        postsAndComments.deletePost(req, res, (groupName) => {
-                            res.redirect("/group/modpanel/reportlist/" +groupName)
-                        })
+                        () => {
+                            if(req.body.reportedSubcomment){
+                                postsAndComments.deleteSubComment(req, res, (groupName) => {
+                                    res.redirect("/group/modpanel/reportlist/" +groupName)
+                                })
+                            }else if(req.body.reportedComment){
+                                postsAndComments.deleteComment(req, res, (groupName) => {
+                                    res.redirect("/group/modpanel/reportlist/" +groupName)
+                                })
+                            }else if(req.body.reportedPost){
+                                postsAndComments.deletePost(req, res, (groupName) => {
+                                    res.redirect("/group/modpanel/reportlist/" +groupName)
+                                })
+                            } else {
+                                console.log("problem")
+                            }
+                        }
                     )
             }else{
-                console.log("error in group/mod/post/delete")
+                console.log("error in group/mod/comment/delete")
             }
         })
-});
-
-//post request for deleting a comment
-//post /post/comment/delete; (private)
-router.post('/mod/comment/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
-    const groupID = req.body.groupID
-    const reportedComment = req.body.reportedComment
-
-    //TODO:check if user who wants to remove content is mod
-
-    //find group for remove the reported post from reportedPosts list
-    Group.findById(groupID)
-    .exec((err, group)=>{
-
-        //find reported post in reportedComments array
-        const findReportedComment = group.reportedComments.find((comment) => {
-            return comment._id.toString() == reportedComment.toString()
-        })
-
-        //find index of removing reportedComment
-        const commentIndex = group.reportedComments.indexOf(findReportedComment);
-
-        if(findReportedComment){
-            group.reportedComments.splice(commentIndex, 1)
-            group.save()
-                .then(
-                    postsAndComments.deleteComment(req, res, (groupName) => {
-                        res.redirect("/group/modpanel/reportlist/" +groupName)
-                    })
-                )
-        }else{
-            console.log("error in group/mod/comment/delete")
-        }
-    })
-});
-
-
-//post request for deleting a subcomment
-//post /post/subcomment/delete; (private)
-router.post('/mod/subcomment/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
-    const groupID = req.body.groupID
-    const reportedSubcomment = req.body.reportedSubcomment
-
-    //TODO:check if user who wants to remove content is mod
-
-    //find group for remove the reported post from reportedPosts list
-    Group.findById(groupID)
-    .exec((err, group)=>{
-
-        //find reported post in reportedComments array
-        const findReportedSubcomment = group.reportedSubcomments.find((subcomment) => {
-            return subcomment._id.toString() == reportedSubcomment.toString()
-        })
-
-        //find index of removing reportedComment
-        const subcommentIndex = group.reportedSubcomments.indexOf(findReportedSubcomment);
-
-        if(findReportedSubcomment){
-            group.reportedSubcomments.splice(subcommentIndex, 1)
-            group.save()
-                .then(
-                    postsAndComments.deleteSubComment(req, res, (groupName) => {
-                        res.redirect("/group/modpanel/reportlist/" +groupName)
-                    })
-                )
-        }else{
-            console.log("error in group/mod/subcomment/delete")
-        }
-    })
 });
 
 //post request for removing Content from the reported-List without deleting the Content

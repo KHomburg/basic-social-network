@@ -16,14 +16,19 @@ const ifCurrentUserIsMod = (group, profile) => {
     })
 }
 
-//if(checkContact !== undefined){
-//    //remove contact from contacts list
-//    currentUserProfile.contacts.pull({_id: req.body.profileId})
-//    currentUserProfile.save()
-//    
+//takes the according array of the reported Contents in the group by its content type 
+//    (group.reportedSubcomments/group.reportedComments/group.reportedPosts) as reportedContents
+//and the individual id of the reported Content as reportedContent
+const findReportedContent = (reportedContents, reportedContent) => {
+    return reportedContents.find((content) => {
+        return content._id.toString() == reportedContent.toString()
+    })
+}
+
 
 
 module.exports = {
     findMembershipInProfile,
     ifCurrentUserIsMod,
+    findReportedContent,
 }

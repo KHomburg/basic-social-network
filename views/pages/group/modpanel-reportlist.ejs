@@ -21,7 +21,7 @@
 
         <div class="uk-margin-left uk-margin-right uk-margin-bottom">
             <!-- Delete Button for Post-->
-            <form action="/group/mod/post/delete" method="post">
+            <form action="/group/mod/content/delete" method="post">
                 <div class="uk-margin-top" style="display:none">
                     <input type="hidden" name="postId" value= <%= reportedPost.content._id %>></br>
                     <input type="hidden" name="groupID" value= <%= groupID %>></br>
@@ -34,7 +34,6 @@
             <form action="/group/mod/reportlist/removecontent" method="post">
                 <div class="uk-margin-top" style="display:none">
                     <input type="hidden" name="postId" value= <%= reportedPost.content._id %>></br>
-                    <input type="hidden" name="groupID" value= <%= groupID %>></br>
                     <input type="hidden" name="reportedPost" value= <%= reportedPost._id %>></br>
                 </div>
                 <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Nicht Löschen">
@@ -51,7 +50,7 @@
 
         <div class="uk-margin-left uk-margin-right uk-margin-bottom">
             <!-- Delete Button for Comments-->
-            <form action="/group/mod/comment/delete" method="post">
+            <form action="/group/mod/content/delete" method="post">
                 <div class="uk-margin-top" style="display:none">
                     <input type="hidden" name="commentId" value= <%= reportedComment.content._id %>></br>
                     <input type="hidden" name="groupID" value= <%= groupID %>></br>
@@ -84,7 +83,7 @@
 
         <div class="uk-margin-left uk-margin-right uk-margin-bottom">
             <!-- Delete Button for Subcomments-->
-            <form action="/group/mod/subcomment/delete" method="post">
+            <form action="/group/mod/content/delete" method="post">
                 <div class="uk-margin-top" style="display:none">
                     <input type="hidden" name="subCommentId" value= <%= reportedSubcomment.content._id %>></br>
                     <input type="hidden" name="groupID" value= <%= groupID %>></br>
