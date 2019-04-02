@@ -449,16 +449,13 @@ router.post('/mod/reportlist/removecontent', authenticate.checkLogIn, authentica
             console.log("problem")
         }
 
-        //find reported post in reportedComments array
-        const findReportedContent = reportedContents.find((content) => {
-            return content._id.toString() == reportedContent.toString()
-        })
-
-        //find index of removing reportedComment
-        const contentIndex = reportedContents.indexOf(findReportedContent);
+        //find reported content in according reported content array (if exists)
+        let findReportedContent = helpers.findReportedContent(reportedContents, reportedContent)
 
         if(findReportedContent){
-            reportedContents.splice(contentIndex, 1)
+            //remove reported content from list of reported content
+            reportedContents.pull({_id: reportedContent})
+            
             group.save()
                 .then(res.redirect("/group/modpanel/reportlist/" +group.name))
         }else{
