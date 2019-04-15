@@ -16,6 +16,9 @@ const Subcomment = require("../models/Subcomment");
 const ContentImage = require("../models/Contentimage");
 const Notification = require("../models/Notification");
 
+//custom modules
+const notification = require("../functions/notification")
+
 
 //Custom Functions for Posts/Comments/SubComments Routes
 
@@ -346,6 +349,7 @@ const createSubComment = (req, res) => {
                 .populate('notification')
                 .exec( (err, comment) => {
                     let postID = req.body.postId
+                    let groupID = req.body.groupId
                     if(comment){
 
                         //initialize new ContentImage object
@@ -353,7 +357,7 @@ const createSubComment = (req, res) => {
                         const newContentImage = new ContentImage({
                             _id : id,
                             profile : currentUserProfile,
-                            group: req.body.groupId,
+                            group: groupID,
                             parentPost: comment.parentPost,
                             parentComment: comment,
                             parentType: "subcomment",
@@ -374,14 +378,28 @@ const createSubComment = (req, res) => {
                         const newSubComment = new Subcomment({
                             profile: currentUserProfile,
                             text: req.body.text,
-                            parentPost: req.body.postId,
+                            parentPost: postID,
                             parentComment: req.body.commentId,
-                            group: req.body.groupId,
+                            group: groupID,
                             image: newContentImage,
                         })
 
+                        //create new Notification with new comment
+                        const newNotification = new Notification({
+                            profile: currentUserProfile,
+                            group: groupID,
+                            refContent: newSubComment,
+                            refContentType: "subcomment",
+                            parentContent: comment,
+                            parentContentType: "comment",
+                            addressee: currentUserProfile,
+                            updatedBy: currentUserProfile
+                        })
+
+                        newSubComment.notification = newNotification
                         newSubComment.save()
                             .then(()=>{
+                                newNotification.save()
                                 comment.notification.updatedBy = currentUserProfile //update the notification for that comment
                                 comment.notification.addressee.push(currentUserProfile) //add currentUserProfile to addressees
                                 comment.notification.lastUpdated = new Date
@@ -409,17 +427,32 @@ const createSubComment = (req, res) => {
                 .populate('notification')
                 .exec( (err, comment) => {
                     let postID = req.body.postId
+                    let groupID = req.body.groupId
                     if(comment){
                         const newSubComment = new Subcomment({
                             profile: currentUserProfile,
                             text: req.body.text,
-                            parentPost: req.body.postId,
+                            parentPost: postID,
                             parentComment: req.body.commentId,
-                            group: req.body.groupId,
+                            group: groupID,
                         })
 
+                        //create new Notification with new comment
+                        const newNotification = new Notification({
+                            profile: currentUserProfile,
+                            group: groupID,
+                            refContent: newSubComment,
+                            refContentType: "subcomment",
+                            parentContent: comment,
+                            parentContentType: "comment",
+                            addressee: currentUserProfile,
+                            updatedBy: currentUserProfile
+                        })
+
+                        newSubComment.notification = newNotification
                         newSubComment.save()
                             .then(()=>{
+                                newNotification.save()
                                 comment.notification.updatedBy = currentUserProfile //update the notification for that comment
                                 comment.notification.addressee.push(currentUserProfile) //add currentUserProfile to addressees
                                 comment.notification.lastUpdated = new Date 
@@ -452,7 +485,10 @@ const deletePost = (req, res, callback) => {
             const groupName = post.group.name
             if(callback){
                 callback(groupName)
-            }        
+            }
+            notification.deleteNotification(post.notification)
+                .then()
+                .catch((err) => console.log(err))
         })
 }
 
@@ -532,6 +568,10 @@ const deleteComment = (req, res, callback) => {
                 if(callback){
                     callback(groupName)
                 }
+                
+                notification.deleteNotification(comment.notification)
+                    .then()
+                    .catch((err) => console.log(err))
             }else{
                 console.log("error in post/comment/delete - not op or mod")
             }
@@ -624,6 +664,9 @@ const deleteSubComment = (req, res, callback) => {
                 commentsSubcomments.splice(index,1)
                 //save comment and remove subcomment            
                 comment.save().then(subComment.remove())
+                notification.deleteNotification(subComment.notification)
+                    .then()
+                    .catch((err) => console.log(err))
                 if(callback){
                     callback(groupName)
                 }

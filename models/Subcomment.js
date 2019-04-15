@@ -33,7 +33,12 @@ const SubcommentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "group",
         required: true
-    }
+    },
+    notification: {
+        type: Schema.Types.ObjectId,
+        ref: "notification",
+        required: true,
+    },
 })
 
 module.exports = Subcomment = mongoose.model("subcomment", SubcommentSchema);
