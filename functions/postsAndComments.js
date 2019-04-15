@@ -4,6 +4,7 @@ const authenticate = require("./authenticate");
 const multer = require('multer');
 const image = require("../functions/image");
 const sharp = require("sharp");
+const config = require("../config/config")
 
 //Load models
 const User = require("../models/User");
@@ -50,7 +51,7 @@ const createPost = (req, res) => {
                         .jpeg({
                             quality: 60,        //changes image quality to *number* percent
                         })
-                        .toFile('./public/images/contentImages/' + req.file.filename) // TODO: change upload dir
+                        .toFile(config.uploadDir + req.file.filename) // TODO: change upload dir
                         .then((info) => { 
                             console.log(info)
                             //create new Post object with image
@@ -78,6 +79,7 @@ const createPost = (req, res) => {
                             newNotification.save();
                             newPost.save();
 
+                            newContentImage.path = config.uploadDir + req.file.filename
                             newContentImage.parentPost = newPost;
                             newContentImage.save()
                             res.redirect("id/" +newPost._id)
@@ -215,7 +217,7 @@ const createComment = (req, res) => {
                                 .jpeg({
                                     quality: 60,        //changes image quality to *number* percent
                                 })
-                                .toFile('./public/images/contentImages/' + req.file.filename) // TODO: change upload dir
+                                .toFile(config.uploadDir + req.file.filename) // TODO: change upload dir
                                 .then((info) => { 
                                     console.log(info)
                                     const newComment = new Comment({
@@ -254,6 +256,7 @@ const createComment = (req, res) => {
                                             post.notification.save()
             
                                             //finalize and save new image object
+                                            newContentImage.path = config.uploadDir + req.file.filename;
                                             newContentImage.parentComment = newComment;
                                             newContentImage.save()
             
@@ -363,7 +366,7 @@ const createSubComment = (req, res) => {
                             .jpeg({
                                 quality: 60,        //changes image quality to *number* percent
                             })
-                            .toFile('./public/images/contentImages/' + req.file.filename) // TODO: change upload dir
+                            .toFile(config.uploadDir + req.file.filename) // TODO: change upload dir
                             .then(info => { console.log(info)})
                             .catch(err => { console.log(err)});
 
@@ -386,7 +389,9 @@ const createSubComment = (req, res) => {
                                 comment.subcomments.push(newSubComment);
                                 comment.save();
                                 comment.notification.save() 
+
                                 //finalize and save new image object
+                                newContentImage.path = config.uploadDir + req.file.filename;
                                 newContentImage.parentSubcomment = newSubComment;
                                 newContentImage.save()
 
