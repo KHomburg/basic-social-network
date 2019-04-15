@@ -380,17 +380,77 @@ router.get("/search/", authenticate.checkLogIn, authenticate.reqSessionProfile,(
 
 
 
+//router.get("/test", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+//    const currentUserProfile = req.currentUserProfile
+//
+//    Comment.find()
+//        .exec((err, comments) => {
+//            //console.log("Kommentare:" + comments)
+//            Post.find({"comments._id": { $in: comments}})
+//                .exec((err, post) => {
+//                    console.log("Posts:" +post)
+//                })
+//        })
+//});
+
 router.get("/test", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
+    var testUsers = 1000
+    var testPosts = 100
 
-    Comment.find()
-        .exec((err, comments) => {
-            //console.log("Kommentare:" + comments)
-            Post.find({"comments._id": { $in: comments}})
-                .exec((err, post) => {
-                    console.log("Posts:" +post)
+
+    for(var i = 0; i < testUsers; i++){
+        const newUser = new User({
+            email: "123456@bob.de",
+            password: "123456"
+        });
+
+        newUser.save().then(() => {
+
+            const newProfile = new Profile({
+                name: "Test Profile: " + i,
+                user: newUser._id,
+                bio: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"
+            })
+
+            newProfile.save()
+                .then(() => {
+                    console.log(i + " New User created at: " + new Date().toUTCString())
+                    for(var x = 0; x < testPosts; x++){
+
+
+                        Group.findById("5c968f646e5fcd4798a37e42")
+                            .exec((err, group) => {
+
+                                const newNotification = new Notification({
+                                    profile: newProfile._id,
+                                    group: group,
+                                    refContentType: "post",
+                                    addressee: newProfile._id,
+                                    updatedBy: newProfile._id,
+                                })
+
+                                newPost = new Post({
+                                    group: group,
+                                    title: x + " Automatically created Testpost by: " + newUser._id,
+                                    text: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam",
+                                    profile: newProfile._id,
+                                    notification: newNotification
+                                })
+                                newNotification.refContent = newPost
+
+                                newPost.save()
+                                    .then(() => {
+                                        newNotification.save()
+                                    })
+                            })
+                        
+                    }
                 })
-        })
+        
+        });
+
+    }
 });
 
 
