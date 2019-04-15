@@ -5,11 +5,11 @@ const ContentImageSchema = new Schema({
     profile: {
         type: Schema.Types.ObjectId,
         ref: "profile",
-        required: "true"
+        required: true
     },
     parentType: {
         type: String,
-        required: "true"
+        required: true
     },
     parentPost: {                       //fill also if image belongs to Comment/Subcomment
         type: Schema.Types.ObjectId,
@@ -33,6 +33,7 @@ const ContentImageSchema = new Schema({
     },
     path: {
         type: String,
+        required: true
     }
 })
 

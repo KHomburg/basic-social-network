@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 const SubcommentSchema = new Schema({
     profile: {
         type: Schema.Types.ObjectId,
-        ref: "profile"
+        ref: "profile",
+        required: true
     },
     text: {
         type: String,

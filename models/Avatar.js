@@ -5,7 +5,7 @@ const AvatarSchema = new Schema({
     profile: {
         type: Schema.Types.ObjectId,
         ref: "profile",
-        required: "true"
+        required: true
     },
     date: {
         type: Date,
@@ -13,6 +13,7 @@ const AvatarSchema = new Schema({
     },
     path: {
         type: String,
+        required: true
     }
 })
 

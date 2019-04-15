@@ -10,7 +10,8 @@ const PostSchema = new Schema({
     },
     group: {
         type: Schema.Types.ObjectId,
-        ref: "group"
+        ref: "group",
+        required: true
     },
     title: {
         type: String,
