@@ -68,8 +68,8 @@ router.get("/notifications", authenticate.checkLogIn, authenticate.reqSessionPro
     
     Notification.find({"addressee._id": currentUserProfile})
         .sort({lastUpdated: 'desc'})
-        .limit(5)
         .$where("this.addressee.length >1")
+        .limit(20)
         .populate(
             [
                 {

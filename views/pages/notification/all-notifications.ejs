@@ -7,12 +7,10 @@
 <body>
 
     <div class="main">
-
-    <% notifications.forEach((notification) => {%>
+    <% if(notifications){notifications.forEach((notification) => {%>
         <div class="full-notification uk-inline">
             <div class="uk-comment-body">
                 <p class="uk-margin-remove">
-
                     <% if (notification.updatedBy.toString() == currentUserProfile._id.toString()){%>
                         You
                     <%}else if (notification.updatedBy.toString() != currentUserProfile._id.toString()){%>
@@ -43,17 +41,20 @@
                     <%}%>
 
                     <% if (notification.refContentType =="post"){%>
-                        <%- include('../../partials/helpers/trim-text', {text: notification.refContent.title})%>
+                        <a href="<%="/post/id/" + notification.refContent._id %>">
+                            <%- include('../../partials/helpers/trim-text', {text: notification.refContent.title})%>
+                        </a>
                     <%}else if (notification.refContentType == "comment"){%>
-                        <%- include('../../partials/helpers/trim-text', {text: notification.refContent.text})%>
+                        <a href="<%="/post/id/" + notification.parentContent._id %>">
+                            <%- include('../../partials/helpers/trim-text', {text: notification.refContent.text})%>
+                        </a>
                     <%}%>
                 </p>
                 <p class="uk-text-meta uk-margin-remove"><%= notification.refContent.date.toDateString("de-De") + " " + notification.refContent.date.toLocaleTimeString("de-De")%></p>
                 
-                
             </div>
         </div>
-    <%})%>
+    <%})}%>
     </div>
 </body>
 
