@@ -6,12 +6,14 @@ const multer = require('multer');
 const sharp = require("sharp");
 
 
-
+/*
+IMAGE UPLOAD STORAGE ENGINE
+*/
 //TODO: change directories when config.js path is fixed
 const uploadAvatar = multer.diskStorage({
 	destination: function(req, file, callback) {
 
-		callback(null, './uploads/avatar')
+		callback(null, config.unprocessedImages)
 	},
 	filename: function(req, file, callback) {
 		let newAvatar = new Avatar({
@@ -22,7 +24,7 @@ const uploadAvatar = multer.diskStorage({
 
 const uploadContentImage = multer.diskStorage({
 	destination: function(req, file, callback) {
-		callback(null, './uploads/images')
+		callback(null, config.unprocessedImages)
 	},
 	filename: function(req, file, callback) {
 		let newContentImage = new ContentImage({
@@ -83,10 +85,11 @@ const imageFilter = function (req, file, cb) {
 //function to return path to avatar if available, need currentUser profile as params
 let showAvatar = (userProfile) => {
 	if(userProfile.avatar){
-		return 'images/avatars/' + userProfile.avatar
+		return config.uploadDirAvatars + userProfile.avatar
 	} else {
 		return "images/maxresdefault.jpg"
-	}}
+	}
+}
 
 
 module.exports = {

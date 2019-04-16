@@ -54,7 +54,7 @@ const createPost = (req, res) => {
                         .jpeg({
                             quality: 60,        //changes image quality to *number* percent
                         })
-                        .toFile(config.uploadDir + req.file.filename) // TODO: change upload dir
+                        .toFile(config.uploadDirImages + req.file.filename) // TODO: change upload dir
                         .then((info) => { 
                             console.log(info)
                             //create new Post object with image
@@ -82,7 +82,7 @@ const createPost = (req, res) => {
                             newNotification.save();
                             newPost.save();
 
-                            newContentImage.path = config.uploadDir + req.file.filename
+                            newContentImage.path = config.uploadDirImages + req.file.filename
                             newContentImage.parentPost = newPost;
                             newContentImage.save()
                             res.redirect("id/" +newPost._id)
@@ -144,6 +144,10 @@ const getPost = (req, res) => {
                 model: "group"
             },
             {
+                path: "image",
+                model: "contentImage"
+            },
+            {
                 path: "comments._id",
                 model: "comment",
                 populate: [
@@ -152,12 +156,20 @@ const getPost = (req, res) => {
                         model: "profile",
                     },
                     {
+                        path: "image",
+                        model: "contentImage"
+                    },
+                    {
                         path: "subcomments._id",
                         model: "subcomment",
-                        populate: {
+                        populate: [{
                             path: "profile",
                             model: "profile"
-                        }
+                        },
+                        {
+                            path: "image",
+                            model: "contentImage"
+                        }]                        
                     }
                 ]
             }
@@ -220,7 +232,7 @@ const createComment = (req, res) => {
                                 .jpeg({
                                     quality: 60,        //changes image quality to *number* percent
                                 })
-                                .toFile(config.uploadDir + req.file.filename) // TODO: change upload dir
+                                .toFile(config.uploadDirImages + req.file.filename) // TODO: change upload dir
                                 .then((info) => { 
                                     console.log(info)
                                     const newComment = new Comment({
@@ -259,7 +271,7 @@ const createComment = (req, res) => {
                                             post.notification.save()
             
                                             //finalize and save new image object
-                                            newContentImage.path = config.uploadDir + req.file.filename;
+                                            newContentImage.path = config.uploadDirImages + req.file.filename
                                             newContentImage.parentComment = newComment;
                                             newContentImage.save()
             
@@ -370,7 +382,7 @@ const createSubComment = (req, res) => {
                             .jpeg({
                                 quality: 60,        //changes image quality to *number* percent
                             })
-                            .toFile(config.uploadDir + req.file.filename) // TODO: change upload dir
+                            .toFile(config.uploadDirImages + req.file.filename) // TODO: change upload dir
                             .then(info => { console.log(info)})
                             .catch(err => { console.log(err)});
 
@@ -409,7 +421,7 @@ const createSubComment = (req, res) => {
                                 comment.notification.save() 
 
                                 //finalize and save new image object
-                                newContentImage.path = config.uploadDir + req.file.filename;
+                                newContentImage.path = config.uploadDirImages + req.file.filename;
                                 newContentImage.parentSubcomment = newSubComment;
                                 newContentImage.save()
 
