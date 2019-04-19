@@ -14,6 +14,9 @@ const Comment = require("../models/Comment");
 const Subcomment = require("../models/Subcomment");
 const ContentImage = require("../models/Contentimage");
 
+//custom modules
+const config = require("../config/config")
+
 
 //get all profiles (Private)
 //Get /profile/all
@@ -110,9 +113,10 @@ router.post('/avatar', authenticate.checkLogIn, authenticate.reqSessionProfile, 
                 .jpeg({
                     quality: 60,    //changes image quality to *number* percent
                 })
-                .toFile('./public/images/avatars/' + req.file.filename) // TODO: change upload dir
+                .toFile(config.uploadDirAvatars + req.file.filename)
                 .then((info) => { 
                     console.log(info)
+                    newAvatar.path = config.uploadDirAvatars + req.file.filename
                     newAvatar.save()
                         .then(() => {
                             currentUserProfile.avatar = newAvatar;
