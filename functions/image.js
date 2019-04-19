@@ -84,7 +84,7 @@ const imageFilter = function (req, file, cb) {
 //function to return path to avatar if available, need currentUser profile as params
 let showAvatar = (userProfile) => {
 	if(userProfile.avatar){
-		return config.uploadDirAvatars + userProfile.avatar
+		return "images/avatars/" + userProfile.avatar
 	} else {
 		return "images/maxresdefault.jpg"
 	}

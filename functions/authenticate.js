@@ -59,10 +59,6 @@ module.exports.reqSessionProfile = (req, res, next) => {
         {
             path: "contacts._id",
             model: "profile"
-        },
-        {
-            path: "avatar",
-            model: "avatar"
         }
     ])
     .exec((err, profile) => 
