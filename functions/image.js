@@ -12,7 +12,6 @@ IMAGE UPLOAD STORAGE ENGINE
 //TODO: change directories when config.js path is fixed
 const uploadAvatar = multer.diskStorage({
 	destination: function(req, file, callback) {
-
 		callback(null, config.unprocessedImages)
 	},
 	filename: function(req, file, callback) {

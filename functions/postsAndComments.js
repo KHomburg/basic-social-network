@@ -32,8 +32,6 @@ const createPost = (req, res) => {
     .single('image')
     upload(req, res, function(err) {
         if(req.file){
-            console.log(req.file)
-
             //creating the Post object
             Group.findOne({name: req.body.groupName}, (err, postGroup) => {
                 if(postGroup){
@@ -54,7 +52,7 @@ const createPost = (req, res) => {
                         .jpeg({
                             quality: 60,        //changes image quality to *number* percent
                         })
-                        .toFile(config.uploadDirImages + req.file.filename) // TODO: change upload dir
+                        .toFile(config.uploadDirImages + req.file.filename)
                         .then((info) => { 
                             console.log(info)
                             //create new Post object with image
