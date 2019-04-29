@@ -13,6 +13,7 @@ const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const Subcomment = require("../models/Subcomment");
 const ContentImage = require("../models/Contentimage");
+const Avatar = require("../models/Avatar");
 
 //custom modules
 const config = require("../config/config")
@@ -63,7 +64,15 @@ router.get("/edit", authenticate.checkLogIn, authenticate.reqSessionProfile, aut
     const currentUserProfile = req.currentUserProfile
     const currentUser = req.currentUser
     const userEmail = currentUser.email
-    res.render("pages/profile/edit", {currentUserProfile, userEmail, showAvatar:image.showAvatar(currentUserProfile) });
+    Avatar.find({profile: currentUserProfile})
+        .exec((err, avatars) => {
+            avatars.forEach((avatar) => {
+                avatar.path = "images/avatars/" + avatar._id //TODO: after fileupload is adjusted change this
+            })
+            res.render("pages/profile/edit", {currentUserProfile, userEmail, avatars, showAvatar:image.showAvatar(currentUserProfile) });
+            
+        })
+    
 })
 
 //post changes for profile (Private)
@@ -132,6 +141,21 @@ router.post('/avatar', authenticate.checkLogIn, authenticate.reqSessionProfile, 
             //TODO: error message
         }
     })
+})
+
+router.post('/changeavatar', authenticate.checkLogIn, authenticate.reqSessionProfile, function (req, res, next) {
+    const currentUserProfile = req.currentUserProfile
+    console.log(req.body.avatarID)
+    Avatar.findById(req.body.avatarID)
+        .exec((err, avatar) => {
+            if(err){
+                console.log(err)
+            }else{
+                console.log(avatar)
+                currentUserProfile.avatar = avatar
+                currentUserProfile.save()
+            }
+        })
 })
 
 //adds profile experiences entry(Private)
