@@ -108,7 +108,13 @@ router.post("/register", (req, res) => {
 
 //login route (Public)
 //get /users/login
-router.get("/login", (req, res) => res.render("pages/users/login"));
+router.get("/login", authenticate.reqSessionProfile, (req, res) => {
+    if(req.currentUserProfile){
+        res.redirect("/post/stream/1");
+    }else{
+        res.render("pages/users/login")
+    }
+});
 
 //login route (Public)
 //post /users/login

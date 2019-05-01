@@ -46,30 +46,34 @@ module.exports.sessionProfile = (req, res, path) => {
 
 //returns the profile of the current sessions user
 module.exports.reqSessionProfile = (req, res, next) => {
-    Profile.findOne({user: req.session.userId})
-    .populate([
-        {
-            path: "moderatorOf._id",
-            model: "group"
-        },
-        {
-            path: "membership._id",
-            model: "group"
-        },
-        {
-            path: "contacts._id",
-            model: "profile"
-        }
-    ])
-    .exec((err, profile) => 
-    {
-        if (profile){
-            req.currentUserProfile = profile 
-            return next()         
-        }else if(err){ 
-            console.log(err)
-        }else{
-            res.send("Something went wrong, cannot find your profile (you are not logged in)!")
-        }
-    })
+    if(req.session.userId){
+        Profile.findOne({user: req.session.userId})
+            .populate([
+                {
+                    path: "moderatorOf._id",
+                    model: "group"
+                },
+                {
+                    path: "membership._id",
+                    model: "group"
+                },
+                {
+                    path: "contacts._id",
+                    model: "profile"
+                }
+            ])
+            .exec((err, profile) => 
+            {
+                if (profile){
+                    req.currentUserProfile = profile 
+                    return next()         
+                }else if(err){ 
+                    console.log(err)
+                }else{
+                    res.send("Something went wrong, cannot find your profile (you are not logged in)!")
+                }
+            })
+    }else{
+        return next() 
+    }
 }
