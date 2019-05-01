@@ -14,9 +14,18 @@
             <a href="/group/modpanel/leavemod/<%=group.name%>"      class="uk-button uk-button-default uk-button-small uk-margin-left uk-margin-right uk-background-default">Leave as Mod</a>
         </div>
 
+        <!-- search Form-->
+        <div class="uk-margin uk-margin-left uk-margin-right uk-background-default">
+            <form class="uk-search uk-search-default uk-width-1-1" action="/group/modpanel/members/search/<%=group.name%>" method="post">
+                <input type="hidden" name="groupID"  value="<%=group._id%>">
+                <input id="Name" type="text" name="name" class="uk-search-input" type="search" placeholder="Search...">
+            </form>
+        </div>
+        <%console.log(members)%>
+
         <!-- List all Members -->
-        <% if(group.members){ group.members.forEach((member) => { %>
-            <% profile = member._id%>
+        <% if(members){members.forEach((member) => { %>
+            <% if(member.name == undefined){profile = member._id}%>
             <%- include('../../partials/components/single-profile-reference', {profile, currentUserProfile})%>
             <!-- Button to add Member as Mod-->
             <%if(profile.isMod == false){%>

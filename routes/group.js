@@ -292,7 +292,7 @@ router.get("/modpanel/members/:name", authenticate.checkLogIn, authenticate.reqS
                 if(ifCurrentUserIsMod){
                     const groupID = group._id
                     
-                    res.render("pages/group/modpanel-members", {currentUserProfile, group, groupID})
+                    res.render("pages/group/modpanel-members", {currentUserProfile, group, members: group.members})
                 } else{
                     console.log("cannot show this site: User is not a moderator of this group")
                 }
@@ -300,6 +300,31 @@ router.get("/modpanel/members/:name", authenticate.checkLogIn, authenticate.reqS
             console.log("unable to find group")
         }
     })
+});
+
+////find members of group by their name in modpanel
+////get /name/modpanel/members/search/:name
+router.post("/modpanel/members/search/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+    const term = req.body.name;
+
+    Group.findById(req.body.groupID)
+        .exec((err,group) => {
+            if(group){
+                Profile.find({$text: {$search: term}, membership: {_id: req.body.groupID}})
+                .exec((err, members) => {
+                    if(members){
+                        console.log(members)
+                        res.render("pages/group/modpanel-members", {currentUserProfile, group, members})
+                    }else{
+                        console.log(err)
+                    }
+                    
+                })
+            }else{
+                console.log(err)
+            }
+        })
 });
 
 ////get all moderators of group shown in mod panel
