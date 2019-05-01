@@ -101,8 +101,12 @@
   background-color: white;
   text-align: center;
   height: 300px;
-  width: 960px;
+  width: 100%;
   margin: 100px auto auto auto; }
+
+.login-input {
+  width: 100%;
+  max-width: 260px; }
 
 body {
   margin: 0px auto 0px auto;
@@ -172,6 +176,17 @@ body {
 
 .profile__dl {
   margin-top: 5px; }
+
+.register-form {
+  background-color: white;
+  text-align: center;
+  height: 300px;
+  width: 100%;
+  margin: 100px auto auto auto; }
+
+.register-input {
+  width: 100%;
+  max-width: 260px; }
 
 /* The sidebar menu */
 .sidenav {

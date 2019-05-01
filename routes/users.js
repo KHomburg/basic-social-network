@@ -80,7 +80,7 @@ router.post("/register", (req, res) => {
                                         //save new User
                                         newUser.save()
                                             .then((user) => {
-                                                res.json(user);
+                                                res.redirect("/users/login");
                                                 const createdUser = user;
                                             })
                                             .catch(err => console.log(err))
