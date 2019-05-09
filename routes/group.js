@@ -170,8 +170,8 @@ router.post("/unsubscribe", authenticate.checkLogIn, authenticate.reqSessionProf
         })
 });
 
-////get all reported content of a group
-////get /name/mod/reportlist/:name
+//get all reported content of a group
+//get /name/mod/reportlist/:name
 router.get("/modpanel/reportlist/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     Group.findOne({name: req.params.name})
@@ -253,53 +253,53 @@ router.get("/modpanel/reportlist/:name", authenticate.checkLogIn, authenticate.r
         })
 });
 
-////get all members of group shown in mod panel
-////get /name/modpanel/members
+//get all members of group shown in mod panel
+//get /name/modpanel/members
 router.get("/modpanel/members/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
     //TODO: add pagination
     Group.findOne({name: req.params.name})
-    .populate(
-        [
-            {
-                path: "members._id",
-                model:"profile",
-            },
-            {
-                path: "moderator._id",
-                model:"profile",
-            }
-        ]
-    )
-    .exec((err, group) => {
-            if(group){
-                
-                //check for each member if is mod; if so add member._id.isMod = true
-                group.members.forEach((member) =>{
-                    if (group.moderator.find((mod) => {
-                        return mod._id._id.toString() == member._id._id.toString()
-                    })){
-                        member._id.isMod = true
-                    } else{
-                        member._id.isMod = false
-                    }
-                })
-
-                //check if currentUser is mod
-                let ifCurrentUserIsMod = helpers.ifCurrentUserIsMod(group, currentUserProfile)
-
-                if(ifCurrentUserIsMod){
-                    const groupID = group._id
-                    
-                    res.render("pages/group/modpanel-members", {currentUserProfile, group, members: group.members})
-                } else{
-                    console.log("cannot show this site: User is not a moderator of this group")
+        .populate(
+            [
+                {
+                    path: "members._id",
+                    model:"profile",
+                },
+                {
+                    path: "moderator._id",
+                    model:"profile",
                 }
-        }else{
-            console.log("unable to find group")
-        }
-    })
+            ]
+        )
+        .exec((err, group) => {
+                if(group){
+                    
+                    //check for each member if is mod; if so add member._id.isMod = true
+                    group.members.forEach((member) =>{
+                        if (group.moderator.find((mod) => {
+                            return mod._id._id.toString() == member._id._id.toString()
+                        })){
+                            member._id.isMod = true
+                        } else{
+                            member._id.isMod = false
+                        }
+                    })
+
+                    //check if currentUser is mod
+                    let ifCurrentUserIsMod = helpers.ifCurrentUserIsMod(group, currentUserProfile)
+
+                    if(ifCurrentUserIsMod){
+                        const groupID = group._id
+                        
+                        res.render("pages/group/modpanel-members", {currentUserProfile, group, members: group.members})
+                    } else{
+                        console.log("cannot show this site: User is not a moderator of this group")
+                    }
+            }else{
+                console.log("unable to find group")
+            }
+        })
 });
 
 ////find members of group by their name in modpanel
