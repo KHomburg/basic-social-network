@@ -42,9 +42,9 @@ router.get("/register", (req, res) => res.render("pages/users/register"));
 router.post("/register", (req, res) => {
     
     //check if registration code is a valid profile id
-    Profile.findById({_id: req.body.code})
-        .exec((err1, profile) => {
-            if(profile || req.body.code == "tramitest"){
+    User.findById({_id: req.body.code})
+        .exec((err1, invitedByUser) => {
+            if(invitedByUser || req.body.code == "tramitest"){
                     //fill in errors object if any occure and check validation
                     const {
                         errors,
@@ -56,7 +56,7 @@ router.post("/register", (req, res) => {
                         return res.status(400).json(errors);
                     }
 
-                    //look wether the a User with that email adress already exists
+                    //look wether the User with that email adress already exists
                     User.findOne({
                             email: req.body.email.toLowerCase()
                         })
@@ -77,24 +77,30 @@ router.post("/register", (req, res) => {
                                     bcrypt.hash(newUser.password, salt, (err, hash) => {
                                         if (err) throw err;
                                         newUser.password = hash;
+                                        if(invitedByUser){
+                                            newUser.invitedBy = invitedByUser;
+                                        }
+
+                                        //Create the profile for newUser
+                                        const newProfile = new Profile({
+                                            name: req.body.name,
+                                            user: newUser._id
+                                        });
+
+                                        newUser.profile = newProfile._id
+
                                         //save new User
                                         newUser.save()
                                             .then((user) => {
-                                                res.redirect("/users/login");
-                                                const createdUser = user;
+                                                //save the Profile
+                                                newProfile.save()
+                                                    .then(() => {
+                                                        console.log("Profile saved:" + newProfile)
+                                                        res.render("pages/users/post-register");
+                                                    })
+                                                    .catch(err => console.log(err));
                                             })
                                             .catch(err => console.log(err))
-
-                                            //Create the profile
-                                            .then(createProfile => {
-                                                const newProfile = new Profile({
-                                                    name: req.body.name,
-                                                    user: newUser._id
-                                                });
-                                                newProfile.save()
-                                                    .then(console.log("Profile saved:" + newProfile))
-                                                    .catch(err => console.log(err));
-                                            });
                                     })
                                 })
                             }
@@ -145,20 +151,25 @@ router.post("/login", (req, res) => {
                 //errors.email = "User not found";
                 //return res.status(404).json(errors);
             }
-            //check password
-            bcrypt.compare(password, user.password)
-                .then(isMatch => {
-                    if (isMatch) {
+            if(user.verified == true){
+                //check password
+                bcrypt.compare(password, user.password)
+                    .then(isMatch => {
+                        if (isMatch) {
 
-                        req.session.userId = user._id;
-                        console.log("session created");
-                        res.redirect("/post/stream/1");
-                    } else {
-                        req.flash('BAD:', 'Wrong Password', '/users/login');
-                        //errors.password = "Password incorrect";
-                        //return res.status(400).json(errors);
-                    }
-                })
+                            req.session.userId = user._id;
+                            console.log("session created");
+                            res.redirect("/post/stream/1");
+                        } else {
+                            req.flash('BAD:', 'Wrong Password', '/users/login');
+                            //errors.password = "Password incorrect";
+                            //return res.status(400).json(errors);
+                        }
+                    })
+            }else if(user.verified == false){
+                res.send("your account has not been verified yet")
+            }
+
         });
 });
 

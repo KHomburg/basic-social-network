@@ -8,6 +8,10 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
+    profile:{
+        type: Schema.Types.ObjectId,
+        ref: "profile"
+    },
     password:{
         type: String,
         required: true
@@ -15,6 +19,24 @@ const UserSchema = new Schema({
     date:{
         type: Date,
         default: Date.now
+    },
+    invitedBy:{
+        type: Schema.Types.ObjectId,
+        ref: "users"
+    },
+    verifiedByProfile:{
+        type: Schema.Types.ObjectId,
+        ref: "users"
+    },
+    verified:{
+        type: Boolean,
+        required: true,
+        default: false,
+    },
+    suspended:{
+        type: Boolean,
+        required: true,
+        default: false,
     }
 });
 

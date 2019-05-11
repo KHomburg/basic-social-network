@@ -1,0 +1,36 @@
+<% include ../../partials/head %>
+
+<% include ../../partials/header %>
+<% include ../../partials/sidebar %>
+
+<body>
+    <div class="main">
+        <h1> contacts list </h1>    
+        <% if(users){ users.forEach((user) => { %>
+            <div class="uk-card uk-card-default">
+                <div class="uk-card-header">
+                    <div class="uk-grid-small uk-flex-middle" uk-grid>
+                        <div class="uk-width-expand">
+                            <h3 class="uk-card-title uk-margin-remove-bottom"><%= user.profile.name %></h3>
+                            <p class="uk-text-meta uk-margin-remove-top">
+                                <form action="/verification/verifyuser/" method="post">
+                                    <input type="hidden" name="userId" value="<%= user._id %>">
+                                    <button type="submit" class="uk-button uk-button-primary uk-button-small">Bewerber bestätigen</button>                  
+                                </form>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% })} %>
+
+
+
+
+
+
+
+    </div>
+</body>
+
+<% include ../../partials/foot %>
