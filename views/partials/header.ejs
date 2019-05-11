@@ -32,6 +32,12 @@
                                         <a href="/profile/edit">Profil bearbeiten</a>
                                         <li class="uk-nav-divider"></li>  
                                     </li>
+                                    <%if(currentUserProfile.admin == true){%>
+                                        <li>
+                                            <a href="/admin/listprofiles">Administration</a>
+                                            <li class="uk-nav-divider"></li>  
+                                        </li>
+                                    <%}%>
                                     <li>
                                         <a href="/users/logout">Logout</a>
                                     </li>

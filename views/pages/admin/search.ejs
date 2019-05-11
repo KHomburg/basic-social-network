@@ -1,0 +1,32 @@
+<% include ../../partials/head %>
+
+<% include ../../partials/header %>
+<% include ../../partials/sidebar %>
+
+<body>
+    <div class="main">
+        <div class="uk-margin uk-margin-left uk-margin-right">
+            <h1> profiles list </h1>
+        </div>
+
+        <!-- search Form-->
+        <div class="uk-margin uk-margin-left uk-margin-right uk-background-default">
+            <form class="uk-search uk-search-default uk-width-1-1" action="/admin/profiles/search" method="post">
+                <input id="Name" type="text" name="name" class="uk-search-input" type="search" placeholder="Search...">
+            </form>
+        </div>
+        
+        <% if(profiles.length !== 0){ profiles.forEach((profile) => { %>
+
+            <%- include('../../partials/components/single-profile-reference', {profile, currentUserProfile})%>
+
+        <% })}else{ %>
+            <div class="uk-margin uk-margin-left uk-margin-right">
+                <p>No such Users found</p>
+            </div>
+        <% } %>
+
+    </div>
+</body>
+
+<% include ../../partials/foot %>

@@ -1,0 +1,46 @@
+<% include ../../partials/head %>
+
+<% include ../../partials/header %>
+<% include ../../partials/sidebar %>
+
+<body>
+    <div class="main">
+        <div class="uk-margin uk-margin-left uk-margin-right">
+            <h1> All profiles</h1>
+        </div>
+
+        <!-- search Form-->
+        <div class="uk-margin uk-margin-left uk-margin-right uk-background-default">
+            <form class="uk-search uk-search-default uk-width-1-1" action="/admin/profiles/search" method="post">
+                <input id="Name" type="text" name="name" class="uk-search-input" type="search" placeholder="Search...">
+            </form>
+        </div>
+
+        <% if(profiles){ profiles.forEach((profile) => { %>
+            <%- include('../../partials/components/single-profile-reference', {profile, currentUserProfile})%>
+            <div class="uk-margin-left uk-margin-right uk-margin-bottom">
+                <!-- Suspend button for user-->
+                <%if(profile.user.suspended == false){%>
+                    <form action="/admin/profiles/suspenduser" method="post">
+                        <div class="uk-margin-top" style="display:none">
+                            <input type="hidden" name="userId" value= <%= profile.user._id %>></br>
+
+                        </div>
+                        <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Nutzer sperren">
+                    </form>
+                <%}else{%>
+                    <form action="/admin/profiles/unsuspenduser" method="post">
+                        <div class="uk-margin-top" style="display:none">
+                            <input type="hidden" name="userId" value= <%= profile.user._id %>></br>
+
+                        </div>
+                        <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Nutzer Entsperren">
+                    </form>
+                <%}%>
+            </div>
+        <% })} %>
+
+    </div>
+</body>
+
+<% include ../../partials/foot %>

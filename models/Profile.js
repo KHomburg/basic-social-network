@@ -115,6 +115,10 @@ const ProfileSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    admin:{
+        type: Boolean,
+        default: false,
+    }
 });
 
 

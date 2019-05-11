@@ -20,6 +20,7 @@ const contacts ={};
 const statics ={};
 const notification ={};
 const verification ={};
+const admin = {};
 
 //View:
 users.view = require('./routes/users');
@@ -30,6 +31,7 @@ contacts.view = require('./routes/contacts');
 statics.view = require('./routes/statics');
 notification.view = require('./routes/notification');
 verification.view = require('./routes/verification');
+admin.view = require('./routes/admin');
 
 
 //Middleware
@@ -83,6 +85,7 @@ app.use('/group', group.view, express.static('public'));
 app.use('/contacts', contacts.view, express.static('public'));
 app.use('/notification', notification.view, express.static('public'));
 app.use('/verification', verification.view, express.static('public'));
+app.use('/admin', admin.view, express.static('public'));
 app.use('/', statics.view, express.static('public'));
 
 

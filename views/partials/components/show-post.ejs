@@ -33,7 +33,7 @@ requires
                         </div>
                         <input class="uk-button uk-button-primary uk-button-small uk-width-1-1 report-btn" type="submit" value="Unangemessener Beitrag">
                     </form>
-
+                    <br />
                     <form action="/post/reportcontent" method="post">
                         <div style="display:none">
                             <input type="hidden" name="ID" value= <%= post._id %>></br>
@@ -43,6 +43,17 @@ requires
                             <input type="hidden" name="reason" value= "spamOrAd"></br>
                         </div>
                         <input class="uk-button uk-button-primary uk-button-small uk-width-1-1 report-btn" type="submit" value="Unangemessener Beitrag">
+                    </form>
+                    <br />
+                    <form action="/post/reportcontent" method="post">
+                        <div style="display:none">
+                            <input type="hidden" name="ID" value= <%= post._id %>></br>
+                            <input type="hidden" name="groupID" value= <%= group._id %>></br>
+                            <input type="hidden" name="reportedBy" value= <%= currentUserProfile._id %>></br>
+                            <input type="hidden" name="contentType" value= post></br>
+                            <input type="hidden" name="reason" value= "spamOrAd"></br>
+                        </div>
+                        <input class="uk-button uk-button-primary uk-button-small uk-width-1-1 report-btn" type="submit" value="Nutzer melden">
                     </form>
 
             </ul>

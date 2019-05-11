@@ -19,7 +19,9 @@ requires
             <%}%>
         </div>
         <div class="uk-width-expand">
-            <h3 class="uk-card-title uk-margin-remove-bottom"><%= profile.name %></h3>
+            <a class="uk-card-title uk-margin-remove-bottom" href="/profile/id/<%=profile._id %>">
+                <h3 class="uk-card-title uk-margin-remove-bottom"><%= profile.name %></h3>
+            </a>
             <p class="uk-text-meta uk-margin-remove-top">
         
                 <!-- check if rendered users profile is currentUsers profile or allready in contacts list, to render according button -->
