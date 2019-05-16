@@ -1,19 +1,24 @@
 const ErrorLog = require("../models/ErrorLog");
 
 //create a new error object
-const createError = (message, route, profile, errLog, group) => {
+const createError = (errLog, message, route, profile, group) => {
     return new Promise((reject, resolve) => {
-        const newErrorLog = new ErrorLog({
-            message: message,
-            profile: profile,
-            route: route,
-            errLog: errLog,
-            group: group,
-        })
-        newErrorLog.save()
-            .then((ErrLog) => {
-                resolve(ErrLog)
+        if(errLog){
+            const newErrorLog = new ErrorLog({
+                message: message,
+                profile: profile,
+                route: route,
+                errLog: errLog,
+                group: group,
             })
+            newErrorLog.save()
+                .then((ErrLog) => {
+                    resolve(ErrLog)
+                })
+        }else{
+            reject("Error in error handler: no error message")
+        }
+        
     })
 }
 

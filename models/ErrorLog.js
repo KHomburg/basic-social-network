@@ -25,4 +25,4 @@ const ErrorLogSchema = new Schema({
     }
 })
 
-module.exports = ErrorLog = mongoose.model("error", CommentSchema);
+module.exports = ErrorLog = mongoose.model("error", ErrorLogSchema);
