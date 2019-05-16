@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authenticate = require("../functions/authenticate");
 const image = require("../functions/image");
+const errLog = require("../functions/error-log");
 
 //Load models
 const User = require("../models/User");
@@ -29,18 +30,26 @@ router.get("/listprofiles", authenticate.checkLogIn, authenticate.reqSessionProf
         .skip((perPage * page) - perPage)
         .limit(perPage)
         .populate("user")
-        .exec((err1, profiles) => {
-            Profile.count()
-                .exec((err2, count) => {
-                    if(profiles){
-                        res.render("pages/admin/profilelist", {profiles, currentUserProfile, current: page, pages: Math.ceil(count / perPage) });
-                    }else if(err1){
-                        console.log(err1)
-                    }else if(err2){
-                        console.log(err2)
-                    }else{
-                        console.log("Something went wrong")
-                    }   
+        .then((profiles) => {
+            Profile.countDocuments()
+                .then((count) => {
+                    res.render("pages/admin/profilelist", {profiles, currentUserProfile, current: page, pages: Math.ceil(count / perPage) });
+                })
+                .catch((countErr) => {
+                    errLog.createError(countErr, "Error counting profiles", "get admin/listprofiles", currentUserProfile, undefined)
+                        .then((errLog)=>{console.log(errLog)})
+                        .catch((err) => {
+                            console.log(err)
+                            res.render("pages/error-page", {});
+                        })
+                })
+        })
+        .catch((profileErr)=>{
+            errLog.createError(profileErr, "Error finding profiles", "get admin/listprofiles", currentUserProfile, undefined)
+                .then((errLog)=>{console.log(errLog)})
+                .catch((err) => {
+                    console.log(err)
+                    res.render("pages/error-page", {});
                 })
         })
 });
@@ -51,12 +60,18 @@ router.post("/profiles/search", authenticate.checkLogIn, authenticate.reqSession
     const currentUserProfile = req.currentUserProfile
     
     const term = req.body.name;
-    Profile.find({
-        $text: {$search: term},
-    })
+    Profile.find({$text: {$search: term}})
         .then((profiles) => {
-            res.render("pages/admin/search", {profiles, currentUserProfile});
-        });
+                res.render("pages/admin/search", {profiles, currentUserProfile});
+        })
+        .catch((profileErr) => {
+            errLog.createError(profileErr, "Error finding profiles by searched term", "get admin/profiles/search", currentUserProfile, undefined)
+            .then((errLog)=>{console.log(errLog)})
+            .catch((err) => {
+                console.log(err)
+                res.render("pages/error-page", {});
+            })
+        })
 });
 
 //post suspend to suspend user
@@ -76,7 +91,15 @@ router.post("/profiles/suspenduser", authenticate.checkLogIn, authenticate.reqSe
             }else{
                 console.log("error")
             }
-        });
+        })
+        .catch((userErr) => {
+            errLog.createError(userErr, "Error finding user by id", "get admin/profiles/suspenduser", currentUserProfile, undefined)
+            .then((errLog)=>{console.log(errLog)})
+            .catch((err) => {
+                console.log(err)
+                res.render("pages/error-page", {});
+            })
+        })
 });
 
 //post suspend to suspend user
@@ -96,14 +119,16 @@ router.post("/profiles/unsuspenduser", authenticate.checkLogIn, authenticate.req
             }else{
                 console.log("error")
             }
-        });
+        })
+        .catch((userErr) => {
+            errLog.createError(userErr, "Error finding user by id", "get admin/profiles/unsuspenduser", currentUserProfile, undefined)
+            .then((errLog)=>{console.log(errLog)})
+            .catch((err) => {
+                console.log(err)
+                res.render("pages/error-page", {});
+            })
+        })
 });
-
-
-
-
-
-
 
 
 module.exports = router;
