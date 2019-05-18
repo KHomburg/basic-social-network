@@ -13,6 +13,7 @@ const createError = (errLog, message, route, profile, group) => {
             })
             newErrorLog.save()
                 .then((ErrLog) => {
+                    console.log(ErrLog)
                     resolve(ErrLog)
                 })
         }else{

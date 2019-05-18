@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authenticate = require("../functions/authenticate");
 const image = require("../functions/image");
+const errLog = require("../functions/error-log");
 
 //Load models
 const User = require("../models/User");
@@ -16,27 +17,36 @@ const Subcomment = require("../models/Subcomment");
 router.post("/addcontact", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     //find profile to be added as currentUsers contact    
-    Profile.findById({_id: req.body.profileId}, (err, profile) => {
-        if(profile){
-            const contacts = currentUserProfile.contacts
-            //check if contact is already in contacts list
-            let checkContact = contacts.find((contact) => {return contact._id._id.toString() == req.body.profileId.toString()})
-            if(checkContact == undefined){
-                currentUserProfile.contacts.push(profile);
-                currentUserProfile.save(); 
+    Profile.findById({_id: req.body.profileId})
+        .then((profile) => {
+            if(profile){
+                const contacts = currentUserProfile.contacts
+                //check if contact is already in contacts list
+                let checkContact = contacts.find((contact) => {return contact._id._id.toString() == req.body.profileId.toString()})
+                if(checkContact == undefined){
+                    currentUserProfile.contacts.push(profile);
+                    currentUserProfile.save(); 
+                } else {
+                    console.log("ERROR: unexpected error in contacts/addcontact; contact already in contacts list")
+                }
             } else {
-                console.log("contact already in contacts list")
+                console.log("ERROR: unexpected error in contact/addcontact: profile not found")
             }
-        } else {
-            console.log("profile could not be found")
-        }
-        res.status(204).send();  //TODO: add frontend script to change state to removecontact form 
-    })
+            res.status(204).send();  //TODO: add frontend script to change state to removecontact form 
+        })
+        .catch((profileErr) => {
+            errLog.createError(profileErr, "Error finding profile to be added", "post contact/addcontact", currentUserProfile, undefined)
+                .then((errLog)=>{res.render("pages/error-page", {})})
+                .catch((err) => {
+                    console.log(err)
+                    res.render("pages/error-page", {});
+                })
+        })
 });
 
 
-//post to remove the profile of another user to currentUsers contacts list
-//post /contacs/addcontact
+//post to remove the profile of another user from currentUsers contacts list
+//post /contacs/removecontact
 router.post("/removecontact", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile    
 
@@ -51,7 +61,7 @@ router.post("/removecontact", authenticate.checkLogIn, authenticate.reqSessionPr
         currentUserProfile.save()
 
     }else{
-        console.log("tried to remove contact, that is not in contacts list")
+        console.log("ERROR: unexpected error in contact/removecontact: tried to remove contact, that is not in contacts list")
     }
 
     res.status(204).send(); //TODO: add frontend script to change state to addcontact form
