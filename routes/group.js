@@ -30,16 +30,35 @@ router.get("/all/:page", authenticate.checkLogIn, authenticate.reqSessionProfile
         .limit(perPage)    
         .then((groups) => {
             Group.count()
-                .exec((err, count) => {
-                    if (err) console.log(next(err))
+                .then((count) => {
                     res.render("pages/group/all", {
                         groups: groups, 
                         currentUserProfile: currentUserProfile,
                         current: page,
                         pages: Math.ceil(count / perPage)                    
                     })
+                })
+                .catch((countErr) => {
+                    errLog.createError(countErr, "Error counting groups", "get group/all/:page", currentUserProfile, undefined)
+                        .then((errLog)=>{
+                            res.render("pages/error-page", {})
+                        })
+                        .catch((err) => {
+                            if(err){console.log(err)}
+                            res.render("pages/error-page", {})
+                        })
                 })            
-        });
+        })
+        .catch((groupErr) => {
+            errLog.createError(groupErr, "Error finding groups", "get group/all/:page", currentUserProfile, undefined)
+                .then((errLog)=>{
+                    res.render("pages/error-page", {})
+                })
+                .catch((err) => {
+                    if(err){console.log(err)}
+                    res.render("pages/error-page", {})
+                })
+        })
 
 })
 

@@ -1,6 +1,6 @@
 <header>
-    <!--Top Navbar-->
-    <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
+    <!--Top Navbar Large View-->
+    <div  class="uk-visible@s" uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
         <nav class="uk-navbar-container uk-navbar style="top: 0px uk-navbar="mode: hover;" >
             <div class="uk-navbar-left">
                 <ul class="uk-navbar-nav">
@@ -50,11 +50,6 @@
                             <a href="/post/stream/1" uk-icon="icon: home; ratio: 1.5"></a>
                         </li>
                     </li>
-                    <li>
-                        <li class="">
-                            <a href="/post/stream/1" uk-icon="icon: mail; ratio: 1.5"></a>
-                        </li>
-                    </li>
                 </ul>
             </div>
             <div class="uk-navbar-right">
@@ -67,6 +62,87 @@
                     <li>
                         <li class="">
                             <a href="#" uk-icon="icon: users; ratio: 1.5"></a>
+                            <div class="uk-navbar-dropdown uk-active" uk-dropdown="offset: -15">
+                                <ul class="uk-nav uk-navbar-dropdown-nav">
+                                    <li>
+                                        <a href="/profile/list">Alle Profile</a>
+                                        <li class="uk-nav-divider"></li>
+                                    </li>
+                                    <li>
+                                        <a href="/contacts/list">Deine Kontakte</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <!--Top Navbar small View-->
+    <div  class="uk-hidden@s" uk-sticky="bottom: 1; sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
+        <nav class="uk-navbar-container uk-navbar style="bottom: 0px uk-navbar="mode: hover;" >
+            <div class="uk-navbar-left">
+                <ul class="uk-navbar-nav">
+                <li>
+                    <li class="">
+                        <!-- This is a button toggling the off-canvas -->
+                        <button class="uk-button-small uk-button-default uk-margin-top uk-margin-small-right" type="button" uk-toggle="target: #offcanvas-overlay">Gruppen</button>
+                        
+                    </li>
+                </li>
+                    <li>
+                        <li class="">
+                            <a href="#" uk-icon="icon: user; ratio: 1"></a>
+                            <div class="uk-navbar-dropdown uk-active" uk-dropdown="offset: -1">
+                                <ul class="uk-nav uk-navbar-dropdown-nav">
+                                    <li>
+                                        <a href="/profile/mycontent/posts/1">Deine Posts</a>
+                                        <li class="uk-nav-divider"></li>
+                                    </li>
+                                    <li>
+                                        <a href="/profile/mycontent/comments/1">Von dir Kommentierte Posts</a>
+                                        <li class="uk-nav-divider"></li>
+                                    </li>
+                                    <li>
+                                        <a href="/profile/id/<%= currentUserProfile._id %>">Dein Profil</a>
+                                        <li class="uk-nav-divider"></li>  
+                                    </li>
+                                    <li>
+                                        <a href="/profile/edit">Profil bearbeiten</a>
+                                        <li class="uk-nav-divider"></li>  
+                                    </li>
+                                    <%if(currentUserProfile.admin == true){%>
+                                        <li>
+                                            <a href="/admin/listprofiles">Administration</a>
+                                            <li class="uk-nav-divider"></li>  
+                                        </li>
+                                    <%}%>
+                                    <li>
+                                        <a href="/users/logout">Logout</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </li>
+                    <li>
+                        <li class="" >
+                            <a href="/post/stream/1" uk-icon="icon: home; ratio: 1"></a>
+                        </li>
+                    </li>
+                </ul>
+            </div>
+            <div class="uk-navbar-right">
+                <ul class="uk-navbar-nav">
+                    <li>
+                        <li class="" >
+                            <a href="/notification/notifications" id="notify-icon" style="color: grey" uk-icon="icon: bell; ratio: 1"></a>
+                        </li>
+                    </li>
+                    <li>
+                        <li class="">
+                            <a href="#" uk-icon="icon: users; ratio: 1"></a>
                             <div class="uk-navbar-dropdown uk-active" uk-dropdown="offset: -15">
                                 <ul class="uk-nav uk-navbar-dropdown-nav">
                                     <li>

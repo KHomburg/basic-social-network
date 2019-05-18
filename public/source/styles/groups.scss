@@ -38,7 +38,7 @@
 
 .post{
     background-color: white;
-    padding: 20px;
+    padding: 10px;
     width: 90%;
     max-width: 630px;
     border: 1px solid #e5e5e5;
@@ -80,7 +80,7 @@
     }
     &__comment{
         background-color: white;
-        padding: 20px;
+        padding: 10px;
         width: 90%;
         max-width: 630px;
         border: 1px solid #e5e5e5;
@@ -89,12 +89,12 @@
     }
     &__sub-comment{
         background-color: white;
-        padding: 0px 0px 0px 10px;
+        padding: 0px 15px 0px 10px;
         width: 90%;
-        max-width: 580px;
+        max-width: 610px;
         border-top: 1px solid #999;
         border-left: 4px solid #1e87f0;
-        margin: 20px 8px 20px 50px;
+        margin: 12px 8px 12px 0px;
     }
 }
 

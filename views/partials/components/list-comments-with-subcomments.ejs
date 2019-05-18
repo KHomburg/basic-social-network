@@ -15,11 +15,11 @@ requires
 <% if(comments){ comments.forEach((comment) => { %>
     <% if(comment != null) {%>
         <div class="post__comment uk-inline">
-            <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+            <header class="uk-comment-header uk-margin-remove-bottom uk-grid-medium uk-flex-middle" uk-grid>
 
                 <!--Report Dropdown Button for Comments -->
                 <button class="uk-button uk-button-link uk-position-top-right" type="button"><span uk-icon="icon:  triangle-down"></span></button>
-                <div uk-dropdown="mode: click; boundary: !">
+                <div uk-dropdown="mode: click;  pos: bottom-left">
                     <ul class="uk-nav uk-dropdown-nav">
                         <li class="uk-nav-header">Melden wegen:</li>
                         <li class="uk-nav-divider"></li>
@@ -35,7 +35,7 @@ requires
                             </div>
                             <input class="uk-button uk-button-primary uk-button-small uk-width-1-1 report-btn" type="submit" value="Unangemessener Beitrag">
                         </form>
-
+                        <br />
                         <form action="/post/reportcontent" method="post">
                             <div style="display:none">
                                 <input type="hidden" name="ID" value= <%= comment._id._id %>></br>
@@ -97,7 +97,7 @@ requires
 
                             <!--Report Dropdown Button for Subcomments -->
                             <button class="uk-button uk-button-link uk-position-top-right" type="button"><span uk-icon="icon:  triangle-down"></span></button>
-                            <div uk-dropdown="mode: click; boundary: !">
+                            <div uk-dropdown="mode: click;  pos: bottom-left">
                                 <ul class="uk-nav uk-dropdown-nav">
                                     <li class="uk-nav-header">Melden wegen:</li>
                                     <li class="uk-nav-divider"></li>
@@ -113,7 +113,7 @@ requires
                                             </div>
                                             <input class="uk-button uk-button-primary uk-button-small uk-width-1-1 report-btn" type="submit" value="Unangemessener Beitrag">
                                         </form>
-
+                                        <br />
                                         <form action="/post/reportcontent" method="post">
                                             <div style="display:none">
                                                 <input type="hidden" name="ID" value= <%= subComment._id._id %>></br>
@@ -136,11 +136,8 @@ requires
                                     <%}%>
                                 </div>
                                 <div class="uk-width-expand uk-margin-remove">
-                                    <ul class="uk-comment-meta uk-subnav uk-margin-remove-top">
-                                        <li><a href="/profile/id/<%= post.profile._id %>">von <%= subComment._id.profile.name %></a></li>
-                                        <li><%= subComment._id.date.toDateString("de-De") + " " + subComment._id.date.toLocaleTimeString("de-De") %></li>
-                                        
-                                    </ul>
+                                    <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><a href="/profile/id/<%= post.profile._id %>">von <%= subComment._id.profile.name %></a></p>
+                                    <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><%= subComment._id.date.toDateString("de-De") + " " + subComment._id.date.toLocaleTimeString("de-De") %></p>
                                 </div>
                             </header>
                             
