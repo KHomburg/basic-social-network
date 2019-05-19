@@ -8,57 +8,67 @@
     <body>        
     <div class="profile__edit">
         <h3>Profil Bearbeiten:</h3>
-        <ul class="uk-subnav uk-tab" uk-switcher>
-            <li><a href="#">Social/General</a></li>
+        <!--Tab switcher-->
+        <ul class="uk-subnav uk-tab uk-visible@s" uk-switcher>
+            <li class="uk-active"><a href="#">Social/General</a></li>
             <li><a href="#">Education</a></li>
             <li><a href="#">Experience</a></li>
             <li><a href="#">Allgemeines</a></li>
             <li><a href="#">Profilbild</a></li>
         </ul>
+
+        <ul class="uk-tab-left uk-tab uk-hidden@s" uk-switcher>
+            <li class="uk-active"><a href="#">Social/General</a></li>
+            <li><a href="#">Education</a></li>
+            <li><a href="#">Experience</a></li>
+            <li><a href="#">Allgemeines</a></li>
+            <li><a href="#">Profilbild</a></li>
+        </ul>
+        <!--Tab Content-->
         <ul class="uk-switcher uk-margin">
             <li>
                 <form class="uk-form-width-large uk-margin-small " action="/profile/edit" method="post">
                     <h5>General information:</h5>
-                    <table class="uk-table uk-table-hover uk-table-small profile__form">
+                    <table class="uk-table uk-table-hover uk-table-small profile__form uk-table-responsive">
                         <tbody>
                             <tr>
                                 <td class="uk-width-small">Name</td>
-                                <td><input class="uk-input uk-form-small" id="form-horizontal-text" id="Name" type="text" name="name" placeholder="Name" value="<%=currentUserProfile.name%>" required></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="form-horizontal-text" id="Name" type="text" name="name" placeholder="Name" value="<%=currentUserProfile.name%>" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Wohnort</td>
-                                <td><input class="uk-input uk-form-small" id="Standort" type="text" name="location" placeholder="Standort/Wohnort" value="<%=currentUserProfile.location%>"></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="Standort" type="text" name="location" placeholder="Standort/Wohnort" value="<%=currentUserProfile.location%>"></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Über dich...</td>
-                                <td><textarea class="uk-input  uk-textarea" id="Bio" type="text" name="bio" placeholder="<%=currentUserProfile.bio%>" value="<%=currentUserProfile.bio%>"><%=currentUserProfile.bio%></textarea></td>
+                                <td><textarea class="uk-input  uk-textarea uk-form-width-medium" id="Bio" type="text" name="bio" placeholder="<%=currentUserProfile.bio%>" value="<%=currentUserProfile.bio%>"><%=currentUserProfile.bio%></textarea></td>
                             </tr>
                         </tbody>
                     </table>
                 
 
                     <h5>Social</h5>
-                    <table class="uk-table uk-table-hover uk-table-small profile__form">
+                    <table class="uk-table uk-table-hover uk-table-small profile__form uk-table-responsive">
                         <tbody>
                             <tr>
                                 <td class="uk-width-small">Twitter</td>
-                                <td><input class="uk-input uk-form-small" id="Twitter" type="text" name="twitter" placeholder="Twitter" value="<%=currentUserProfile.social.twitter%>"></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="Twitter" type="text" name="twitter" placeholder="Twitter" value="<%=currentUserProfile.social.twitter%>"></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Facebook</td>
-                                <td><input class="uk-input uk-form-small" id="Facebook" type="text" name="facebook" placeholder="Facebook" value="<%=currentUserProfile.social.facebook%>"></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="Facebook" type="text" name="facebook" placeholder="Facebook" value="<%=currentUserProfile.social.facebook%>"></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">LinkedIn</td>
-                                <td><input class="uk-input uk-form-small" id="LinkdIn" type="text" name="linkedin" placeholder="LinkdIn" value="<%=currentUserProfile.social.linkedin%>"></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="LinkdIn" type="text" name="linkedin" placeholder="LinkdIn" value="<%=currentUserProfile.social.linkedin%>"></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Xing</td>
-                                <td><input class="uk-input uk-form-small" id="Email" type="text" name="xing" placeholder="Xing" value="<%=currentUserProfile.social.xing%>"></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="Email" type="text" name="xing" placeholder="Xing" value="<%=currentUserProfile.social.xing%>"></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Website</td>
-                                <td><input class="uk-input uk-form-small" id="Website" type="text" name="website" placeholder="Website" value="<%=currentUserProfile.social.website%>"></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="Website" type="text" name="website" placeholder="Website" value="<%=currentUserProfile.social.website%>"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -69,7 +79,7 @@
             
             <li>
                 <h5>Education:</h5>                    
-                <table class="uk-table uk-table-divider">
+                <table class="uk-table uk-table-divider uk-table-responsive">
                     <% //sort array by startdate
                         currentUserProfile.education.sort(function(a, b) {
                             var dateA = new Date(a.from), dateB = new Date(b.from);
@@ -96,27 +106,27 @@
                 <form class="uk-form-width-large uk-margin-small" action="/profile/education" method="post">
                     <hr>
                     <h5>Add a new entry:</h5>
-                    <table class="uk-table uk-table-hover uk-table-small profile__form">
+                    <table class="uk-table uk-table-hover uk-table-small uk-table-responsive profile__form">
                         <tbody>
                             <tr>
                                 <td class="uk-width-small">Universität</td>
-                                <td><input class="uk-input uk-form-small" id="Universität" type="text" name="university" placeholder="Universität" required></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="Universität" type="text" name="university" placeholder="Universität" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Studiengang</td>
-                                <td><input class="uk-input uk-form-small" id="Studiengang" type="text" name="fieldOfStudy" placeholder="Studiengang" required></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="Studiengang" type="text" name="fieldOfStudy" placeholder="Studiengang" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Abschluss</td>
-                                <td><input class="uk-input uk-form-small" id="Abschluss" type="text" name="degree" placeholder="Abschluss" required></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="Abschluss" type="text" name="degree" placeholder="Abschluss" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Von</td>
-                                <td><input class="uk-input uk-form-small" id="Von" type="date" name="from" placeholder="Von (Datum)" required></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="Von" type="date" name="from" placeholder="Von (Datum)" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">bis</td>
-                                <td><input class="uk-input uk-form-small" id="Bis" type="date" name="to" placeholder="Bis (Datum)" required></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="Bis" type="date" name="to" placeholder="Bis (Datum)" required></td>
                             </tr>
                         </tbody>
                     </table>
@@ -126,7 +136,7 @@
             
             <li>
                 <h5>Experience:</h5>
-                <table class="uk-table uk-table-divider">
+                <table class="uk-table uk-table-divider uk-table-responsive">
                     <% //sort array by startdate
                         currentUserProfile.experience.sort(function(a, b) {
                             var dateA = new Date(a.from), dateB = new Date(b.from);
@@ -153,27 +163,27 @@
                 <form class="uk-form-width-large uk-margin-small" action="/profile/experience" method="post">                  
                     <hr>
                     <h5>Add a new entry:</h5>                    
-                    <table class="uk-table uk-table-hover uk-table-small profile__form">
+                    <table class="uk-table uk-table-hover uk-table-small uk-table-responsive profile__form">
                         <tbody>
                             <tr>
                                 <td class="uk-width-small">Berufstitel</td>
-                                <td><input class="uk-input uk-form-small" id="Titel" type="text" name="title" placeholder="Berufstitel" required></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="Titel" type="text" name="title" placeholder="Berufstitel" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Unternehmen</td>
-                                <td><input class="uk-input uk-form-small" id="Unternehmen" type="text" name="company" placeholder="Unternehmen" required></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="Unternehmen" type="text" name="company" placeholder="Unternehmen" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Ort</td>
-                                <td><input class="uk-input uk-form-small" id="Ort" type="text" name="location" placeholder="Ort"></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="Ort" type="text" name="location" placeholder="Ort"></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Von</td>
-                                <td><input class="uk-input uk-form-small" id="Von" type="date" name="from" placeholder="Von (Datum)" required></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="Von" type="date" name="from" placeholder="Von (Datum)" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">bis</td>
-                                <td><input class="uk-input uk-form-small" id="Bis" type="date" name="to" placeholder="Bis (Datum)" required></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="Bis" type="date" name="to" placeholder="Bis (Datum)" required></td>
                             </tr>
                         </tbody>
                     </table>
@@ -183,15 +193,15 @@
             <li>
                 <form class="uk-form-width-large uk-margin-small" action="/users/changemail" method="post">                  
                     <h5>Email Adresse ändern</h5>                    
-                    <table class="uk-table uk-table-hover uk-table-small profile__form">
+                    <table class="uk-table uk-table-hover uk-table-small uk-table-responsive profile__form">
                         <tbody>
                             <tr>
                                 <td class="uk-width-small">E-Mail</td>
-                                <td><input class="uk-input uk-form-small" id="newEmail" type="newEmail" name="newEmail" placeholder="Neue E-Mail Adresse eingeben" required></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="newEmail" type="newEmail" name="newEmail" placeholder="Neue E-Mail Adresse eingeben" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Passwort</td>
-                                <td><input class="uk-input uk-form-small" id="password" type="password" name="password" placeholder="Passwort zum bestätigen" required></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="password" type="password" name="password" placeholder="Passwort zum bestätigen" required></td>
                             </tr>
                         </tbody>
                     </table>
@@ -203,19 +213,19 @@
 
                 <form class="uk-form-width-large uk-margin-small" action="/users/changepassword" method="post">  
                     <h5>Password ändern</h5>                    
-                    <table class="uk-table uk-table-hover uk-table-small profile__form">
+                    <table class="uk-table uk-table-hover uk-table-small uk-table-responsive profile__form">
                         <tbody>
                             <tr>
                                 <td class="uk-width-small">Passwort</td>
-                                <td><input class="uk-input uk-form-small" id="password" type="password" name="password" placeholder="Passwort zum bestätigen" required></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="password" type="password" name="password" placeholder="Passwort zum bestätigen" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Neues Password</td>
-                                <td><input class="uk-input uk-form-small" id="newPW" type="newPW" name="newPW" placeholder="Neues Passwort eingeben" required></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="newPW" type="newPW" name="newPW" placeholder="Neues Passwort eingeben" required></td>
                             </tr>
                             <tr>
                                 <td class="uk-width-small">Bestätige Password</td>
-                                <td><input class="uk-input uk-form-small" id="newPW2" type="newPW2" name="newPW2" placeholder="Neues Passwort bestätigen" required></td>
+                                <td><input class="uk-input uk-form-small uk-form-width-medium" id="newPW2" type="newPW2" name="newPW2" placeholder="Neues Passwort bestätigen" required></td>
                             </tr>
                         </tbody>
                     </table>

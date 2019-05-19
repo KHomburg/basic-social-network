@@ -19,8 +19,14 @@
             </div>
             <div class="uk-card-body">
 
-                <ul class="uk-subnav uk-tab" uk-switcher>
-                    <li><a href="#">Social</a></li>
+                <ul class="uk-subnav uk-tab uk-visible@s" uk-switcher>
+                    <li class="uk-active"><a href="#">Social</a></li>
+                    <li><a href="#">Education</a></li>
+                    <li><a href="#">Experience</a></li>
+                </ul>
+
+                <ul class="uk-tab-left uk-tab uk-hidden@s" uk-switcher>
+                    <li class="uk-active"><a href="#">Social</a></li>
                     <li><a href="#">Education</a></li>
                     <li><a href="#">Experience</a></li>
                 </ul>
@@ -28,7 +34,7 @@
                 <ul class="uk-switcher uk-margin">
                     <li>
                     <!--Social Table -->
-                        <table class="uk-table uk-table-divider">
+                        <table class="uk-table uk-table-divider uk-table-responsive">
                             <tbody>
                                 <tr>
                                     <td class="uk-width-small">Facebook</td>
@@ -56,7 +62,7 @@
                     </li>
                     <!--Education Table -->
                     <li>
-                        <table class="uk-table uk-table-divider">
+                        <table class="uk-table uk-table-divider uk-table-responsive">
                             <% //sort array by startdate
                                 profile.education.sort(function(a, b) {
                                     var dateA = new Date(a.from), dateB = new Date(b.from);
@@ -78,7 +84,7 @@
                     </li>
                     <!--Experience Table -->
                     <li>
-                        <table class="uk-table uk-table-divider">
+                        <table class="uk-table uk-table-divider uk-table-responsive">
                             <% //sort array by startdate
                                 profile.experience.sort(function(a, b) {
                                     var dateA = new Date(a.from), dateB = new Date(b.from);
