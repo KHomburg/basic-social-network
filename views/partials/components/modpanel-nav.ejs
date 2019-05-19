@@ -1,0 +1,51 @@
+<!-- mopanel navigation buttons-->
+
+<%
+    var buttons = [
+        {activeName: "reportlist",
+        url: "/group/modpanel/reportlist/",
+        buttonName: "Reported Content",
+        },
+        {activeName: "members",
+        url: "/group/modpanel/members/",
+        buttonName: "Members",
+        },
+        {activeName: "moderator",
+        url: "/group/modpanel/moderators/",
+        buttonName: "Moderators",
+        },
+        {activeName: "leavemod",
+        url: "/group/modpanel/leavemod/",
+        buttonName: "Leave as Mod",
+        }
+    ]
+%>
+
+<div>
+    <div class="uk-button-group uk-margin uk-margin-top uk-flex uk-flex-center uk-visible@m">
+        <% buttons.forEach((button) => { %>
+            <%if(button.activeName == activeSite){%>
+                <a href="<%=button.url%><%=group.name%>"  class="uk-button uk-button-small uk-margin-left uk-margin-right uk-button-primary"><%=button.buttonName%></a>
+            <%}else{%>
+                <a href="<%=button.url%><%=group.name%>"  class="uk-button uk-button-small uk-margin-left uk-margin-right uk-button-default uk-background-default"><%=button.buttonName%></a>
+            <%}%>
+        <%})%>
+    </div>
+</div>
+
+<div class="uk-button-group uk-flex uk-flex-center uk-margin-top uk-background-default uk-hidden@m">
+    <div class="uk-inline">
+        <button class="uk-button uk-button-default" type="button"><span uk-icon="icon:  triangle-down"></span></button>
+        <div uk-dropdown="mode: click; boundary: ! .uk-button-group; boundary-align: true; pos: bottom-center;">
+            <ul class="uk-nav uk-dropdown-nav">
+                <% buttons.forEach((button) => { %>
+                    <%if(button.activeName == activeSite){%>
+                        <li><a href="<%=button.url%><%=group.name%>"  class="uk-button uk-button-small uk-margin-left uk-margin-right uk-button-primary"><%=button.buttonName%></a></li>
+                    <%}else{%>
+                        <li><a href="<%=button.url%><%=group.name%>"  class="uk-button uk-button-small uk-margin-left uk-margin-right uk-button-default uk-background-default"><%=button.buttonName%></a></li>
+                    <%}%>
+                <%})%>
+            </ul>
+        </div>
+    </div>
+</div>
