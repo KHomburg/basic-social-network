@@ -18,7 +18,11 @@ requires
             <%}%>
         </div>
         <div class="uk-width-expand uk-margin-remove">
-            <h3 class="uk-comment-title uk-margin-remove"><a href="/post/id/<%= comment.parentPost._id %>">Zum Post: <%= comment.parentPost.title %></a></h3>                    
+            <%if(comment.parentPost){%>
+                <h3 class="uk-comment-title uk-margin-remove"><a href="/post/id/<%= comment.parentPost._id %>">Zum Post: <%= comment.parentPost.title %></a></h3>
+            <%}else{%>
+                <h3 class="uk-comment-title uk-margin-remove">Post has been deleted</h3>
+            <%}%>
             <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom">
                 <a href="/profile/id/<%= comment.profile._id %>">Von: <%= comment.profile.name %></a>
                 <a href="/group/name/<%= comment.group.name %>"> - In: <%= comment.group.name %></a>
