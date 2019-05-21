@@ -362,7 +362,6 @@ router.get('/list', authenticate.checkLogIn, authenticate.reqSessionProfile, (re
         .sort({name: 1})
         .skip((perPage * page) - perPage)
         .limit(perPage)
-        .populate("profile")
         .exec((err1, profiles) => {
             Profile.count()
                 .exec((err2, count) => {
