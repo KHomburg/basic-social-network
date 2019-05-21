@@ -20,8 +20,16 @@ const Notification = require("../models/Notification");
 const notification = require("../functions/notification")
 
 
-//Custom Functions for Posts/Comments/SubComments Routes
-
+/*
+Creates a new Post along with Notification
+Takes req Object with Attributes:
+    req.file: Post image (optional)
+    req.currentUserprofile: currentUserProfile (required)
+    req.groupName: name of group the post belongs to (required)
+    req.body.title: title of Post (required)
+    req.body.text: text of Post
+returns redirect as response
+*/
 const createPost = (req, res) => {
     const currentUserProfile = req.currentUserProfile
     
@@ -192,6 +200,17 @@ const getPost = (req, res) => {
     });
 }
 
+
+/*
+Creates a new Comment along with Notification
+Takes req Object with Attributes:
+    req.file: Comment image (optional)
+    req.currentUserprofile: currentUserProfile (required)
+    req.groupId: id of Group the Comment belongs to (required)
+    req.postId: id of Post the Comment belongs to (required)
+    req.body.text: text of Comment (required)
+returns redirect as response
+*/
 const createComment = (req, res) => {
     const currentUserProfile = req.currentUserProfile
     let groupID = req.body.groupId
@@ -342,6 +361,17 @@ const createComment = (req, res) => {
         })
 }
 
+/*
+Creates a new Subcomment along with Notification
+Takes req Object with Attributes:
+    req.file: Comment image (optional)
+    req.currentUserprofile: currentUserProfile (required)
+    req.groupId: id of Group the Subcomment belongs to (required)
+    req.postId: id of Post the Subcommment belongs to (required)
+    req.body.commentId: id of Comment the Subcomment belongs to (required)
+    req.body.text: text of Comment (required)
+returns redirect as response
+*/
 const createSubComment = (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
@@ -486,7 +516,6 @@ const createSubComment = (req, res) => {
 Deletes a Post by postId
 takes a callback and hands over the groupName
 */
-
 const deletePost = (req, res, callback) => {
     const currentUserProfile = req.currentUserProfile
     Post.findOneAndRemove({_id: req.body.postId})
@@ -724,8 +753,14 @@ const getStream = (req, res) => {
         })
 }
 
-
-//function for reporting posts/comments/subcomments
+/*
+Creates a new report object in one of the group.reportedXXX arrays (if content is not already reported)
+Takes req Object with Attributes:
+    req.currentUserprofile: currentUserProfile (required)
+    req.body.ID: id of the reported Content (required)
+    req.body.contentType: type of the reported content ("post"/"comment"/"subcomment") (required)
+returns redirect as response
+*/
 const reportContent = (req, res) => {
     const currentUserProfile = req.currentUserProfile
     Group.findById(req.body.groupID, (err, group)=> {
@@ -733,7 +768,7 @@ const reportContent = (req, res) => {
             const newReportedContent = {
                 content: req.body.ID,
                 contentType: req.body.contentType,
-                reportedBy: req.body.reportedBy,
+                reportedBy: currentUserProfile,
                 reason: req.body.reason,
             }
 
@@ -745,7 +780,7 @@ const reportContent = (req, res) => {
             }else if(req.body.contentType == "subcomment"){
                 group.reprtedContent = group.reportedSubcomments
             }
-                
+
             //check if content has allready been reported
             const findDoubles = group.reprtedContent.find((report)=>{
                 return report.content.toString() == newReportedContent.content.toString()
