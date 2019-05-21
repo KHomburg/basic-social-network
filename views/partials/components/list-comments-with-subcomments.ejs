@@ -17,38 +17,7 @@ requires
         <div class="post__comment uk-inline">
             <header class="uk-comment-header uk-margin-remove-bottom uk-grid-medium uk-flex-middle" uk-grid>
 
-                <!--Report Dropdown Button for Comments -->
-                <button class="uk-button uk-button-link uk-position-top-right" type="button"><span uk-icon="icon:  triangle-down"></span></button>
-                <div uk-dropdown="mode: click;  pos: bottom-left">
-                    <ul class="uk-nav uk-dropdown-nav">
-                        <li class="uk-nav-header">Melden wegen:</li>
-                        <li class="uk-nav-divider"></li>
-
-                        <!--Buttons/Forms for reporting a comment -->
-                        <form action="/post/reportcontent" method="post">
-                            <div style="display:none">
-                                <input type="hidden" name="ID" value= <%= comment._id._id %>></br>
-                                <input type="hidden" name="groupID" value= <%= group._id %>></br>
-                                <input type="hidden" name="reportedBy" value= <%= currentUserProfile._id %>></br>
-                                <input type="hidden" name="contentType" value= comment></br>
-                                <input type="hidden" name="reason" value= "inadquate"></br>
-                            </div>
-                            <input class="uk-button uk-button-primary uk-button-small uk-width-1-1 report-btn" type="submit" value="Unangemessener Beitrag">
-                        </form>
-                        <br />
-                        <form action="/post/reportcontent" method="post">
-                            <div style="display:none">
-                                <input type="hidden" name="ID" value= <%= comment._id._id %>></br>
-                                <input type="hidden" name="groupID" value= <%= group._id %>></br>
-                                <input type="hidden" name="reportedBy" value= <%= currentUserProfile._id %>></br>
-                                <input type="hidden" name="contentType" value= comment></br>
-                                <input type="hidden" name="reason" value= "spamOrAd"></br>
-                            </div>
-                            <input class="uk-button uk-button-primary uk-button-small uk-width-1-1 report-btn" type="submit" value="Unangemessener Beitrag">
-                        </form>
-
-                    </ul>
-                </div>
+                    <%- include('./report-content-dropdown', {contentId: comment._id._id, groupId: group._id, currentUserProfile, contentType: "comment"} )%>
 
                 <div class="uk-width-auto uk-margin-remove">
                     <%if(comment._id.profile.avatar){%>
@@ -95,38 +64,7 @@ requires
                         <div class="post__sub-comment uk-inline">
                             <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
 
-                            <!--Report Dropdown Button for Subcomments -->
-                            <button class="uk-button uk-button-link uk-position-top-right" type="button"><span uk-icon="icon:  triangle-down"></span></button>
-                            <div uk-dropdown="mode: click;  pos: bottom-left">
-                                <ul class="uk-nav uk-dropdown-nav">
-                                    <li class="uk-nav-header">Melden wegen:</li>
-                                    <li class="uk-nav-divider"></li>
-
-                                        <!--Buttons/Forms for reporting a subcomment -->
-                                        <form action="/post/reportcontent" method="post">
-                                            <div style="display:none">
-                                                <input type="hidden" name="ID" value= <%= subComment._id._id %>></br>
-                                                <input type="hidden" name="groupID" value= <%= group._id %>></br>
-                                                <input type="hidden" name="reportedBy" value= <%= currentUserProfile._id %>></br>
-                                                <input type="hidden" name="contentType" value= subcomment></br>
-                                                <input type="hidden" name="reason" value= "inadquate"></br>
-                                            </div>
-                                            <input class="uk-button uk-button-primary uk-button-small uk-width-1-1 report-btn" type="submit" value="Unangemessener Beitrag">
-                                        </form>
-                                        <br />
-                                        <form action="/post/reportcontent" method="post">
-                                            <div style="display:none">
-                                                <input type="hidden" name="ID" value= <%= subComment._id._id %>></br>
-                                                <input type="hidden" name="groupID" value= <%= group._id %>></br>
-                                                <input type="hidden" name="reportedBy" value= <%= currentUserProfile._id %>></br>
-                                                <input type="hidden" name="contentType" value= subcomment></br>
-                                                <input type="hidden" name="reason" value= "spamOrAd"></br>
-                                            </div>
-                                            <input class="uk-button uk-button-primary uk-button-small uk-width-1-1 report-btn" type="submit" value="Unangemessener Beitrag">
-                                        </form>
-
-                                </ul>
-                            </div>
+                            <%- include('./report-content-dropdown', {contentId: subComment._id._id, groupId: group._id, currentUserProfile, contentType: "subcomment"} )%>
 
                                 <div class="uk-width-auto uk-margin-remove">
                                     <%if(subComment._id.profile.avatar){%>
