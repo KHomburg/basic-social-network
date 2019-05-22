@@ -10,7 +10,7 @@ const browserSync = require('browser-sync').create();
 
 //concat and minify javascript files
 gulp.task("compile-js", () => {
-    gulp.src("public/source/javascript/*js")
+    gulp.src("frontend-sources/javascript/*js")
         .pipe(concat("main.js"))
         .pipe(uglify())
         .pipe(gulp.dest("public"))
@@ -18,7 +18,7 @@ gulp.task("compile-js", () => {
 
 //concat and compile style files
 gulp.task("compile-style", () => {
-    gulp.src("public/source/styles/*scss")
+    gulp.src("frontend-sources/styles/*scss")
         .pipe(sass().on("error", sass.logError))
         .pipe(concat("main.css"))
         .pipe(gulp.dest("public"))

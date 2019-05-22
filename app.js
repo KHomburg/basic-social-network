@@ -78,15 +78,16 @@ app.use(flash(app));
 
 //ROUTES
 //Use View routes
-app.use('/users', users.view, express.static('public'));
-app.use('/profile', profile.view, express.static('public'));
-app.use('/post', post.view, express.static('public'));
-app.use('/group', group.view, express.static('public'));
-app.use('/contacts', contacts.view, express.static('public'));
-app.use('/notification', notification.view, express.static('public'));
-app.use('/verification', verification.view, express.static('public'));
-app.use('/admin', admin.view, express.static('public'));
-app.use('/', statics.view, express.static('public'));
+const publicDir = "public"
+app.use('/users', users.view, express.static(publicDir));
+app.use('/profile', profile.view, express.static(publicDir));
+app.use('/post', post.view, express.static(publicDir));
+app.use('/group', group.view, express.static(publicDir));
+app.use('/contacts', contacts.view, express.static(publicDir));
+app.use('/notification', notification.view, express.static(publicDir));
+app.use('/verification', verification.view, express.static(publicDir));
+app.use('/admin', admin.view, express.static(publicDir));
+app.use('/', statics.view, express.static(publicDir));
 
 
 //Server Setup
