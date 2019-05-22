@@ -17,7 +17,7 @@ router.get("/test", (req, res) => res.json({msg: "Groups Works"}));
 
 //show all created groups
 //get /group/all (private)
-router.get("/all/:page", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.get("/all/:page", authenticate.reqSessionProfile, (req, res) => {
     
     //constants for pagination
     const perPage = 30
@@ -64,7 +64,7 @@ router.get("/all/:page", authenticate.checkLogIn, authenticate.reqSessionProfile
 
 //get groups by name in params(Private) showing all th posts in that group
 //Get /group/name/:id
-router.get('/name/:name', authenticate.checkLogIn, authenticate.reqSessionProfile,(req, res) => {
+router.get('/name/:name', authenticate.reqSessionProfile,(req, res) => {
     const currentUserProfile = req.currentUserProfile
     Group.findOne({name: req.params.name}, (err,currentGroup) => {
         if(currentGroup){
@@ -101,14 +101,14 @@ router.get('/name/:name', authenticate.checkLogIn, authenticate.reqSessionProfil
 
 //form for creating a new group
 //get /group/create; (private)
-router.get("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.get("/create", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     res.render("pages/group/create", {currentUserProfile})
 })
 
 //post request for form for creating a new group
 //post /group/create; (private)
-router.post("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.post("/create", authenticate.reqSessionProfile, (req, res) => {
     Group.findOne({name: req.body.name}, (err, group) => {
         if(group){
             res.send("group already exists") //insert flash message here
@@ -137,7 +137,7 @@ router.post("/create", authenticate.checkLogIn, authenticate.reqSessionProfile, 
 
 //post request form for membership for group
 //post /group/subscribe; (private)
-router.post("/subscribe", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.post("/subscribe", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
     Group.findById(req.body.groupID)
@@ -163,7 +163,7 @@ router.post("/subscribe", authenticate.checkLogIn, authenticate.reqSessionProfil
 
 //post delete a single experience entry from profile(Private)
 //post /profile/expdelete
-router.post("/unsubscribe", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.post("/unsubscribe", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     Group.findById(req.body.groupID)
         .exec((err, group) => {
@@ -191,7 +191,7 @@ router.post("/unsubscribe", authenticate.checkLogIn, authenticate.reqSessionProf
 
 //get all reported content of a group
 //get /name/mod/reportlist/:name
-router.get("/modpanel/reportlist/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.get("/modpanel/reportlist/:name", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     Group.findOne({name: req.params.name})
         .populate(
@@ -274,7 +274,7 @@ router.get("/modpanel/reportlist/:name", authenticate.checkLogIn, authenticate.r
 
 //get all members of group shown in mod panel
 //get /name/modpanel/members
-router.get("/modpanel/members/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.get("/modpanel/members/:name", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
     //TODO: add pagination
@@ -323,7 +323,7 @@ router.get("/modpanel/members/:name", authenticate.checkLogIn, authenticate.reqS
 
 ////find members of group by their name in modpanel
 ////get /name/modpanel/members/search/:name
-router.post("/modpanel/members/search/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.post("/modpanel/members/search/:name", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     const term = req.body.name;
 
@@ -348,7 +348,7 @@ router.post("/modpanel/members/search/:name", authenticate.checkLogIn, authentic
 
 ////get all moderators of group shown in mod panel
 ////get /name/modpanel/moderators
-router.get("/modpanel/moderators/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.get("/modpanel/moderators/:name", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     Group.findOne({name: req.params.name})
         .populate(
@@ -383,7 +383,7 @@ router.get("/modpanel/moderators/:name", authenticate.checkLogIn, authenticate.r
 
 ////get page to leave mod status
 ////get /name/modpanel/leavemod/:name
-router.get("/modpanel/leavemod/:name", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.get("/modpanel/leavemod/:name", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     Group.findOne({name: req.params.name})
     .populate(
@@ -416,7 +416,7 @@ router.get("/modpanel/leavemod/:name", authenticate.checkLogIn, authenticate.req
 
 //post request for deleting reportedCintent
 //post /mod/content/delete; (private)
-router.post('/mod/content/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.post('/mod/content/delete', authenticate.reqSessionProfile, (req, res) => {
     const groupID = req.body.groupID
 
     //TODO:check if user who wants to remove content is mod
@@ -473,7 +473,7 @@ router.post('/mod/content/delete', authenticate.checkLogIn, authenticate.reqSess
 
 //post request for removing Content from the reported-List without deleting the Content
 //post /name/mod/reportlist/removecontent; (private)
-router.post('/mod/reportlist/removecontent', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.post('/mod/reportlist/removecontent', authenticate.reqSessionProfile, (req, res) => {
     const groupID = req.body.groupID
 
     //TODO:check if user who wants to remove content is mod
@@ -510,7 +510,7 @@ router.post('/mod/reportlist/removecontent', authenticate.checkLogIn, authentica
 
 //post request for adding a member of a group to moderators
 //post /name/mod/reportlist/removecontent; (private)
-router.post("/mod/addmod/:id", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.post("/mod/addmod/:id", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     const groupID = req.body.groupID
     const profileID = req.params.id
@@ -582,7 +582,7 @@ router.post("/mod/addmod/:id", authenticate.checkLogIn, authenticate.reqSessionP
 
 //post request for leaving mod status for the group
 //post /name/mod/reportlist/removecontent; (private)
-router.post("/mod/leavemod/:id", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.post("/mod/leavemod/:id", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     const groupID = req.body.groupID
     const profileID = req.params.id
@@ -638,7 +638,7 @@ router.post("/mod/leavemod/:id", authenticate.checkLogIn, authenticate.reqSessio
 
 //post request to search groups by term
 //POST group/search
-router.post("/search", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.post("/search", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     const term = req.body.name;
 
@@ -658,7 +658,7 @@ router.post("/search", authenticate.checkLogIn, authenticate.reqSessionProfile, 
 
 //get request to show search view for groups
 //get group/search
-router.get("/search", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.get("/search", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     const groups = []
     res.render("pages/group/search", {

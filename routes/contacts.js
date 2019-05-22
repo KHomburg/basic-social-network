@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const authenticate = require("../functions/authenticate");
 const image = require("../functions/image");
 const errLog = require("../functions/error-log");
+const authenticate = require("../functions/authenticate");
 
 //Load models
 const User = require("../models/User");
@@ -14,7 +14,7 @@ const Subcomment = require("../models/Subcomment");
 
 //post add the profile of another user to currentUsers contacts list
 //post /contacs/addcontact
-router.post("/addcontact", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.post("/addcontact", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     //find profile to be added as currentUsers contact    
     Profile.findById({_id: req.body.profileId})
@@ -47,7 +47,7 @@ router.post("/addcontact", authenticate.checkLogIn, authenticate.reqSessionProfi
 
 //post to remove the profile of another user from currentUsers contacts list
 //post /contacs/removecontact
-router.post("/removecontact", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.post("/removecontact", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile    
 
     //this route needs the id of the profile that will be spliced as profileId
@@ -70,7 +70,7 @@ router.post("/removecontact", authenticate.checkLogIn, authenticate.reqSessionPr
 
 //get currentUsers contact list
 //Get /list
-router.get('/list', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.get('/list', authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     let contacts = currentUserProfile.contacts
     

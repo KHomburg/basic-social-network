@@ -26,7 +26,7 @@ router.get("/test", (req, res) => {
 
 //return current User route (Private)
 //Get users/current
-router.get("/current", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.get("/current", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     res.render("pages/users/current", {currentUserProfile})
 
@@ -300,7 +300,7 @@ router.get('/logout', (req,res) => {
 //User Delete Route (Private)
 //also deletes profile and all comments and posts by User
 //Get users/logout
-router.get('/delete', authenticate.checkLogIn, authenticate.reqSessionProfile, (req,res) => {
+router.get('/delete', authenticate.reqSessionProfile, (req,res) => {
 
     const currentUserProfile = req.currentUserProfile
 

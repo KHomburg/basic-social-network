@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const authenticate = require("../functions/authenticate");
 const image = require("../functions/image");
 const errLog = require("../functions/error-log");
+const authenticate = require("../functions/authenticate");
 
 //Load models
 const User = require("../models/User");
@@ -17,7 +17,7 @@ const Subcomment = require("../models/Subcomment");
 
 //shows all profile with option to suspend or delete profiles
 //GET /admin/listprofiles
-router.get("/listprofiles", authenticate.checkLogIn, authenticate.reqSessionProfile, authenticate.checkAdmin, (req, res) => { 
+router.get("/listprofiles", authenticate.reqSessionProfile, authenticate.checkAdmin, (req, res) => { 
     const currentUserProfile = req.currentUserProfile
     const contacts = currentUserProfile.contacts
 
@@ -60,7 +60,7 @@ router.get("/listprofiles", authenticate.checkLogIn, authenticate.reqSessionProf
 
 //post search request to find users by text
 //POST admin/profiles/search
-router.post("/profiles/search", authenticate.checkLogIn, authenticate.reqSessionProfile, authenticate.checkAdmin, (req, res) => {
+router.post("/profiles/search", authenticate.reqSessionProfile, authenticate.checkAdmin, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     
     const term = req.body.name;
@@ -82,7 +82,7 @@ router.post("/profiles/search", authenticate.checkLogIn, authenticate.reqSession
 
 //post suspend to suspend user
 //POST admin/profiles/suspend
-router.post("/profiles/suspenduser", authenticate.checkLogIn, authenticate.reqSessionProfile, authenticate.checkAdmin, (req, res) => {
+router.post("/profiles/suspenduser", authenticate.reqSessionProfile, authenticate.checkAdmin, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
     //find user and change suspended attribute to true
@@ -112,7 +112,7 @@ router.post("/profiles/suspenduser", authenticate.checkLogIn, authenticate.reqSe
 
 //post suspend to suspend user
 //POST admin/profiles/suspend
-router.post("/profiles/unsuspenduser", authenticate.checkLogIn, authenticate.reqSessionProfile, authenticate.checkAdmin, (req, res) => {
+router.post("/profiles/unsuspenduser", authenticate.reqSessionProfile, authenticate.checkAdmin, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
     //find user and change suspended attribute to true

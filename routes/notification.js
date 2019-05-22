@@ -12,7 +12,7 @@ const Subcomment = require("../models/Subcomment");
 const ContentImage = require("../models/Contentimage");
 
 //get notifications
-router.get("/test", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => { 
+router.get("/test", authenticate.reqSessionProfile, (req, res) => { 
     const currentUserProfile = req.currentUserProfile
     
     Notification.find({"addressee._id": currentUserProfile})
@@ -37,7 +37,7 @@ router.get("/fetch", (req, res) => {
 
 //check wether the User has new notifications
 //get /notification/check (private)
-router.get("/check", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => { 
+router.get("/check", authenticate.reqSessionProfile, (req, res) => { 
     const currentUserProfile = req.currentUserProfile
     
     Notification.findOne({"addressee._id": currentUserProfile})
@@ -63,7 +63,7 @@ router.get("/check", authenticate.checkLogIn, authenticate.reqSessionProfile, (r
 
 //query the 5 most recent updated notification for currentUserProfile as addressee
 //get /notification/check (private)
-router.get("/notifications", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => { 
+router.get("/notifications", authenticate.reqSessionProfile, (req, res) => { 
     const currentUserProfile = req.currentUserProfile
     
     Notification.find({"addressee._id": currentUserProfile})

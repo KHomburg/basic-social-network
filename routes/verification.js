@@ -23,7 +23,7 @@ router.get("/test", (req, res) => res.json({msg: "Groups Works"}));
 
 //show all unverified users that registered
 //get /applicants
-router.get("/applicants", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.get("/applicants", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
     User.find({verified: false})
@@ -40,7 +40,7 @@ router.get("/applicants", authenticate.checkLogIn, authenticate.reqSessionProfil
 
 //verify an applicant to a membership on this platform
 //post /verifyuser
-router.post("/verifyuser", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.post("/verifyuser", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
     User.findById(req.body.userId)

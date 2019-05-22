@@ -21,7 +21,7 @@ const config = require("../config/config")
 
 //get all profiles (Private)
 //Get /profile/all
-router.get("/all", authenticate.checkLogIn, (req, res) => {
+router.get("/all", (req, res) => {
     const currentUserProfile = req.currentUserProfile
     Profile.find()
         .then((profile) => {
@@ -32,7 +32,7 @@ router.get("/all", authenticate.checkLogIn, (req, res) => {
 
 //get users /profile by id in params(Private)
 //Get /profile/id/:id
-router.get('/id/:id', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.get('/id/:id', authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     Profile.findOne({_id: req.params.id}, (err, profile) => {
         
@@ -60,7 +60,7 @@ router.get('/id/:id', authenticate.checkLogIn, authenticate.reqSessionProfile, (
 
 //get edit page for profile (Private)
 //get /profile/edit
-router.get("/edit", authenticate.checkLogIn, authenticate.reqSessionProfile, authenticate.sessionUser, (req, res) => {
+router.get("/edit", authenticate.reqSessionProfile, authenticate.sessionUser, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     const currentUser = req.currentUser
     const userEmail = currentUser.email
@@ -77,7 +77,7 @@ router.get("/edit", authenticate.checkLogIn, authenticate.reqSessionProfile, aut
 
 //post changes for profile (Private)
 //post /profile/edit
-router.post("/edit", authenticate.checkLogIn, (req, res) => {
+router.post("/edit", (req, res) => {
     Profile.findOneAndUpdate({user: req.session.userId},
         {
             name: req.body.name,
@@ -100,7 +100,7 @@ router.post("/edit", authenticate.checkLogIn, (req, res) => {
 
 //Upload and save avatar for profile
 // TODO: delete originally uploaded file
-router.post('/avatar', authenticate.checkLogIn, authenticate.reqSessionProfile, function (req, res, next) {
+router.post('/avatar', authenticate.reqSessionProfile, function (req, res, next) {
     const currentUserProfile = req.currentUserProfile
     var upload = multer({
         storage: image.uploadAvatar,
@@ -143,7 +143,7 @@ router.post('/avatar', authenticate.checkLogIn, authenticate.reqSessionProfile, 
     })
 })
 
-router.post('/changeavatar', authenticate.checkLogIn, authenticate.reqSessionProfile, function (req, res, next) {
+router.post('/changeavatar', authenticate.reqSessionProfile, function (req, res, next) {
     const currentUserProfile = req.currentUserProfile
     console.log(req.body.avatarID)
     Avatar.findById(req.body.avatarID)
@@ -160,7 +160,7 @@ router.post('/changeavatar', authenticate.checkLogIn, authenticate.reqSessionPro
 
 //adds profile experiences entry(Private)
 //post /profile/experience
-router.post("/experience", authenticate.checkLogIn, (req, res) => {
+router.post("/experience", (req, res) => {
     Profile.findOne({user: req.session.userId}, (err, profile) => {
         const newExperience =            
             {
@@ -178,7 +178,7 @@ router.post("/experience", authenticate.checkLogIn, (req, res) => {
 
 //post delete a single experience entry from profile(Private)
 //post /profile/expdelete
-router.post("/expdelete", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.post("/expdelete", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     Profile.findOne({_id: currentUserProfile._id}, (err, profile) => {
 
@@ -192,7 +192,7 @@ router.post("/expdelete", authenticate.checkLogIn, authenticate.reqSessionProfil
 
 //adds profile education entry(Private)
 //post /profile/education
-router.post("/education", authenticate.checkLogIn, (req, res) => {
+router.post("/education", (req, res) => {
     Profile.findOne({user: req.session.userId}, (err, profile) => {
         const newEducation =            
             {
@@ -210,7 +210,7 @@ router.post("/education", authenticate.checkLogIn, (req, res) => {
 
 //post delete a single education entry from profile(Private)
 //post /profile/edudelete
-router.post("/edudelete", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.post("/edudelete", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     Profile.findOne({_id: currentUserProfile._id}, (err, profile) => {
 
@@ -224,7 +224,7 @@ router.post("/edudelete", authenticate.checkLogIn, authenticate.reqSessionProfil
 
 //get posts created by currentprofile
 //get /profile/mycontent/posts
-router.get("/mycontent/posts/:page", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.get("/mycontent/posts/:page", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
     //constants for pagination
@@ -265,7 +265,7 @@ router.get("/mycontent/posts/:page", authenticate.checkLogIn, authenticate.reqSe
 
 //get comments created by currentprofile
 //get /profile/mycontent/comments
-router.get("/mycontent/comments/:page", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.get("/mycontent/comments/:page", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
     //constants for pagination
@@ -350,7 +350,7 @@ router.get("/mycontent/comments/:page", authenticate.checkLogIn, authenticate.re
 
 //get all users
 //Get /list
-router.get('/list', authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.get('/list', authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     const contacts = currentUserProfile.contacts
 
@@ -382,7 +382,7 @@ router.get('/list', authenticate.checkLogIn, authenticate.reqSessionProfile, (re
 
 //post search request to find users by text
 //POST profile/search
-router.post("/search/", authenticate.checkLogIn, authenticate.reqSessionProfile,(req, res) => {
+router.post("/search/", authenticate.reqSessionProfile,(req, res) => {
     const currentUserProfile = req.currentUserProfile
     const contacts = currentUserProfile.contacts
     
@@ -397,7 +397,7 @@ router.post("/search/", authenticate.checkLogIn, authenticate.reqSessionProfile,
 
 //get search view
 //GET profile/search
-router.get("/search/", authenticate.checkLogIn, authenticate.reqSessionProfile,(req, res) => {
+router.get("/search/", authenticate.reqSessionProfile,(req, res) => {
     const currentUserProfile = req.currentUserProfile
     const contacts = currentUserProfile.contacts
     var profiles = [];
@@ -407,7 +407,7 @@ router.get("/search/", authenticate.checkLogIn, authenticate.reqSessionProfile,(
 
 
 
-//router.get("/test", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+//router.get("/test", authenticate.reqSessionProfile, (req, res) => {
 //    const currentUserProfile = req.currentUserProfile
 //
 //    Comment.find()
@@ -420,7 +420,7 @@ router.get("/search/", authenticate.checkLogIn, authenticate.reqSessionProfile,(
 //        })
 //});
 
-router.get("/test", authenticate.checkLogIn, authenticate.reqSessionProfile, (req, res) => {
+router.get("/test", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     var testUsers = 1000
     var testPosts = 100
