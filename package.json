@@ -4,7 +4,8 @@
   "description": "reddit like plattform",
   "main": "app.js",
   "scripts": {
-    "test": "mocha --timeout 3000 --recursive"
+    "test": "mocha --timeout 3000 --recursive",
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
