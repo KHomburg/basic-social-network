@@ -250,17 +250,30 @@
                 <div class="uk-child-width-2-3 uk-text-center uk-margin" uk-grid>
                     <%if(currentUserProfile.avatar){
                         avatars.forEach((avatar) => {%>
-                            <div class="uk-width-auto">
-                                <img width="200" height="200" src="<%="/avatars/"+avatar._id%>">
-                                <p class="uk-margin-remove">
-                                    <form action="profile/changeavatar" method="post">
-                                        <input type="hidden" name="avatarID" value= <%= avatar._id %>></br>
-                                        <input class="uk-margin-remove uk-button-primary uk-button-small" type="submit" value="Set as Avatar">
-                                    </form>
 
-                                    <button class="uk-margin-remove uk-button-danger uk-button-small">Delete Image</button>
-                                </p>
+                            <div>
+                                <div class="uk-card uk-card-default">
+                                    <div class="uk-card-media-top">
+                                        <img src="<%="/avatars/"+avatar._id%>" alt="">
+                                    </div>
+                                    <div class="uk-card-body">
+                                        <%if(currentUserProfile.avatar._id.toString() != avatar._id.toString()){%>
+                                            <p class="uk-margin-remove">
+                                                <form action="profile/changeavatar" method="post">
+                                                    <input type="hidden" name="avatarID" value= <%= avatar._id %>>
+                                                    <input class="uk-margin-remove uk-button-primary uk-button-small" type="submit" value="Set as Avatar">
+                                                </form>
+                                                <form action="profile/removeavatar" method="post">
+                                                    <input type="hidden" name="avatarID" value= <%= avatar._id %>>
+                                                    <button class="uk-margin-remove uk-button-danger uk-button-small">Delete Image</button>
+                                                </form>
+                                            </p>
+                                        <%}%>
+                                    </div>
+                                </div>
                             </div>
+
+
                     <%})}%>
                 </div>
             </li>

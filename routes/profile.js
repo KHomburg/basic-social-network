@@ -4,6 +4,7 @@ const authenticate = require("../functions/authenticate");
 const multer = require('multer');
 const image = require("../functions/image");
 const sharp = require("sharp");
+const fs = require("fs");
 
 //Load models
 const User = require("../models/User");
@@ -124,7 +125,6 @@ router.post('/avatar', authenticate.reqSessionProfile, function (req, res, next)
                 })
                 .toFile(config.uploadDirAvatars + req.file.filename)
                 .then((info) => { 
-                    console.log(info)
                     newAvatar.path = config.uploadDirAvatars + req.file.filename
                     newAvatar.save()
                         .then(() => {
@@ -151,11 +151,30 @@ router.post('/changeavatar', authenticate.reqSessionProfile, function (req, res,
             if(err){
                 console.log(err)
             }else{
-                console.log(avatar)
                 currentUserProfile.avatar = avatar
                 currentUserProfile.save()
+                    .then(res.redirect("/profile/edit"))
             }
         })
+})
+
+router.post('/removeavatar', authenticate.reqSessionProfile, function (req, res, next) {
+    const currentUserProfile = req.currentUserProfile
+
+    Avatar.deleteOne({_id: req.body.avatarID})
+        .then(
+            fs.unlink(config.uploadDirAvatars + req.body.avatarID, 
+                (err) => {
+                    if(err){
+                        console.log(err)
+                    }else{
+                        res.redirect("/profile/edit")
+                    }
+                })
+        )
+        .catch(
+            (err) => {console.log(err)}
+        )
 })
 
 //adds profile experiences entry(Private)
