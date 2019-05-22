@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const keys = require("./config/keys");
 const multer = require('multer');
+const authenticate = require("./functions/authenticate");
 
 const session = require('express-session'); //for authentication Session
 const cookieParser = require('cookie-parser'); //for creating cookies (prob. not necessary in the future)
@@ -79,15 +80,18 @@ app.use(flash(app));
 //ROUTES
 //Use View routes
 const publicDir = "public"
+const imageDir = "images"
 app.use('/users', users.view, express.static(publicDir));
-app.use('/profile', profile.view, express.static(publicDir));
-app.use('/post', post.view, express.static(publicDir));
-app.use('/group', group.view, express.static(publicDir));
-app.use('/contacts', contacts.view, express.static(publicDir));
-app.use('/notification', notification.view, express.static(publicDir));
-app.use('/verification', verification.view, express.static(publicDir));
-app.use('/admin', admin.view, express.static(publicDir));
-app.use('/', statics.view, express.static(publicDir));
+app.use('/profile', authenticate.checkLogIn, profile.view, express.static(publicDir));
+app.use('/post', authenticate.checkLogIn, post.view, express.static(publicDir));
+app.use('/group', authenticate.checkLogIn, group.view, express.static(publicDir));
+app.use('/contacts', authenticate.checkLogIn, contacts.view, express.static(publicDir));
+app.use('/notification', authenticate.checkLogIn, notification.view, express.static(publicDir));
+app.use('/verification', authenticate.checkLogIn, verification.view, express.static(publicDir));
+app.use('/admin', authenticate.checkLogIn, admin.view, express.static(publicDir));
+app.use(express.static('public'));
+app.use(authenticate.checkLogIn, express.static('images'));
+//app.use('/', statics.view, express.static(publicDir));
 
 
 //Server Setup

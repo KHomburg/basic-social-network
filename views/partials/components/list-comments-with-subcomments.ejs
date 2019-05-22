@@ -21,9 +21,9 @@ requires
 
                 <div class="uk-width-auto uk-margin-remove">
                     <%if(comment._id.profile.avatar){%>
-                        <img class="uk-border" width="80" height="80" src="<%="images/avatars/" + comment._id.profile.avatar %>">
+                        <img class="uk-border" width="80" height="80" src="<%="/avatars/" + comment._id.profile.avatar %>">
                     <%}else{%>
-                        <img class="uk-border" width="80" height="80" src="images/maxresdefault.jpg">
+                        <img class="uk-border" width="80" height="80" src="/maxresdefault.jpg">
                     <%}%>
                 </div>
                 <div class="uk-width-expand uk-margin-remove">
@@ -40,7 +40,7 @@ requires
             <% if(comment._id.image){%>
                 </br>
                 <div class="uk-width-auto">
-                    <img  width="100%" src= <%="images/contentImages/" + comment._id.image._id %> >
+                    <img  width="100%" src= <%="/contentImages/" + comment._id.image._id %> >
                 </div>
             <%}%>
 
@@ -68,9 +68,9 @@ requires
 
                                 <div class="uk-width-auto uk-margin-remove">
                                     <%if(subComment._id.profile.avatar){%>
-                                        <img class="uk-border" width="80" height="80" src="<%="images/avatars/" + subComment._id.profile.avatar %>">
+                                        <img class="uk-border" width="80" height="80" src="<%="/avatars/" + subComment._id.profile.avatar %>">
                                     <%}else{%>
-                                        <img class="uk-border" width="80" height="80" src="images/maxresdefault.jpg">
+                                        <img class="uk-border" width="80" height="80" src="/maxresdefault.jpg">
                                     <%}%>
                                 </div>
                                 <div class="uk-width-expand uk-margin-remove">
@@ -87,7 +87,7 @@ requires
                             <% if(subComment._id.image){%>
                                 </br>
                                 <div class="uk-width-auto">
-                                    <img  width="100%" src= <%="images/contentImages/" + subComment._id.image._id %> >
+                                    <img  width="100%" src= <%="/contentImages/" + subComment._id.image._id %> >
                                 </div>
                             <%}%>
                             <!-- Delete Button -->

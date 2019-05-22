@@ -19,9 +19,9 @@ requires
 
         <div class="uk-width-auto uk-margin-remove">
             <%if(post.profile.avatar){%>
-                <img class="uk-border" width="80" height="80" src="<%="images/avatars/" + post.profile.avatar %>">
+                <img class="uk-border" width="80" height="80" src="<%="/avatars/" + post.profile.avatar %>">
             <%}else{%>
-                <img class="uk-border" width="80" height="80" src="images/maxresdefault.jpg">
+                <img class="uk-border" width="80" height="80" src="/maxresdefault.jpg">
             <%}%>
         </div>
         <div class="uk-width-expand uk-margin-remove">
@@ -41,7 +41,7 @@ requires
     <% if(post.image){%>
         </br>
         <div class="uk-width-auto">
-            <img  width="100%" src= <%="images/contentImages/" + post.image._id %> >
+            <img  width="100%" src= <%="/contentImages/" + post.image._id %> >
         </div>
     <%}%>
     <!-- Delete Button for Post-->
