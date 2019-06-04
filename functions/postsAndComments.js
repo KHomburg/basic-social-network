@@ -41,97 +41,98 @@ const createPost = (req, res) => {
     upload(req, res, function(err) {
         if(req.file){
             //creating the Post object
-            Group.findOne({name: req.body.groupName}, (err, postGroup) => {
-                if(postGroup){
+            Group.findOne({name: req.body.groupName})
+                .then((postGroup) => {
+                    if(postGroup){
 
-                    //initialize new ContentImage object
-                    const id = req.file.filename.toString()
-                    const newContentImage = new ContentImage({
-                        _id : id,
-                        profile : currentUserProfile,
-                        group: postGroup,
-                        parentType: "post",
-                    })
+                        //initialize new ContentImage object
+                        const id = req.file.filename.toString()
+                        req.newContentImage.profile = currentUserProfile
+                        req.newContentImage.group = postGroup
+                        req.newContentImage.parentType = "post"
 
-                    let file = req.file.destination + "/" + req.file.filename
-                    sharp(file)
-                        .resize({height: 1000}) //resizing to max. height 1000px autoscaled
-                        .toFormat("jpeg")       //changes format to jpeg
-                        .jpeg({
-                            quality: 60,        //changes image quality to *number* percent
-                        })
-                        .toFile(config.uploadDirImages + req.file.filename)
-                        .then((info) => { 
-                            console.log(info)
-                            //create new Post object with image
-                            const newPost = new Post({
-                                profile: currentUserProfile,
-                                group: postGroup,
-                                title: req.body.title,
-                                text: req.body.text,
-                                image: newContentImage,
+                        let file = req.file.destination + "/" + req.file.filename
+                        sharp(file)
+                            .resize({height: 1000}) //resizing to max. height 1000px autoscaled
+                            .toFormat("jpeg")       //changes format to jpeg
+                            .jpeg({
+                                quality: 60,        //changes image quality to *number* percent
                             })
-                            //create new Notification with new Post
-                            const newNotification = new Notification({
-                                profile: currentUserProfile,
-                                group: postGroup,
-                                refContent: newPost,
-                                refContentType: "post",
-                                addressee: currentUserProfile,
-                                updatedBy: currentUserProfile
+                            .toFile(config.uploadDirImages + req.file.filename)
+                            .then((info) => { 
+                                console.log(info)
+                                //create new Post object with image
+                                const newPost = new Post({
+                                    profile: currentUserProfile,
+                                    group: postGroup,
+                                    title: req.body.title,
+                                    text: req.body.text,
+                                    image: req.newContentImage,
+                                })
+                                //create new Notification with new Post
+                                const newNotification = new Notification({
+                                    profile: currentUserProfile,
+                                    group: postGroup,
+                                    refContent: newPost,
+                                    refContentType: "post",
+                                    addressee: currentUserProfile,
+                                    updatedBy: currentUserProfile
+                                })
+
+                                //add notification reference to newPost
+                                newPost.notification = newNotification;
+
+                                //save notification and post
+                                newNotification.save().catch((err) => {console.log({msg: err})});
+                                newPost.save().catch((err) => {console.log({msg: err})});
+
+                                req.newContentImage.path = config.uploadDirImages + req.file.filename
+                                req.newContentImage.parentPost = newPost;
+                                req.newContentImage.save().catch((err) => {console.log({msg: err})});
+                                res.redirect("id/" +newPost._id)
                             })
+                            .catch((err) => {console.log({msg: err})});
 
-                            //add notification reference to newPost
-                            newPost.notification = newNotification;
-
-                            //save notification and post
-                            newNotification.save();
-                            newPost.save();
-
-                            newContentImage.path = config.uploadDirImages + req.file.filename
-                            newContentImage.parentPost = newPost;
-                            newContentImage.save()
-                            res.redirect("id/" +newPost._id)
-                        })
-                        .catch(err => { console.log(err)});
-
-                    
-                } else {               
-                        console.log(err + "test");
-                }
-            })
+                        
+                    } else {               
+                            console.log(err + "test");
+                    }
+                })
+                .catch((err) => {console.log({msg: err})});
         }else{
             //creating the Post object without image
-            Group.findOne({name: req.body.groupName}, (err, postGroup) => {
-                if(postGroup){
-                    const newPost = new Post({
-                        profile: currentUserProfile,
-                        group: postGroup,
-                        title: req.body.title,
-                        text: req.body.text,
-                    })
+            Group.findOne({name: req.body.groupName})
+                .then((postGroup) => {
+                    if(postGroup){
+                        const newPost = new Post({
+                            profile: currentUserProfile,
+                            group: postGroup,
+                            title: req.body.title,
+                            text: req.body.text,
+                        })
 
-                    //create new Notification with new Post
-                    const newNotification = new Notification({
-                        profile: currentUserProfile,
-                        group: postGroup,
-                        refContent: newPost,
-                        refContentType: "post",
-                        addressee: currentUserProfile,
-                        updatedBy: currentUserProfile
-                    })
+                        //create new Notification with new Post
+                        const newNotification = new Notification({
+                            profile: currentUserProfile,
+                            group: postGroup,
+                            refContent: newPost,
+                            refContentType: "post",
+                            addressee: currentUserProfile,
+                            updatedBy: currentUserProfile
+                        })
 
-                    //add notification reference to newPost
-                    newPost.notification = newNotification;
+                        //add notification reference to newPost
+                        newPost.notification = newNotification;
 
-                    //save notification and post
-                    newNotification.save();
-                    newPost.save();
-                    res.redirect("id/" +newPost._id)
-                } else {               
-                        console.log(err + "test");
-                }
-            })
+                        //save notification and post
+                        newNotification.save().catch((err) => {console.log({msg: err})});
+                        newPost.save().catch((err) => {console.log({msg: err})});
+                        res.redirect("id/" +newPost._id)
+                    } else {               
+                            console.log(err + "test");
+                    }
+                })
+                .catch((err) => {console.log({msg: err})});
         }
     })
 }
@@ -213,8 +214,8 @@ returns redirect as response
 */
 const createComment = (req, res) => {
     const currentUserProfile = req.currentUserProfile
-    let groupID = req.body.groupId
-    let postID = req.body.postId
+    const groupID = req.body.groupId
+    const postID = req.body.postId
 
     var upload = multer({
         storage: image.uploadContentImage,
@@ -226,21 +227,14 @@ const createComment = (req, res) => {
 
             Post.findById(req.body.postId)
                 .populate('notification')
-                .exec(
-                    (err, post) => {
-                        let postID = req.body.postId
-                        let groupID = req.body.groupId
+                .then((post) => {
                         if(post){
                             //initialize new ContentImage object
                             const id = req.file.filename.toString()
-                            const newContentImage = new ContentImage({
-                                _id : id,
-                                profile : currentUserProfile,
-                                group: groupID,
-                                parentPost: post,
-                                //parentComment gets added down below
-                                parentType: "comment",
-                            })
+                            req.newContentImage.profile = currentUserProfile
+                            req.newContentImage.group = groupID
+                            req.newContentImage.parentPost = post
+                            req.newContentImage.parentType = "comment"
 
                             let file = req.file.destination + "/" + req.file.filename
                             sharp(file)
@@ -251,13 +245,15 @@ const createComment = (req, res) => {
                                 })
                                 .toFile(config.uploadDirImages + req.file.filename) // TODO: change upload dir
                                 .then((info) => { 
+                                    const groupID = req.body.groupId
+                                    const postID = req.body.postId
                                     console.log(info)
                                     const newComment = new Comment({
                                         profile: currentUserProfile,
                                         text: req.body.text,
-                                        parentPost: postID,
+                                        parentPost: post._id,
                                         group: groupID,
-                                        image: newContentImage,
+                                        image: req.newContentImage,
                                     })
 
                                     //create new Notification with new comment
@@ -266,7 +262,7 @@ const createComment = (req, res) => {
                                         group: groupID,
                                         refContent: newComment,
                                         refContentType: "comment",
-                                        parentContent: postID,
+                                        parentContent: post._id,
                                         parentContentType: "post",
                                         addressee: currentUserProfile,
                                         updatedBy: currentUserProfile
@@ -274,42 +270,37 @@ const createComment = (req, res) => {
 
                                     //add notification reference to newComment
                                     newComment.notification = newNotification;
+                                    //modify post
+                                    post.notification.updatedBy = currentUserProfile //update the notification for that post
+                                    post.notification.addressee.push(currentUserProfile) //add currentUserProfile to addressees
+                                    post.notification.lastUpdated = new Date
+                                    post.comments.push(newComment._id);
 
-                                    //save notification and comment
-                                    newNotification.save();    
-                                    newComment.save()
-                                        .then(()=>{
-                                            post.notification.updatedBy = currentUserProfile //update the notification for that post
-                                            post.notification.addressee.push(currentUserProfile) //add currentUserProfile to addressees
-                                            post.notification.lastUpdated = new Date
-                                            //push comment to parentPost object
-                                            post.comments.push(newComment);
-                                            post.save();
-                                            post.notification.save()
-            
-                                            //finalize and save new image object
-                                            newContentImage.path = config.uploadDirImages + req.file.filename
-                                            newContentImage.parentComment = newComment;
-                                            newContentImage.save()
-            
-                                            res.redirect("/post/id/" +postID); 
-                                        })
-                                        .catch((err)=> {
-                                            console.log(err)
-                                        })                            
+                                    //finalize and save new image object
+                                    req.newContentImage.path = config.uploadDirImages + req.file.filename
+                                    req.newContentImage.parentComment = newComment
+
+                                    //save new Objects
+                                    newNotification.save().catch((err) => {console.log({msg: err})});  
+                                    newComment.save().catch((err) => {console.log({msg: err})});  
+                                    post.save().catch((err) => {console.log({msg: err})});
+                                    post.notification.save().catch((err) => {console.log({msg: err})});
+                                    req.newContentImage.save().catch((err) => {console.log({msg: err})});
+
+                                    res.redirect("/post/id/" +postID); 
                                 })
-                                .catch(err => { console.log(err)});
+                                .catch((err) => {console.log({msg: err})});
 
                         } else {               
                                 console.log(err);
                         }
-            })
+                })
+                .catch((err) => {console.log({msg: err})});
             }else{
                 //create new comment without image
                 Post.findById(req.body.postId)
                     .populate('notification')
-                    .exec(
-                        (err, post) => {
+                    .then((post) => {
                             let postID = req.body.postId
                             if(post){
                                 const newComment = new Comment({
@@ -334,27 +325,27 @@ const createComment = (req, res) => {
                                 //add notification reference to newComment
                                 newComment.notification = newNotification;
 
-                                //save notification and comment
-                                newNotification.save();  
+                                //modify post
+                                post.notification.updatedBy = currentUserProfile //update the notification for that post
+                                post.notification.addressee.push(currentUserProfile) //add currentUserProfile to addressees
+                                post.notification.lastUpdated = new Date
+                                post.comments.push(newComment._id)
 
-                                newComment.save()
-                                    .then(()=>{
-                                        post.notification.updatedBy = currentUserProfile //update the notification for that post
-                                        post.notification.addressee.push(currentUserProfile) //add currentUserProfile to addressees
-                                        post.notification.lastUpdated = new Date
-                                        post.comments.push(newComment);
-                                        post.save();
-                                        post.notification.save()
-                                        res.redirect("/post/id/" +postID); 
-                                    })
-                                    .catch((err)=> {
-                                        console.log(err)
-                                    })
-                                    
+
+                                //save new objects
+                                newNotification.save().catch((err) => {console.log({msg: err})});
+                                newComment.save().catch((err) => {console.log({msg: err})});
+                                post.save().catch((err) => {console.log({msg: err})});
+                                post.notification.save().catch((err) => {console.log({msg: err})});
+
+
+                                res.redirect("/post/id/" +postID); 
+
                             } else {               
                                     console.log(err);
                             }
-                })
+                    })
+                    .catch((err) => {console.log({msg: err})});
             }
 
 
@@ -387,21 +378,17 @@ const createSubComment = (req, res) => {
 
             Comment.findById(req.body.commentId)
                 .populate('notification')
-                .exec( (err, comment) => {
+                .then((comment) => {
                     let postID = req.body.postId
                     let groupID = req.body.groupId
                     if(comment){
 
                         //initialize new ContentImage object
                         const id = req.file.filename.toString()
-                        const newContentImage = new ContentImage({
-                            _id : id,
-                            profile : currentUserProfile,
-                            group: groupID,
-                            parentPost: comment.parentPost,
-                            parentComment: comment,
-                            parentType: "subcomment",
-                        })
+                        req.newContentImage.profile = currentUserProfile
+                        req.newContentImage.group = groupID
+                        req.newContentImage.parentPost = comment
+                        req.newContentImage.parentType = "subcomment"
 
                         let file = req.file.destination + "/" + req.file.filename
                         sharp(file)
@@ -411,57 +398,57 @@ const createSubComment = (req, res) => {
                                 quality: 60,        //changes image quality to *number* percent
                             })
                             .toFile(config.uploadDirImages + req.file.filename) // TODO: change upload dir
-                            .then(info => { console.log(info)})
-                            .catch(err => { console.log(err)});
+                            .then(info => { 
+                                console.log(info)
+                                const newSubComment = new Subcomment({
+                                    profile: currentUserProfile,
+                                    text: req.body.text,
+                                    parentPost: postID,
+                                    parentComment: req.body.commentId,
+                                    group: groupID,
+                                    image: req.newContentImage,
+                                })
+        
+                                //create new Notification with new comment
+                                const newNotification = new Notification({
+                                    profile: currentUserProfile,
+                                    group: groupID,
+                                    refContent: newSubComment,
+                                    refContentType: "subcomment",
+                                    parentContent: comment,
+                                    parentContentType: "comment",
+                                    addressee: currentUserProfile,
+                                    updatedBy: currentUserProfile
+                                })
+        
+                                newSubComment.notification = newNotification
 
-
-                        const newSubComment = new Subcomment({
-                            profile: currentUserProfile,
-                            text: req.body.text,
-                            parentPost: postID,
-                            parentComment: req.body.commentId,
-                            group: groupID,
-                            image: newContentImage,
-                        })
-
-                        //create new Notification with new comment
-                        const newNotification = new Notification({
-                            profile: currentUserProfile,
-                            group: groupID,
-                            refContent: newSubComment,
-                            refContentType: "subcomment",
-                            parentContent: comment,
-                            parentContentType: "comment",
-                            addressee: currentUserProfile,
-                            updatedBy: currentUserProfile
-                        })
-
-                        newSubComment.notification = newNotification
-                        newSubComment.save()
-                            .then(()=>{
-                                newNotification.save()
+                                //modify comment
                                 comment.notification.updatedBy = currentUserProfile //update the notification for that comment
                                 comment.notification.addressee.push(currentUserProfile) //add currentUserProfile to addressees
                                 comment.notification.lastUpdated = new Date
-                                //push subcomment to parentComment object
-                                comment.subcomments.push(newSubComment);
-                                comment.save();
-                                comment.notification.save() 
+                                comment.subcomments.push(newSubComment._id);
 
                                 //finalize and save new image object
-                                newContentImage.path = config.uploadDirImages + req.file.filename;
-                                newContentImage.parentSubcomment = newSubComment;
-                                newContentImage.save()
+                                req.newContentImage.path = config.uploadDirImages + req.file.filename;
+                                req.newContentImage.parentSubcomment = newSubComment._id;
+
+                                //save new objects
+                                newSubComment.save().catch((err) => {console.log({msg: err})});
+                                newNotification.save().catch((err) => {console.log({msg: err})});
+                                comment.save().catch((err) => {console.log({msg: err})});
+                                req.newContentImage.save().catch((err) => {console.log({msg: err})});
+                                comment.notification.save().catch((err) => {console.log({msg: err})});
 
                                 res.redirect("/post/id/" +postID)
                             })
-                            .catch((err)=>{
-                                console.log(err)
-                            })
+                            .catch((err) => {console.log({msg: err})});
+
                     } else {               
                             console.log(err);
                     }
                 })
+                .catch((err) => {console.log({msg: err})});
         }else{
             Comment.findById(req.body.commentId)
                 .populate('notification')
@@ -489,21 +476,24 @@ const createSubComment = (req, res) => {
                             updatedBy: currentUserProfile
                         })
 
-                        newSubComment.notification = newNotification
-                        newSubComment.save()
-                            .then(()=>{
-                                newNotification.save()
-                                comment.notification.updatedBy = currentUserProfile //update the notification for that comment
-                                comment.notification.addressee.push(currentUserProfile) //add currentUserProfile to addressees
-                                comment.notification.lastUpdated = new Date 
-                                comment.subcomments.push(newSubComment);
-                                comment.save(); 
-                                comment.notification.save()
-                                res.redirect("/post/id/" +postID)
-                            })
-                            .catch((err)=>{
-                                console.log(err)
-                            })
+                        newSubComment.notification = newNotification._id
+
+
+                        //modify comment
+                        comment.notification.updatedBy = currentUserProfile //update the notification for that comment
+                        comment.notification.addressee.push(currentUserProfile) //add currentUserProfile to addressees
+                        comment.notification.lastUpdated = new Date 
+                        comment.subcomments.push(newSubComment._id);
+
+
+                        //save new/modified objects
+                        newSubComment.save().catch((err) => {console.log({msg: err})});
+                        newNotification.save().catch((err) => {console.log({msg: err})});
+                        comment.save().catch((err) => {console.log({msg: err})});
+                        comment.notification.save().catch((err) => {console.log({msg: err})});
+
+                        res.redirect("/post/id/" +postID)
+
                     } else {               
                             console.log(err);
                     }
