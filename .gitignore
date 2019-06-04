@@ -1,6 +1,5 @@
 /node_modules
 /test.js
-/to-do.txt
 /note.txt
 /images
-/uploads
+config/keys\.js

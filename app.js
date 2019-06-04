@@ -61,7 +61,7 @@ app.use(session({secret: keys.secretOrKey, saveUninitialized: false, resave: tru
 
 //DB Setup
 mongoose
-    .connect('mongodb://localhost:27017/trami', { useNewUrlParser: true })
+    .connect(keys.db, { useNewUrlParser: true })
     .then(() => console.log('connected to DB'))
     .catch(err => console.log(err));
 
@@ -93,5 +93,5 @@ app.use(authenticate.checkLogIn, express.static('images'));
 
 //Server Setup
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || keys.port;
 app.listen(port, () => console.log('Server running'));
