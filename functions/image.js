@@ -15,9 +15,9 @@ const uploadAvatar = multer.diskStorage({
 		callback(null, config.unprocessedImages)
 	},
 	filename: function(req, file, callback) {
-		let newAvatar = new Avatar({
+		req.newAvatar = new Avatar({
 		})
-		callback(null, newAvatar._id.toString())
+		callback(null, req.newAvatar._id.toString())
 	}
 })
 
@@ -26,9 +26,9 @@ const uploadContentImage = multer.diskStorage({
 		callback(null, config.unprocessedImages)
 	},
 	filename: function(req, file, callback) {
-		let newContentImage = new ContentImage({
+		req.newContentImage = new ContentImage({
 		})
-		callback(null, newContentImage._id.toString())
+		callback(null, req.newContentImage._id.toString())
 	}
 })
 

@@ -109,13 +109,12 @@ router.post('/avatar', authenticate.reqSessionProfile, function (req, res, next)
     })
     .single('avatar')
     upload(req, res, function(err) {
+        if(err){
+            res.send({msg: err})
+        }
         if(req.file){
-            const id = req.file.filename.toString()
-            const newAvatar = new Avatar({
-                _id : id,
-                profile : currentUserProfile,
-            })
-        
+            const avatarId = req.file.filename.toString()
+            req.newAvatar.profile = currentUserProfile
             let file = req.file.destination + "/" + req.file.filename
             sharp(file)
                 .resize({height: 1000}) //resizing to max. height 1000px autoscaled
@@ -125,17 +124,18 @@ router.post('/avatar', authenticate.reqSessionProfile, function (req, res, next)
                 })
                 .toFile(config.uploadDirAvatars + req.file.filename)
                 .then((info) => { 
-                    newAvatar.path = config.uploadDirAvatars + req.file.filename
-                    newAvatar.save()
+                    req.newAvatar.path = config.uploadDirAvatars + req.file.filename
+                    req.newAvatar.save()
                         .then(() => {
-                            currentUserProfile.avatar = newAvatar;
+                            currentUserProfile.avatar = avatarId;
                             currentUserProfile.save()
                                 .then(() => {
                                     res.redirect("/profile/edit")
                                 })
                         })
+                        .catch((err) => {console.log({msg: err})});
                 })
-                .catch(err => { console.log(err)});
+                .catch((err) => {console.log({msg: err})});
 
         } else {
             //TODO: error message
