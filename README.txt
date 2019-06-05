@@ -2,6 +2,7 @@ Instruction:
 1.  Clone the repo
 2.  install dependencies via "npm install"
 4.  Create a keys.js file in /config/folder (details below)
+5. Run command "gulp default"
 3. run command "node app"
 
 

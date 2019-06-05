@@ -23,22 +23,32 @@ requires
                 <h3 class="uk-card-title uk-margin-remove-bottom"><%= profile.name %></h3>
             </a>
             <p class="uk-text-meta uk-margin-remove-top">
-        
                 <!-- check if rendered users profile is currentUsers profile or allready in contacts list, to render according button -->
                 <% if(profile._id.toString() == currentUserProfile._id.toString()){%>
                 <%} else if(currentUserProfile.contacts.toString().includes(profile._id.toString()) == false) { %>
-                    <form action="/contacts/addcontact" method="post">
-                        <input type="hidden" name="profileId" value="<%= profile._id %>">
-                        <button type="submit" value="<%= profile._id %>" class="uk-button uk-button-primary uk-button-small">Kontakt hinzufügen</button>                  
-                    </form>
+                    <div>
+                        <form id="addContact" action="/contacts/addcontact" method="post">
+                            <input type="hidden" name="profileId" value="<%= profile._id %>">
+                            <button onclick="addContact(this)" type="submit" value="<%= profile._id %>" class="uk-button uk-button-primary uk-button-small">Kontakt hinzufügen</button>                  
+                        </form>
+                        <form id="removeContact" class="hidden" action="/contacts/removecontact" method="post">
+                            <input type="hidden" name="profileId" value="<%= profile._id %>">
+                            <button onclick="removeContact(this)" type="submit" value="<%= profile._id %>" class="uk-button uk-button-default uk-button-small">Kontakt Entfernen</button>                  
+                        </form>
+                    </div>
                 <%} else if (currentUserProfile.contacts.toString().includes(profile._id.toString()) == true){ %>
-                    <form action="/contacts/removecontact" method="post">
-                        <input type="hidden" name="profileId" value="<%= profile._id %>">
-                        <button type="submit" value="<%= profile._id %>" class="uk-button uk-button-primary uk-button-small">Kontakt Entfernen</button>                  
-                    </form>
+                    <div>
+                        <form id="addContact" class="hidden" action="/contacts/addcontact" method="post">
+                            <input type="hidden" name="profileId" value="<%= profile._id %>">
+                            <button onclick="addContact(this)" type="submit" value="<%= profile._id %>" class="uk-button uk-button-primary uk-button-small">Kontakt hinzufügen</button>                  
+                        </form>
+
+                        <form id="removeContact" action="/contacts/removecontact" method="post">
+                            <input type="hidden" name="profileId" value="<%= profile._id %>">
+                            <button onclick="removeContact(this)" type="submit" value="<%= profile._id %>" class="uk-button uk-button-default uk-button-small">Kontakt Entfernen</button>                  
+                        </form>
+                    </div>
                 <% } %>
-
-
             </p>
         </div>
     </div>

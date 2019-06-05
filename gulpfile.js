@@ -65,8 +65,8 @@ gulp.task("watch", () => {
             //notify: true
         
     })
-    gulp.watch("public/source/javascript/*js", ["compile-js", "browserSyncdo"]);
-    gulp.watch("public/source/styles/*scss", ["compile-style", "browserSyncdo"]);
+    gulp.watch("frontend-sources/javascript/*js", ["compile-js", "browserSyncdo"]);
+    gulp.watch("frontend-sources/styles/*scss", ["compile-style", "browserSyncdo"]);
     gulp.watch("views/**/*ejs", () => {
         browserSync.reload();
         
