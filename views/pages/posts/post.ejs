@@ -20,9 +20,9 @@
                     <input type="hidden" name="postId" value="<%= post._id %>"></br>
                     <input type="hidden" name="groupId" value="<%= group._id %>"></br>
                     <!--upload button -->
-                    <div class="js-upload" uk-form-custom>
+                    <div class="js-upload" uk-form-custom="target: true">
                         <input type="file" name='image' single>
-                        <button class="uk-button uk-button-default"  type="button" tabindex="-1">Select</button>
+                        <input class="uk-input uk-form-width-medium uk-button uk-button-default uk-background-default" type="text" placeholder="Bild hochladen">
                     </div>
                     <input class="uk-button uk-button-primary uk-button-small" type="submit" value="Absenden">
                 </fieldset>

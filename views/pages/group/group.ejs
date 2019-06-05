@@ -43,12 +43,12 @@
                     <textarea class="uk-textarea" id="Text" type="text" name="text" placeholder="Text eingeben" required></textarea>
                     <input type="hidden" name="groupName" value="<%= currentGroup.name %>">
                     <!--file upload form -->
-                    <div class="js-upload" uk-form-custom>
+                    <div class="js-upload" uk-form-custom="target: true">
                         <input type="file" name='image' single>
-                        <button class="uk-button uk-button-default"  type="button" tabindex="-1">Select</button>
+                        <input class="uk-input uk-form-width-medium uk-button uk-button-default uk-background-default" type="text" placeholder="Bild hochladen">
                     </div>
 
-                    <button class="uk-button uk-button-primary uk-button-small" type="submit" value="Absenden">Absenden</button>
+                    <button class="uk-button uk-button-primary uk-button" type="submit" value="Absenden">Absenden</button>
                 <!--</fieldset>-->
             </form>
         </div>
