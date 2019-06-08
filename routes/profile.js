@@ -247,7 +247,7 @@ router.get("/mycontent/posts/:page", authenticate.reqSessionProfile, (req, res) 
     const currentUserProfile = req.currentUserProfile
 
     //constants for pagination
-    const perPage = 50
+    const perPage = 15
     const page = req.params.page || 1
 
     Post.find({profile: currentUserProfile._id})
@@ -295,6 +295,7 @@ router.get("/mycontent/comments/:page", authenticate.reqSessionProfile, (req, re
     Comment.find({profile: currentUserProfile})
         .sort({date: -1})
         .skip((perPage * page) - perPage)
+        .limit(perPage)
         .populate(
             [
                 {
