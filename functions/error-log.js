@@ -12,10 +12,7 @@ const createError = (errLog, message, route, profile, group) => {
                 group: group,
             })
             newErrorLog.save()
-                .then((err, ErrLog) => {
-                    if(err){
-                        console.log(err)
-                    }
+                .then((ErrLog) => {
                     console.log(ErrLog)
                     resolve(ErrLog)
                 })
