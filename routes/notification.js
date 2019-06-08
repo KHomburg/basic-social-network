@@ -10,24 +10,8 @@ const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const Subcomment = require("../models/Subcomment");
 const ContentImage = require("../models/Contentimage");
+const errLog = require("../functions/error-log");
 
-//get notifications
-router.get("/test", authenticate.reqSessionProfile, (req, res) => { 
-    const currentUserProfile = req.currentUserProfile
-    
-    Notification.find({"addressee._id": currentUserProfile})
-        .populate(
-            [
-                {
-                    path: 'refContent'
-                }
-            ]
-        )
-        .exec((err, notifications) => {
-            res.json(notifications);
-        })
-
-});
 
 //get notifications
 router.get("/fetch", (req, res) => { 
@@ -43,7 +27,7 @@ router.get("/check", authenticate.reqSessionProfile, (req, res) => {
     Notification.findOne({"addressee._id": currentUserProfile})
         .sort({lastUpdated: 'desc'})
         .where("updatedBy").ne(currentUserProfile) //exclude notification that have been updated latest by currentUser
-        .exec((err, notification) => {
+        .then((notification) => {
             if(notification){
                 //check if latest notification updated later than profilenotificationCheck date
                 let alert
@@ -56,6 +40,15 @@ router.get("/check", authenticate.reqSessionProfile, (req, res) => {
                 res.json(alert);
             }else{
                 res.json({msg: "no Notifications"});
+            }
+        })
+        .catch((err) =>{
+            if(err){
+                errLog.createError(err, "Error in finding requested notifiaction", "get notification/check", currentUserProfile, undefined)
+                    .then((errLog)=>{res.status(204).send();})
+                    .catch((err) => {
+                        res.render("pages/error-page", {});
+                    })
             }
         })
 
@@ -77,10 +70,20 @@ router.get("/notifications", authenticate.reqSessionProfile, (req, res) => {
                 }
             ]
         )
-        .exec((err, notifications) => {
+        .then((notifications) => {
             //update notificationCheck date
             currentUserProfile.notificationCheck = new Date()
             currentUserProfile.save()
+                .then(res.render("pages/notification/all-notifications", {currentUserProfile, notifications}))
+                .catch((err) =>{
+                    if(err){
+                        errLog.createError(err, "Error saving changes to currentUserProfile", "get notification/check", currentUserProfile, undefined)
+                            .then((errLog)=>{res.render("pages/error-page", {})})
+                            .catch((err) => {
+                                res.render("pages/error-page", {});
+                            })
+                    }
+                })
 
 
             ////check for delted refContent for each notification and delete if none existing       
@@ -92,8 +95,17 @@ router.get("/notifications", authenticate.reqSessionProfile, (req, res) => {
             //    }
             //}
             
-            res.render("pages/notification/all-notifications", {currentUserProfile, notifications});
         })
+        .catch((err) =>{
+            if(err){
+                errLog.createError(err, "Error in finding requested notifiactions", "get notification/notifications", currentUserProfile, undefined)
+                    .then((errLog)=>{res.render("pages/error-page", {})})
+                    .catch((err) => {
+                        res.render("pages/error-page", {});
+                    })
+            }
+        })
+        
 
 });
 
