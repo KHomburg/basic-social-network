@@ -27,7 +27,7 @@ router.post("/addcontact", authenticate.reqSessionProfile, (req, res) => {
                     currentUserProfile.contacts.push(profile);
                     currentUserProfile.save((err) => {
                         if(err){
-                            errLog.createError(profileErr, "Error saving changes to currentUserProfile", "post contact/addcontact", currentUserProfile, undefined)
+                            errLog.createError(err, "Error saving changes to currentUserProfile", "post contact/addcontact", currentUserProfile, undefined)
                                 .then((errLog)=>{res.render("pages/error-page", {})})
                                 .catch((err) => {
                                     console.log(err)
@@ -69,7 +69,7 @@ router.post("/removecontact", authenticate.reqSessionProfile, (req, res) => {
         currentUserProfile.contacts.pull({_id: req.body.profileId})
         currentUserProfile.save((err) => {
             if(err){
-                errLog.createError(profileErr, "Error saving changes to currentUserProfile", "post contact/removecontact", currentUserProfile, undefined)
+                errLog.createError(err, "Error saving changes to currentUserProfile", "post contact/removecontact", currentUserProfile, undefined)
                     .then((errLog)=>{res.render("pages/error-page", {})})
                     .catch((err) => {
                         console.log(err)
@@ -103,7 +103,7 @@ router.get('/list', authenticate.reqSessionProfile, (req, res) => {
     }}
     removeDeletedContacts().then(currentUserProfile.save((err) => {
         if(err){
-            errLog.createError(profileErr, "Error saving changes to contacts list (removing deleted profiles)", "post contact/list", currentUserProfile, undefined)
+            errLog.createError(err, "Error saving changes to contacts list (removing deleted profiles)", "post contact/list", currentUserProfile, undefined)
                 .then((errLog)=>{res.render("pages/error-page", {})})
                 .catch((err) => {
                     console.log(err)
