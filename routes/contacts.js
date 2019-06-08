@@ -25,12 +25,21 @@ router.post("/addcontact", authenticate.reqSessionProfile, (req, res) => {
                 let checkContact = contacts.find((contact) => {return contact._id._id.toString() == req.body.profileId.toString()})
                 if(checkContact == undefined){
                     currentUserProfile.contacts.push(profile);
-                    currentUserProfile.save(); 
+                    currentUserProfile.save((err) => {
+                        if(err){
+                            errLog.createError(profileErr, "Error saving changes to currentUserProfile", "post contact/addcontact", currentUserProfile, undefined)
+                                .then((errLog)=>{res.render("pages/error-page", {})})
+                                .catch((err) => {
+                                    console.log(err)
+                                    res.render("pages/error-page", {});
+                                })
+                        }
+                    }); 
                 } else {
-                    console.log("ERROR: unexpected error in contacts/addcontact; contact already in contacts list")
+                    console.log("ERROR: unexpected error in contacts/addcontact; contact already in contacts list " + currentUserProfile + " contact ID:"+ req.body.profileId)
                 }
             } else {
-                console.log("ERROR: unexpected error in contact/addcontact: profile not found")
+                console.log("ERROR: unexpected error in contact/addcontact: profile not found" + currentUserProfile + " contact ID:"+ req.body.profileId)
             }
             res.status(204).send();  //TODO: add frontend script to change state to removecontact form 
         })
@@ -58,10 +67,19 @@ router.post("/removecontact", authenticate.reqSessionProfile, (req, res) => {
     if(checkContact !== undefined){
         //remove contact from contacts list
         currentUserProfile.contacts.pull({_id: req.body.profileId})
-        currentUserProfile.save()
+        currentUserProfile.save((err) => {
+            if(err){
+                errLog.createError(profileErr, "Error saving changes to currentUserProfile", "post contact/removecontact", currentUserProfile, undefined)
+                    .then((errLog)=>{res.render("pages/error-page", {})})
+                    .catch((err) => {
+                        console.log(err)
+                        res.render("pages/error-page", {});
+                    })
+            }
+        }); 
 
     }else{
-        console.log("ERROR: unexpected error in contact/removecontact: tried to remove contact, that is not in contacts list")
+        console.log("ERROR: unexpected error in contact/removecontact: tried to remove contact, that is not in contacts list " + currentUserProfile + " contact ID: "+ req.body.profileId)
     }
 
     res.status(204).send(); //TODO: add frontend script to change state to addcontact form
@@ -83,7 +101,16 @@ router.get('/list', authenticate.reqSessionProfile, (req, res) => {
                 i--
             }
     }}
-    removeDeletedContacts().then(currentUserProfile.save())
+    removeDeletedContacts().then(currentUserProfile.save((err) => {
+        if(err){
+            errLog.createError(profileErr, "Error saving changes to contacts list (removing deleted profiles)", "post contact/list", currentUserProfile, undefined)
+                .then((errLog)=>{res.render("pages/error-page", {})})
+                .catch((err) => {
+                    console.log(err)
+                    res.render("pages/error-page", {});
+                })
+        }
+    }))
     res.render("pages/profile/contacts", {currentUserProfile, contacts});
 });
 
