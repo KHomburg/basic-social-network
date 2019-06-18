@@ -13,11 +13,15 @@ const createError = (errLog, message, route, profile, group) => {
             })
             newErrorLog.save()
                 .then((ErrLog) => {
-                    console.log(ErrLog)
+                    console.log("ERROR: " + ErrLog)
                     resolve(ErrLog)
                 })
+                .catch((err) => {
+                    console.log("ERROR in ERROR Handler: Failed saving Error:   " + newErrorLog + " Error while trying to save:" + err)
+                })
         }else{
-            reject("Error in error handler: no error message")
+            console.log("Error in error handler: no error message")
+            res.render("pages/error-page", {})
         }
         
     })
