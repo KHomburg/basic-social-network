@@ -41,24 +41,12 @@ router.get("/all/:page", authenticate.reqSessionProfile, (req, res) => {
                 })
                 .catch((countErr) => {
                     errLog.createError(countErr, "Error counting groups", "get group/all/:page", currentUserProfile, undefined)
-                        .then((errLog)=>{
-                            res.render("pages/error-page", {})
-                        })
-                        .catch((err) => {
-                            if(err){console.log(err)}
-                            res.render("pages/error-page", {})
-                        })
+                        .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                 })            
         })
         .catch((groupErr) => {
             errLog.createError(groupErr, "Error finding groups", "get group/all/:page", currentUserProfile, undefined)
-                .then((errLog)=>{
-                    res.render("pages/error-page", {})
-                })
-                .catch((err) => {
-                    if(err){console.log(err)}
-                    res.render("pages/error-page", {})
-                })
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
 
 })
@@ -92,24 +80,12 @@ router.get('/name/:name', authenticate.reqSessionProfile,(req, res) => {
                     }
                 })
                 .catch((err) => {
-                    if(err){
-                        errLog.createError(err, "Error finding post for requested group", "get group/name/:name", currentUserProfile, currentGroup)
-                            .then((errLog)=>{res.render("pages/error-page", {})})
-                            .catch((err) => {
-                                console.log(err)
-                                res.render("pages/error-page", {});
-                            })
-                    }
+                    errLog.createError(err, "Error finding post for requested group", "get group/name/:name", currentUserProfile, currentGroup)
+                        .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                 })
         .catch((err) =>{
-            if(err){
-                errLog.createError(err, "Error finding requested group", "get group/name/:name", currentUserProfile, req.params.name)
-                    .then((errLog)=>{res.render("pages/error-page", {})})
-                    .catch((err) => {
-                        console.log(err)
-                        res.render("pages/error-page", {});
-                    })
-            }
+            errLog.createError(err, "Error finding requested group", "get group/name/:name", currentUserProfile, req.params.name)
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         });  
     })
 });
@@ -146,34 +122,19 @@ router.post("/create", authenticate.reqSessionProfile, (req, res) => {
                                 currentUserProfile.save()
                                     .then(res.redirect("name/" + newGroup.name))
                                     .catch((err) => {
-                                        if(err){
-                                            errLog.createError(err, "Error in saving changes to currentUserProfile", "get group/name/:name", currentUserProfile, undefined)
-                                                .then((errLog)=>{res.render("pages/error-page", {})})
-                                                .catch((err) => {
-                                                    res.render("pages/error-page", {});
-                                                })
-                                        }
+                                        errLog.createError(err, "Error in saving changes to currentUserProfile", "get group/name/:name", currentUserProfile, undefined)
+                                            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                                     })
                         })
                         .catch((err)=>{
                             errLog.createError(err, "Error saving new group", "get group/name/:name", currentUserProfile, undefined)
-                            .then((errLog)=>{res.render("pages/error-page", {})})
-                            .catch((err) => {
-                                res.render("pages/error-page", {});
-                            })
+                                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                         })
             }
         })
         .catch((err)=>{               
-            if(err){
-                errLog.createError(err, "Error in checking, if group already exists", "get group/name/:name", currentUserProfile, undefined)
-                    .then((errLog)=>{res.render("pages/error-page", {})})
-                    .catch((err) => {
-                        console.log(err)
-                        res.render("pages/error-page", {});
-                    })
-            
-            }
+            errLog.createError(err, "Error in checking, if group already exists", "get group/name/:name", currentUserProfile, undefined)
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
 })
 
@@ -198,34 +159,21 @@ router.post("/subscribe", authenticate.reqSessionProfile, (req, res) => {
                             .then(res.redirect("name/" + group.name))
                             .catch((err) => {
                                 errLog.createError(err, "Error in saving changes to currentUserProfile(adding new membership)", "post group/subscribe", currentUserProfile, req.body.groupID)
-                                    .then((errLog)=>{res.render("pages/error-page", {})})
-                                    .catch((err) => {
-                                        res.redirect("name/" + group.name);
-                                    })
+                                    .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                             
                         });
                     })
                     .catch((err) => {
-                        if(err){
-                            errLog.createError(err, "Error in saving changes to group (adding new member)", "post group/subscribe", currentUserProfile, group)
-                                .then((errLog)=>{res.render("pages/error-page", {})})
-                                .catch((err) => {
-                                    res.render("pages/error-page", {});
-                                })
-                        }
+                        errLog.createError(err, "Error in saving changes to group (adding new member)", "post group/subscribe", currentUserProfile, group)
+                            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                     }); 
             } else {
                 console.log("Error: currentUser is already member of the group")
             }
         })
         .catch((err) => {
-            if(err){
-                errLog.createError(err, "Error in finding requested group", "post group/subscribe", currentUserProfile, req.body.groupID)
-                    .then((errLog)=>{res.render("pages/error-page", {})})
-                    .catch((err) => {
-                        res.render("pages/error-page", {});
-                    })
-            }
+            errLog.createError(err, "Error in finding requested group", "post group/subscribe", currentUserProfile, req.body.groupID)
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
 })
 
@@ -235,40 +183,25 @@ router.post("/subscribe", authenticate.reqSessionProfile, (req, res) => {
 router.post("/unsubscribe", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     Group.findById(req.body.groupID)
-        .exec((err, group) => {
+        .then((group) => {
             //Check wether User is already member
             let findMembershipInProfile = helpers.findMembershipInProfile(group, currentUserProfile)
-            
 
             if (findMembershipInProfile !== undefined){
-
                 //remove currentUser from group as member
-                //remove group from currentUser membership
-
                 group.members.pull({_id: currentUserProfile._id})
+                //remove group from currentUser membership
                 currentUserProfile.membership.pull({_id: req.body.groupID})
 
                 group.save()
-                    .then()
                     .catch((err) => {
-                        if(err){
-                            errLog.createError(err, "Error saving changes to group (new member)", "post group/unsubscribe", currentUserProfile, req.body.groupID)
-                                .then((errLog)=>{res.render("pages/error-page", {})})
-                                .catch((err) => {
-                                    res.render("pages/error-page", {});
-                                })
-                        }
+                        errLog.createError(err, "Error saving changes to group (new member)", "post group/unsubscribe", currentUserProfile, req.body.groupID)
+                            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                     });
                 currentUserProfile.save()
-                    .then()
                     .catch((err) => {
-                        if(err){
-                            errLog.createError(err, "Error saving changes to currentUserProfile (new membership)", "post group/unsubscribe", currentUserProfile, req.body.groupID)
-                                .then((errLog)=>{res.render("pages/error-page", {})})
-                                .catch((err) => {
-                                    res.render("pages/error-page", {});
-                                })
-                        }
+                        errLog.createError(err, "Error saving changes to currentUserProfile (new membership)", "post group/unsubscribe", currentUserProfile, req.body.groupID)
+                            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                     }); 
 
             } else{
@@ -276,6 +209,10 @@ router.post("/unsubscribe", authenticate.reqSessionProfile, (req, res) => {
             }
             res.redirect("name/" + group.name) ;
         })
+        .catch((err) => {
+            errLog.createError(err, "Error finding group", "post group/unsubscribe", currentUserProfile, req.body.groupID)
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
+        }); 
 });
 
 //get all reported content of a group
@@ -352,15 +289,9 @@ router.get("/modpanel/reportlist/:name", authenticate.reqSessionProfile, (req, r
                     group.save()
                         .then()
                         .catch((err) => {
-                        if(err){
                             errLog.createError(err, "Error in saving changes to group (deleted reported content", "get group/modpanel/reportlist/:name", currentUserProfile, req.body.groupID)
-                                .then((errLog)=>{res.render("pages/error-page", {})})
-                                .catch((err) => {
-                                    res.render("pages/error-page", {});
-                                })
-                        }
+                                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                     })
-                    
                     res.render("pages/group/modpanel-reportlist", {currentUserProfile, group, reportedPosts, reportedComments, reportedSubcomments, groupID})
                 } else{
                     console.log("cannot show this site: User is not a moderator of this group")
@@ -370,13 +301,8 @@ router.get("/modpanel/reportlist/:name", authenticate.reqSessionProfile, (req, r
             }
         })
         .catch((err) => {
-            if(err){
-                errLog.createError(err, "Error in finding requested group", "get group/modpanel/reportlist/:name", currentUserProfile, req.body.groupID)
-                    .then((errLog)=>{res.render("pages/error-page", {})})
-                    .catch((err) => {
-                        res.render("pages/error-page", {});
-                    })
-            }
+            errLog.createError(err, "Error in finding requested group", "get group/modpanel/reportlist/:name", currentUserProfile, req.body.groupID)
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
 });
 
@@ -427,13 +353,8 @@ router.get("/modpanel/members/:name", authenticate.reqSessionProfile, (req, res)
             }
         })
         .catch((err) => {
-            if(err){
-                errLog.createError(err, "Error in finding requested group", "get group/modpanel/members/:name", currentUserProfile, req.body.groupID)
-                    .then((errLog)=>{res.render("pages/error-page", {})})
-                    .catch((err) => {
-                        res.render("pages/error-page", {});
-                    })
-            }
+            errLog.createError(err, "Error in finding requested group", "get group/modpanel/members/:name", currentUserProfile, req.body.groupID)
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
 });
 
@@ -449,34 +370,18 @@ router.post("/modpanel/members/search/:name", authenticate.reqSessionProfile, (r
                 Profile.find({$text: {$search: term}, membership: {_id: req.body.groupID}})
                     .then((members) => {
                         if(members){
-                            console.log(members)
                             res.render("pages/group/modpanel-members", {currentUserProfile, group, members})
-                        }else{
-                            console.log(err)
                         }
-                        
                     })
                     .catch((err) => {
-                        if(err){
-                            errLog.createError(err, "Error in finding requested profile(by search)", "get group/modpanel/members/search/:name", currentUserProfile, req.body.groupID)
-                                .then((errLog)=>{res.render("pages/error-page", {})})
-                                .catch((err) => {
-                                    res.render("pages/error-page", {});
-                                })
-                        }
+                        errLog.createError(err, "Error in finding requested profile(by search)", "get group/modpanel/members/search/:name", currentUserProfile, req.body.groupID)
+                            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                     })
-            }else{
-                console.log(err)
             }
         })
         .catch((err) => {
-            if(err){
-                errLog.createError(err, "Error in finding requested group", "get group/modpanel/members/search/:name", currentUserProfile, req.body.groupID)
-                    .then((errLog)=>{res.render("pages/error-page", {})})
-                    .catch((err) => {
-                        res.render("pages/error-page", {});
-                    })
-            }
+            errLog.createError(err, "Error in finding requested group", "get group/modpanel/members/search/:name", currentUserProfile, req.body.groupID)
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
 });
 
@@ -514,13 +419,8 @@ router.get("/modpanel/moderators/:name", authenticate.reqSessionProfile, (req, r
             }
         })
         .catch((err) => {
-            if(err){
-                errLog.createError(err, "Error in finding requested group", "get group/modpanel/moderators/:name", currentUserProfile, req.body.groupID)
-                    .then((errLog)=>{res.render("pages/error-page", {})})
-                    .catch((err) => {
-                        res.render("pages/error-page", {});
-                    })
-            }
+            errLog.createError(err, "Error in finding requested group", "get group/modpanel/moderators/:name", currentUserProfile, req.body.groupID)
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
 });
 
@@ -554,13 +454,8 @@ router.get("/modpanel/leavemod/:name", authenticate.reqSessionProfile, (req, res
         }
     })
     .catch((err) => {
-        if(err){
-            errLog.createError(err, "Error in finding requested group", "get group/modpanel/leavemod/:name", currentUserProfile, req.body.groupID)
-                .then((errLog)=>{res.render("pages/error-page", {})})
-                .catch((err) => {
-                    res.render("pages/error-page", {});
-                })
-        }
+        errLog.createError(err, "Error in finding requested group", "get group/modpanel/leavemod/:name", currentUserProfile, req.body.groupID)
+            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
     })
 });
 
@@ -616,28 +511,16 @@ router.post('/mod/content/delete', authenticate.reqSessionProfile, (req, res) =>
                         }
                     })
                     .catch((err) => {
-                        if(err){
-                            errLog.createError(err, "Error saving changes to group(remove reported content)", "post group/mod/content/delete", currentUserProfile, req.body.groupID)
-                                .then((errLog)=>{res.render("pages/error-page", {})})
-                                .catch((err) => {
-                                    res.render("pages/error-page", {});
-                                })
-                        }else{
-
-                        }
+                        errLog.createError(err, "Error saving changes to group(remove reported content)", "post group/mod/content/delete", currentUserProfile, req.body.groupID)
+                            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                     })
             }else{
                 console.log("error in group/mod/comment/delete")
             }
         })
         .catch((err) => {
-            if(err){
-                errLog.createError(err, "Error in finding requested group", "post group/mod/content/delete", currentUserProfile, req.body.groupID)
-                    .then((errLog)=>{res.render("pages/error-page", {})})
-                    .catch((err) => {
-                        res.render("pages/error-page", {});
-                    })
-            }
+            errLog.createError(err, "Error in finding requested group", "post group/mod/content/delete", currentUserProfile, req.body.groupID)
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
 });
 
@@ -673,26 +556,16 @@ router.post('/mod/reportlist/removecontent', authenticate.reqSessionProfile, (re
                 group.save()
                     .then(res.redirect("/group/modpanel/reportlist/" +group.name))
                     .catch((err)=>{
-                        if(err){
-                            errLog.createError(err, "Error saving changes to group", "post group/mod/reportlist/removecontent", currentUserProfile, req.body.groupID)
-                                .then((errLog)=>{res.render("pages/error-page", {})})
-                                .catch((err) => {
-                                    res.render("pages/error-page", {});
-                                })
-                        }
+                        errLog.createError(err, "Error saving changes to group", "post group/mod/reportlist/removecontent", currentUserProfile, req.body.groupID)
+                            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                 })
             }else{
                 console.log("error in /mod/reportlist/removecontent")
             }
         })
         .catch((err) => {
-            if(err){
-                errLog.createError(err, "Error in finding requested group", "post group/mod/reportlist/removecontent", currentUserProfile, req.body.groupID)
-                    .then((errLog)=>{res.render("pages/error-page", {})})
-                    .catch((err) => {
-                        res.render("pages/error-page", {});
-                    })
-            }
+            errLog.createError(err, "Error in finding requested group", "post group/mod/reportlist/removecontent", currentUserProfile, req.body.groupID)
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
         
 });
@@ -750,32 +623,19 @@ router.post("/mod/addmod/:id", authenticate.reqSessionProfile, (req, res) => {
                                         profile.save()
                                         .then(res.redirect('back'))
                                         .catch((err) => {
-                                            if(err){
-                                                errLog.createError(err, "Error saving changes to profile(added moderator)", "post group/mod/addmod/:id", currentUserProfile, req.body.groupID)
-                                                    .then((errLog)=>{res.render("pages/error-page", {})})
-                                                    .catch((err) => {
-                                                        res.render("pages/error-page", {});
-                                                    })
-                                            }
+                                            errLog.createError(err, "Error saving changes to profile(added moderator)", "post group/mod/addmod/:id", currentUserProfile, req.body.groupID)
+                                                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                                         })
                                     .catch((err) => {
-                                        if(err){
-                                            errLog.createError(err, "Error saving changes to group (added moderator)", "post group/mod/addmod/:id", currentUserProfile, req.body.groupID)
-                                                .then((errLog)=>{res.render("pages/error-page", {})})
-                                                .catch((err) => {
-                                                    res.render("pages/error-page", {});
-                                                })
-                                        }
+                                        errLog.createError(err, "Error saving changes to group (added moderator)", "post group/mod/addmod/:id", currentUserProfile, req.body.groupID)
+                                            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                                     })
 
                                     })
                             } else if (ifCurrentUserIsMod && ifMemberIsMod && ifCurrentUserIsMod){
                                 //user is already mod
                                 errLog.createError(undefined, "Error trying to add mod: profile is already mod:" + profile._id, "post group/mod/addmod/:id", currentUserProfile, req.body.groupID)
-                                    .then((errLog)=>{res.render("pages/error-page", {})})
-                                    .catch((err) => {
-                                        res.render("pages/error-page", {});
-                                    })
+                                    .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                                 res.status(204).send();
                             } else {
                                 //CRUCIAL ERROR: member is assigned as moderator either in group.moderators or profile.moderatorOf, but not the other
@@ -790,24 +650,14 @@ router.post("/mod/addmod/:id", authenticate.reqSessionProfile, (req, res) => {
                         }
                     })
                     .catch((err) => {
-                        if(err){
-                            errLog.createError(err, "Error profile to be added as mod", "post group/mod/addmod/:id", currentUserProfile, req.body.groupID)
-                                .then((errLog)=>{res.render("pages/error-page", {})})
-                                .catch((err) => {
-                                    res.render("pages/error-page", {});
-                                })
-                        }
+                        errLog.createError(err, "Error profile to be added as mod", "post group/mod/addmod/:id", currentUserProfile, req.body.groupID)
+                            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                     })
             }
         })
         .catch((err) => {
-            if(err){
-                errLog.createError(err, "Error in finding requested group", "post group/mod/addmod/:id", currentUserProfile, req.body.groupID)
-                    .then((errLog)=>{res.render("pages/error-page", {})})
-                    .catch((err) => {
-                        res.render("pages/error-page", {});
-                    })
-            }
+            errLog.createError(err, "Error in finding requested group", "post group/mod/addmod/:id", currentUserProfile, req.body.groupID)
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
 })
 
@@ -845,26 +695,17 @@ router.post("/mod/leavemod/:id", authenticate.reqSessionProfile, (req, res) => {
                                             .then(res.redirect("/group/name/" +group.name))
                                             .catch((err) =>{
                                                 errLog.createError(err, "Error saving changes to group", "post group/mod/leavemod/:id", currentUserProfile, req.body.groupID)
-                                                    .then((errLog)=>{res.render("pages/error-page", {})})
-                                                    .catch((err) => {
-                                                        res.render("pages/error-page", {});
-                                                    })
+                                                    .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                                             })
                                     })
                                     .catch((err) => {
                                         errLog.createError(err, "Error saving changes to profile", "post group/mod/leavemod/:id", currentUserProfile, req.body.groupID)
-                                            .then((errLog)=>{res.render("pages/error-page", {})})
-                                            .catch((err) => {
-                                                res.render("pages/error-page", {});
-                                            })
+                                            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                                     })
                             } else if (!ifCurrentUserIsMod){
                                 //user is not mod
                                 errLog.createError(undefined, "Error: currentUserProfile is not mod of this group, but requested to leave mod status", "post group/mod/leavemod/:id", currentUserProfile, req.body.groupID)
-                                    .then((errLog)=>{res.render("pages/error-page", {})})
-                                    .catch((err) => {
-                                        res.render("pages/error-page", {});
-                                    })
+                                    .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                                 res.status(204).send();
                             } else {
                                 //in case of only mod, do nothing
@@ -873,38 +714,22 @@ router.post("/mod/leavemod/:id", authenticate.reqSessionProfile, (req, res) => {
 
                         }else{
                             errLog.createError(undefined, "Error: profile requested to leave mod status is not currentUserProfile", "post group/mod/leavemod/:id", currentUserProfile, req.body.groupID)
-                                .then((errLog)=>{res.render("pages/error-page", {})})
-                                .catch((err) => {
-                                    res.render("pages/error-page", {});
-                                })
+                                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                         }
                     })
                     .catch((err) => {
-                        if(err){
-                            errLog.createError(err, "Error finding profile", "post group/mod/leavemod/:id", currentUserProfile, req.body.groupID)
-                                .then((errLog)=>{res.render("pages/error-page", {})})
-                                .catch((err) => {
-                                    res.render("pages/error-page", {});
-                                })
-                        }
+                        errLog.createError(err, "Error finding profile", "post group/mod/leavemod/:id", currentUserProfile, req.body.groupID)
+                            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                     })
             }else{
                 //error finding group
                 errLog.createError(undefined, "Error: could not find requested group", "post group/mod/leavemod/:id", currentUserProfile, req.body.groupID)
-                    .then((errLog)=>{res.render("pages/error-page", {})})
-                    .catch((err) => {
-                        res.render("pages/error-page", {});
-                    })
+                    .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
             }
         })
         .catch((err) => {
-            if(err){
-                errLog.createError(err, "Error in finding requested group", "post group/mod/leavemod/:id", currentUserProfile, req.body.groupID)
-                    .then((errLog)=>{res.render("pages/error-page", {})})
-                    .catch((err) => {
-                        res.render("pages/error-page", {});
-                    })
-            }
+            errLog.createError(err, "Error in finding requested group", "post group/mod/leavemod/:id", currentUserProfile, req.body.groupID)
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
 })
 
@@ -925,13 +750,8 @@ router.post("/search", authenticate.reqSessionProfile, (req, res) => {
             })
         })
     .catch((err) =>{
-        if(err){
-            errLog.createError(err, "Error in finding requested group by search term", "post group/search", currentUserProfile, undefined)
-                .then((errLog)=>{res.render("pages/error-page", {})})
-                .catch((err) => {
-                    res.render("pages/error-page", {});
-                })
-        }
+        errLog.createError(err, "Error in finding requested group by search term", "post group/search", currentUserProfile, undefined)
+            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
     })
 
 })
