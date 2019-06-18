@@ -20,7 +20,7 @@ const createError = (errLog, message, route, profile, group) => {
                     console.log("ERROR in ERROR Handler: Failed saving Error:   " + newErrorLog + " Error while trying to save:" + err)
                 })
         }else{
-            console.log("Error in error handler: no error message")
+            reject("Error in error handler: no error message")
             res.render("pages/error-page", {})
         }
         
