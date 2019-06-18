@@ -43,13 +43,8 @@ router.get("/check", authenticate.reqSessionProfile, (req, res) => {
             }
         })
         .catch((err) =>{
-            if(err){
                 errLog.createError(err, "Error in finding requested notifiaction", "get notification/check", currentUserProfile, undefined)
-                    .then((errLog)=>{res.status(204).send();})
-                    .catch((err) => {
-                        res.render("pages/error-page", {});
-                    })
-            }
+                    .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
 
 });
@@ -76,13 +71,8 @@ router.get("/notifications", authenticate.reqSessionProfile, (req, res) => {
             currentUserProfile.save()
                 .then(res.render("pages/notification/all-notifications", {currentUserProfile, notifications}))
                 .catch((err) =>{
-                    if(err){
-                        errLog.createError(err, "Error saving changes to currentUserProfile", "get notification/check", currentUserProfile, undefined)
-                            .then((errLog)=>{res.render("pages/error-page", {})})
-                            .catch((err) => {
-                                res.render("pages/error-page", {});
-                            })
-                    }
+                    errLog.createError(err, "Error saving changes to currentUserProfile", "get notification/check", currentUserProfile, undefined)
+                        .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                 })
 
 
@@ -97,13 +87,8 @@ router.get("/notifications", authenticate.reqSessionProfile, (req, res) => {
             
         })
         .catch((err) =>{
-            if(err){
                 errLog.createError(err, "Error in finding requested notifiactions", "get notification/notifications", currentUserProfile, undefined)
-                    .then((errLog)=>{res.render("pages/error-page", {})})
-                    .catch((err) => {
-                        res.render("pages/error-page", {});
-                    })
-            }
+                    .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
         
 
