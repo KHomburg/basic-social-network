@@ -25,7 +25,7 @@ router.get("/listprofiles", authenticate.reqSessionProfile, authenticate.checkAd
     const perPage = 50
     const page = req.params.page || 1
 
-    Profile.find()
+    Profile.find("D")
         .sort({name: 1})
         .skip((perPage * page) - perPage)
         .limit(perPage)
@@ -37,24 +37,12 @@ router.get("/listprofiles", authenticate.reqSessionProfile, authenticate.checkAd
                 })
                 .catch((countErr) => {
                     errLog.createError(countErr, "Error counting profiles", "get admin/listprofiles", currentUserProfile, undefined)
-                        .then((errLog)=>{
-                            res.render("pages/error-page", {})
-                        })
-                        .catch((err) => {
-                            console.log(err)
-                            res.render("pages/error-page", {})
-                        })
+                        .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                 })
         })
         .catch((profileErr)=>{
             errLog.createError(profileErr, "Error finding profiles", "get admin/listprofiles", currentUserProfile, undefined)
-                .then((errLog)=>{
-                    res.render("pages/error-page", {})
-                })
-                .catch((err) => {
-                    console.log(err)
-                    res.render("pages/error-page", {})
-                })
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
 });
 
@@ -70,13 +58,7 @@ router.post("/profiles/search", authenticate.reqSessionProfile, authenticate.che
         })
         .catch((profileErr) => {
             errLog.createError(profileErr, "Error finding profiles by searched term", "get admin/profiles/search", currentUserProfile, undefined)
-            .then((errLog)=>{
-                res.render("pages/error-page", {})
-            })
-            .catch((err) => {
-                console.log(err)
-                res.render("pages/error-page", {});
-            })
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
 });
 
@@ -100,13 +82,7 @@ router.post("/profiles/suspenduser", authenticate.reqSessionProfile, authenticat
         })
         .catch((userErr) => {
             errLog.createError(userErr, "Error finding user by id", "get admin/profiles/suspenduser", currentUserProfile, undefined)
-            .then((errLog)=>{
-                res.render("pages/error-page", {})
-            })
-            .catch((err) => {
-                console.log(err)
-                res.render("pages/error-page", {});
-            })
+            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
 });
 
@@ -124,19 +100,17 @@ router.post("/profiles/unsuspenduser", authenticate.reqSessionProfile, authentic
                     .then(() => {
                         res.status(204).send();
                     })
+                    .catch((err) => {
+                        errLog.createError(err, "Error saving changes to User", "get admin/profiles/unsuspenduser", currentUserProfile, undefined)
+                        .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
+                    })
             }else{
                 console.log("ERROR: unexpected error in admin/profiles/unsuspenduser")
             }
         })
         .catch((userErr) => {
             errLog.createError(userErr, "Error finding user by id", "get admin/profiles/unsuspenduser", currentUserProfile, undefined)
-            .then((errLog)=>{
-                res.render("pages/error-page", {})
-            })
-            .catch((err) => {
-                console.log(err)
-                res.render("pages/error-page", {});
-            })
+            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
 });
 
