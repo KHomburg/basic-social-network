@@ -18,6 +18,7 @@ const Notification = require("../models/Notification");
 
 //custom modules
 const notification = require("../functions/notification")
+const errLog = require("../functions/error-log");
 
 
 /*
@@ -197,23 +198,13 @@ const getPost = (req, res) => {
             }
         ]
     )
-    .exec((err,post) => {
-        if(post){
-            //queries:
-            //console.log(post)
-            //console.log("--------------------")
-            //console.log(post.comments)
-            //console.log("--------------------")
-            //console.log(post.comments[0]._id.profile)
-            //console.log("--------------------")
-            //console.log(post.comments[0]._id.subcomments)
-            //console.log("--------------------")
-            //console.log(post.comments[0]._id.subcomments[0]._id)
-            res.render("pages/posts/post", {currentUserProfile, post});
-        }else{
-            console.log(err)
-        }        
-    });
+    .then((post) => {
+            res.render("pages/posts/post", {currentUserProfile, post})
+    })
+    .catch((err)=>{                    
+        errLog.createError(err, "Error getting post", "getPost function", currentUserProfile, undefined)
+            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
+    })
 }
 
 
@@ -525,7 +516,7 @@ const deletePost = (req, res, callback) => {
     const currentUserProfile = req.currentUserProfile
     Post.findOneAndRemove({_id: req.body.postId})
         .populate("group")
-        .exec((err, post) =>{
+        .then((post) =>{
             const groupName = post.group.name
             if(callback){
                 callback(groupName)
@@ -534,6 +525,11 @@ const deletePost = (req, res, callback) => {
                 .then()
                 .catch((err) => console.log(err))
         })
+        .catch((err)=>{                    
+            errLog.createError(err, "Error deleting Post (deletPost function)", "deletPost function", currentUserProfile, undefined)
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
+        })
+        
 }
 
 
@@ -567,7 +563,7 @@ const deleteComment = (req, res, callback) => {
             }
         ]
     )
-    .exec((err, comment) => {
+    .then((comment) => {
         const group = comment.group;
         const groupName = group.name
 
@@ -621,6 +617,10 @@ const deleteComment = (req, res, callback) => {
             }
         }
     })
+    .catch((err)=>{                    
+        errLog.createError(err, "Error deleting Comment (deleteComment function)", "deleteComment function", currentUserProfile, undefined)
+            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
+    })
 }
 
 
@@ -658,7 +658,7 @@ const deleteSubComment = (req, res, callback) => {
             }
         ]
     )
-    .exec((err, subComment) => {        
+    .then((subComment) => {        
         const group = subComment.group;
         const groupName = group.name
 
@@ -719,6 +719,10 @@ const deleteSubComment = (req, res, callback) => {
             }
         }
     })
+    .catch((err)=>{                    
+        errLog.createError(err, "Error deleting Subcomment (deleteSucomment function)", "deleteSucomment function", currentUserProfile, undefined)
+            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
+    })
 }
 
 
@@ -753,8 +757,12 @@ const getStream = (req, res) => {
                 },
             ]
         )
-        .exec((err, posts) => {
+        .then((posts) => {
             res.render("pages/posts/stream", {currentUserProfile, posts});
+        })
+        .catch((err)=>{                    
+            errLog.createError(err, "Error getting Post for Stream (getStream function)", "getStream function", currentUserProfile, undefined)
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
         })
 }
 
@@ -768,7 +776,8 @@ returns redirect as response
 */
 const reportContent = (req, res) => {
     const currentUserProfile = req.currentUserProfile
-    Group.findById(req.body.groupID, (err, group)=> {
+    Group.findById(req.body.groupID)
+        .then((group)=> {
         if(group){
             const newReportedContent = {
                 content: req.body.ID,
@@ -807,6 +816,10 @@ const reportContent = (req, res) => {
         }else{
             console.log("something went wrong: could not find group, on /post/reportContent")
         }
+    })
+    .catch((err)=>{                    
+        errLog.createError(err, "Error reporting Content (reportContent function)", "reportContent function", currentUserProfile, undefined)
+            .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
     })
 }
 
