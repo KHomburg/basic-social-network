@@ -30,7 +30,10 @@ Takes req Object with Attributes:
     req.body.text: text of Post
 returns redirect as response
 */
+
+    
 const createPost = (req, res) => {
+    return new Promise((resolve, reject) => {
     const currentUserProfile = req.currentUserProfile
     
     var upload = multer({
@@ -39,103 +42,115 @@ const createPost = (req, res) => {
     })
     .single('image')
     upload(req, res, function(err) {
-        if(req.file){
+        if(err){
+            reject(err)
+        }else if(req.file){
             //creating the Post object
             Group.findOne({name: req.body.groupName})
                 .then((postGroup) => {
-                    if(postGroup){
 
-                        //initialize new ContentImage object
-                        const id = req.file.filename.toString()
-                        req.newContentImage.profile = currentUserProfile
-                        req.newContentImage.group = postGroup
-                        req.newContentImage.parentType = "post"
+                    //initialize new ContentImage object
+                    const id = req.file.filename.toString()
+                    req.newContentImage.profile = currentUserProfile
+                    req.newContentImage.group = postGroup
+                    req.newContentImage.parentType = "post"
 
-                        let file = req.file.destination + "/" + req.file.filename
-                        sharp(file)
-                            .resize({height: 1000}) //resizing to max. height 1000px autoscaled
-                            .toFormat("jpeg")       //changes format to jpeg
-                            .jpeg({
-                                quality: 60,        //changes image quality to *number* percent
+                    let file = req.file.destination + "/" + req.file.filename
+                    sharp(file)
+                        .resize({height: 1000}) //resizing to max. height 1000px autoscaled
+                        .toFormat("jpeg")       //changes format to jpeg
+                        .jpeg({
+                            quality: 60,        //changes image quality to *number* percent
+                        })
+                        .toFile(config.uploadDirImages + req.file.filename)
+                        .then((info) => { 
+                            //create new Post object with image
+                            const newPost = new Post({
+                                profile: currentUserProfile,
+                                group: postGroup,
+                                title: req.body.title,
+                                text: req.body.text,
+                                image: req.newContentImage,
                             })
-                            .toFile(config.uploadDirImages + req.file.filename)
-                            .then((info) => { 
-                                console.log(info)
-                                //create new Post object with image
-                                const newPost = new Post({
-                                    profile: currentUserProfile,
-                                    group: postGroup,
-                                    title: req.body.title,
-                                    text: req.body.text,
-                                    image: req.newContentImage,
-                                })
-                                //create new Notification with new Post
-                                const newNotification = new Notification({
-                                    profile: currentUserProfile,
-                                    group: postGroup,
-                                    refContent: newPost,
-                                    refContentType: "post",
-                                    addressee: currentUserProfile,
-                                    updatedBy: currentUserProfile
-                                })
-
-                                //add notification reference to newPost
-                                newPost.notification = newNotification;
-
-                                //save notification and post
-                                newNotification.save().catch((err) => {console.log({msg: err})});
-                                newPost.save().catch((err) => {console.log({msg: err})});
-
-                                req.newContentImage.path = config.uploadDirImages + req.file.filename
-                                req.newContentImage.parentPost = newPost;
-                                req.newContentImage.save().catch((err) => {console.log({msg: err})});
-                                res.redirect("id/" +newPost._id)
+                            //create new Notification with new Post
+                            const newNotification = new Notification({
+                                profile: currentUserProfile,
+                                group: postGroup,
+                                refContent: newPost,
+                                refContentType: "post",
+                                addressee: currentUserProfile,
+                                updatedBy: currentUserProfile
                             })
-                            .catch((err) => {console.log({msg: err})});
 
-                        
-                    } else {               
-                            console.log(err + "test");
-                    }
+                            //add notification reference to newPost
+                            newPost.notification = newNotification;
+
+                            //save notification and post
+                            newNotification.save().catch((err) => {
+                                reject(err)
+                            });
+                            newPost.save()
+                            .then((newPost) => {resolve(newPost)})
+                            .catch((err) => {
+                                reject(err)
+                            });
+
+                            req.newContentImage.path = config.uploadDirImages + req.file.filename
+                            req.newContentImage.parentPost = newPost;
+
+                            req.newContentImage.save()
+                            .catch((err) => {
+                                reject(err)
+                            });
+                            
+                        })
+                        .catch((err) => {
+                            reject(err)
+                        });
+
                 })
-                .catch((err) => {console.log({msg: err})});
+                .catch((err) => {            
+                    reject(err)
+                });
         }else{
             //creating the Post object without image
             Group.findOne({name: req.body.groupName})
                 .then((postGroup) => {
-                    if(postGroup){
-                        const newPost = new Post({
-                            profile: currentUserProfile,
-                            group: postGroup,
-                            title: req.body.title,
-                            text: req.body.text,
-                        })
+                    const newPost = new Post({
+                        profile: currentUserProfile,
+                        group: postGroup,
+                        title: req.body.title,
+                        text: req.body.text,
+                    })
 
-                        //create new Notification with new Post
-                        const newNotification = new Notification({
-                            profile: currentUserProfile,
-                            group: postGroup,
-                            refContent: newPost,
-                            refContentType: "post",
-                            addressee: currentUserProfile,
-                            updatedBy: currentUserProfile
-                        })
+                    //create new Notification with new Post
+                    const newNotification = new Notification({
+                        profile: currentUserProfile,
+                        group: postGroup,
+                        refContent: newPost,
+                        refContentType: "post",
+                        addressee: currentUserProfile,
+                        updatedBy: currentUserProfile
+                    })
 
-                        //add notification reference to newPost
-                        newPost.notification = newNotification;
+                    //add notification reference to newPost
+                    newPost.notification = newNotification;
 
-                        //save notification and post
-                        newNotification.save().catch((err) => {console.log({msg: err})});
-                        newPost.save().catch((err) => {console.log({msg: err})});
-                        res.redirect("id/" +newPost._id)
-                    } else {               
-                            console.log(err + "test");
-                    }
+                    //save notification and post
+                    newNotification.save().catch((err) => {reject(err)});
+
+                    newPost.save()
+                    .then(newPost => resolve(newPost))
+                    .catch((err) => {
+                        reject(err)
+                    });
                 })
-                .catch((err) => {console.log({msg: err})});
+            .catch((err) => {       
+                reject(err)
+            });
         }
     })
-}
+})}
 
 const getPost = (req, res) => {
     const currentUserProfile = req.currentUserProfile

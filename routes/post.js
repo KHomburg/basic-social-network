@@ -6,6 +6,7 @@ const multer = require('multer');
 
 //Load custom functions
 const postsAndComments = require("../functions/postsAndComments");
+const errLog = require("../functions/error-log");
 
 //Load models
 const Avatar = require("../models/Avatar");
@@ -28,7 +29,14 @@ router.get("/stream/:page", authenticate.reqSessionProfile, (req, res) => {
 //post request for form for creating a new post
 //post /post/create; (private)
 router.post("/create", authenticate.reqSessionProfile, (req, res) => {
+    const currentUserProfile = req.currentUserProfile
+
     postsAndComments.createPost(req, res)
+        .then((newPost) => {res.redirect("/post/id/" +newPost._id)})
+        .catch((err)=>{                    
+            errLog.createError(err, "Error creating new Post (createPost function)", "post post/create", currentUserProfile, undefined)
+                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
+        })
 })
 
 //post request for deleting a post
