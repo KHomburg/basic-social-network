@@ -25,7 +25,7 @@ router.get("/listprofiles", authenticate.reqSessionProfile, authenticate.checkAd
     const perPage = 50
     const page = req.params.page || 1
 
-    Profile.find("D")
+    Profile.find()
         .sort({name: 1})
         .skip((perPage * page) - perPage)
         .limit(perPage)

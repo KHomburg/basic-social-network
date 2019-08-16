@@ -80,13 +80,9 @@ module.exports.reqSessionProfile = (req, res, next) => {
 
 //checks if user is admin before proceed with execution of the route
 module.exports.checkAdmin = (req, res, next) => {
-
-
         if(req.currentUserProfile.admin == true){
             return next()
         }else{
             res.send("No access to this site")
         }
-    
-            
 }

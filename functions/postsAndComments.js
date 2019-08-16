@@ -514,16 +514,16 @@ takes a callback and hands over the groupName
 */
 const deletePost = (req, res, callback) => {
     const currentUserProfile = req.currentUserProfile
-    Post.findOneAndRemove({_id: req.body.postId})
+    Post.findById({_id: req.body.postId})
         .populate("group")
-        .then((post) =>{
+        .then((post) => {
             const groupName = post.group.name
-            if(callback){
-                callback(groupName)
-            }
-            notification.deleteNotification(post.notification)
-                .then()
-                .catch((err) => console.log(err))
+            post.remove()
+                .then((deleted) => {
+                    if(callback){
+                        callback(groupName)
+                    }
+                })
         })
         .catch((err)=>{                    
             errLog.createError(err, "Error deleting Post (deletPost function)", "deletPost function", currentUserProfile, undefined)
@@ -567,54 +567,43 @@ const deleteComment = (req, res, callback) => {
         const group = comment.group;
         const groupName = group.name
 
-        //if parentPost is already deleted, delete comment immediately
-        if(!comment.parentPost){
-            comment.remove()
+        const post = comment.parentPost;
+        const postsComments = post.comments;
+
+        //Check if currentUser is moderator of the group, the comment is in
+        //TODO: refactor following function with includes
+        let isModerator = post.group.moderator.find((mod) => {
+            return mod._id.toString() == currentUserProfile._id.toString()
+        })
+
+        //Check if currentUser is OP of the comment
+        let userIsOP = (comment) => {
+            if(currentUserProfile._id.toString() == comment.profile._id.toString()){
+                return true
+            }else{
+                return false
+            }
+        }
+
+        //find comment in posts->comments array
+        let commentInPost = postsComments.find((comment) => {
+            return comment._id._id == commentId
+        })
+
+        //find index of deleting comment
+        const index = postsComments.indexOf(commentInPost);
+                
+        if(commentInPost && (isModerator || userIsOP(comment))){
+            //splice deleting comment out
+            postsComments.splice(index,1)
+            //save post and remove comment         
+            post.save().then(comment.remove())
             if(callback){
                 callback(groupName)
             }
+            
         }else{
-
-            const post = comment.parentPost;
-            const postsComments = post.comments;
-
-            //Check if currentUser is moderator of the group, the comment is in
-            let isModerator = post.group.moderator.find((mod) => {
-                return mod._id.toString() == currentUserProfile._id.toString()
-            })
-
-            //Check if currentUser is OP of the comment
-            let userIsOP = (comment) => {
-                if(currentUserProfile._id.toString() == comment.profile._id.toString()){
-                    return true
-                }else{
-                    return false
-                }
-            }
-
-            //find comment in posts->comments array
-            let commentInPost = postsComments.find((comment) => {
-                return comment._id._id == commentId
-            })
-
-            //find index of deleting comment
-            const index = postsComments.indexOf(commentInPost);
-                    
-            if(commentInPost && (isModerator || userIsOP(comment))){
-                //splice deleting comment out
-                postsComments.splice(index,1)
-                //save post and remove comment         
-                post.save().then(comment.remove())
-                if(callback){
-                    callback(groupName)
-                }
-                
-                notification.deleteNotification(comment.notification)
-                    .then()
-                    .catch((err) => console.log(err))
-            }else{
-                console.log("error in post/comment/delete - not op or mod")
-            }
+            console.log("error in post/comment/delete - not op or mod")
         }
     })
     .catch((err)=>{                    

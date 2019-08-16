@@ -321,10 +321,6 @@ router.get('/delete', authenticate.reqSessionProfile, (req,res) => {
 
     console.log(currentUserProfile.membership)
 
-
-
-
-
     //filling an array with all group-ids of memberships
     const subedGroups = [];
     currentUserProfile.membership.forEach((group) => {
@@ -414,14 +410,22 @@ router.get('/delete', authenticate.reqSessionProfile, (req,res) => {
                 })
                 currentUserProfile.save();
             })
-
-
     
     if(req.session.userId){
         res.send("You are logged out now")
     } else {
         res.send("You are not logged in")
     }
+});
+
+router.get('/deletion', authenticate.reqSessionProfile, (req,res) => {
+    const currentUserProfile = req.currentUserProfile
+    console.log(currentUserProfile.user)
+    User.findById(currentUserProfile.user)
+        .then((user)=>{
+            user.remove()
+                .then((deleted) => {console.log(deleted)})
+        })
 });
 
 

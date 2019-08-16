@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const Profile = require("./Profile");
 
 //Create Schema
 const UserSchema = new Schema({
@@ -39,5 +40,12 @@ const UserSchema = new Schema({
         default: false,
     }
 });
+
+UserSchema.post('remove', (User) => {
+    Profile.remove({ user: User })
+    .then()
+    .catch()
+});
+//TODO: destroy session
 
 module.exports = User = mongoose.model("users", UserSchema);

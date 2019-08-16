@@ -1,6 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const Group = require("./Group");
+const Post = require("./Post");
+const Comment = require("./Comment");
+const Subcomment = require("./Subcomment");
+const Avatar = require("./Avatar")
+
 //Schema
 const ProfileSchema = new Schema({
     user: {
@@ -131,6 +137,15 @@ ProfileSchema.index(
         weights: {
             name: 5,
         },
-    });
+    }
+);
+
+ProfileSchema.post('remove', (Profile) => {
+    Post.remove({ profile: Profile })
+    .then( post => Comment.remove({ profile: Profile }))
+    .then( comment => Subomment.remove({ profile: Profile }))
+    .then( subcomment => Avatar.remove({ profile: Profile }))
+    .catch()
+});
 
 module.exports = Profile = mongoose.model("profile", ProfileSchema);
