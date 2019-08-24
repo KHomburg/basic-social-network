@@ -301,25 +301,16 @@ router.get('/logout', (req,res) => {
 //also deletes profile and all comments and posts by User
 //Get users/logout
 router.get('/delete', authenticate.reqSessionProfile, (req,res) => {
-
     const currentUserProfile = req.currentUserProfile
 
-    Post.deleteMany({profile: currentUserProfile})
-        .exec((err1, posts) => {console.log("Posts------------------------------ \n" + posts)})
-    
-    Comment.deleteMany({profile: currentUserProfile})
-        .exec((err2, comments) => {console.log("Comments------------------------------ \n" + comments)})
+    User.findById(currentUserProfile.user)
+    .then((user)=>{
+        user.remove()
+            .then(deleted => res.send("test"))
+            .then(req.session.destroy())
+    })
 
-    Subcomment.deleteMany({profile: currentUserProfile})
-        .exec((err2, subcomments) => {console.log("Subcomments------------------------------ \n" + subcomments)})
 
-    User.deleteOne({_id: currentUserProfile.user})
-        .exec((err2, user) => {console.log("User------------------------------ \n" + user)})
-
-    Profile.deleteOne({_id: currentUserProfile._id})
-        .exec((err2, profile) => {console.log("Profile------------------------------ \n" + profile)})
-
-    console.log(currentUserProfile.membership)
 
     //filling an array with all group-ids of memberships
     const subedGroups = [];
@@ -410,24 +401,9 @@ router.get('/delete', authenticate.reqSessionProfile, (req,res) => {
                 })
                 currentUserProfile.save();
             })
-    
-    if(req.session.userId){
-        res.send("You are logged out now")
-    } else {
-        res.send("You are not logged in")
-    }
 });
 
-router.get('/deletion', authenticate.reqSessionProfile, (req,res) => {
-    const currentUserProfile = req.currentUserProfile
-    console.log(currentUserProfile.user)
-    User.findById(currentUserProfile.user)
-        .then((user)=>{
-            user.remove()
-                .then(deleted => res.send("test"))
-                .then(req.session.destroy())
-        })
-});
+
 
 
 module.exports = router;
