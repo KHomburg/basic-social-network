@@ -147,9 +147,8 @@ router.post("/login", (req, res) => {
         .then(user => {
             //Check for user
             if (!user) {
-                req.flash('BAD:', 'Wrong Email', '/users/login');
-                //errors.email = "User not found";
-                //return res.status(404).json(errors);
+                errors.email = "User not found";
+                return res.status(404).json(errors);
             }
             if(user.verified == true){
                 //check password
@@ -161,9 +160,8 @@ router.post("/login", (req, res) => {
                             console.log("session created");
                             res.redirect("/post/stream/1");
                         } else {
-                            req.flash('BAD:', 'Wrong Password', '/users/login');
-                            //errors.password = "Password incorrect";
-                            //return res.status(400).json(errors);
+                            errors.password = "Password incorrect";
+                            return res.status(400).json(errors);
                         }
                     })
             }else if(user.verified == false){

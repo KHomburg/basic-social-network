@@ -9,7 +9,6 @@ const authenticate = require("./functions/authenticate");
 const session = require('express-session'); //for authentication Session
 const cookieParser = require('cookie-parser'); //for creating cookies (prob. not necessary in the future)
 const MongoStore = require('connect-mongo')(session); //for storing sessions server side
-const flash = require('express-flash-notification');
 
 
 
@@ -47,10 +46,6 @@ mongoose
 //app.use(express.static(__dirname + '/public/uikit/js'));
 //app.use(express.static(__dirname + '/public/'));
 app.set('view engine', 'ejs');
-
-//flash messages
-const flashMessage = require("./functions/flash-message.js");
-app.use(flash(app));
 
 
 //ROUTES
