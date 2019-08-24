@@ -37,4 +37,6 @@ const ContentImageSchema = new Schema({
     }
 })
 
+//TODO: remove image after deleted model
+
 module.exports = ContentImage = mongoose.model("contentImage", ContentImageSchema);

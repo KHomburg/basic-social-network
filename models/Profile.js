@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const Group = require("./Group");
 const Post = require("./Post");
 const Comment = require("./Comment");
 const Subcomment = require("./Subcomment");
@@ -140,12 +139,27 @@ ProfileSchema.index(
     }
 );
 
-ProfileSchema.post('remove', (Profile) => {
-    Post.remove({ profile: Profile })
-    .then( post => Comment.remove({ profile: Profile }))
-    .then( comment => Subomment.remove({ profile: Profile }))
-    .then( subcomment => Avatar.remove({ profile: Profile }))
-    .catch()
+ProfileSchema.post('remove', (profile) => {
+    Post.find({ profile: profile })
+        .then((comments) => comments.forEach(comment => {
+            comment.remove()
+        }))
+    Comment.find({ profile: profile })
+        .then((comments) => comments.forEach(comment => {
+            comment.remove()
+        }))
+    Subcomment.find({ profile: profile })
+        .then((subcomments) => subcomments.forEach(subcomment => {
+            subcomment.remove()
+        }))
+    ContentImage.find({ profile: profile })
+        .then((contentImages) => contentImages.forEach(contentImage => {
+            contentImage.remove()
+        }))
+    Avatar.find({ profile: profile })
+        .then((avatars) => avatars.forEach(avatar => {
+            avatar.remove()
+        }))
 });
 
 module.exports = Profile = mongoose.model("profile", ProfileSchema);

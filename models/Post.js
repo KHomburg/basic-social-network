@@ -57,12 +57,22 @@ const PostSchema = new Schema({
     }
 });
 
-PostSchema.post('remove', (Post) => {
-    Comment.remove({ parentPost: Post })
-        .then( comment => Subcomment.remove({ parentPost: Post }))
-        .then( subcomment => ContentImage.remove({ parentPost: Post }))
-        .then( contentImage => Notification.remove({ refContent: Post }))
-        .catch(err => console.log(err))
+PostSchema.post('remove', function(post){
+    Comment.find({ parentPost: post })
+        .then((comments) => comments.forEach(comment => {
+            comment.remove()
+        }))
+    Subcomment.find({ parentPost: post })
+        .then((subcomments) => subcomments.forEach(subcomment => {
+            subcomment.remove()
+        }))
+    ContentImage.find({ parentPost: post })
+        .then((contentImages) => contentImages.forEach(contentImage => {
+            contentImage.remove()
+        }))
+    Notification.findOne({ refContent: post })
+        .then((notification) => notification.remove()
+        )
 });
 
 module.exports = Post = mongoose.model("post", PostSchema);

@@ -50,11 +50,18 @@ const CommentSchema = new Schema({
     }
 })
 
-CommentSchema.post('remove', (Comment) => {
-    Subcomment.remove({ parentComment: Comment })
-        .then( subcomment => ContentImage.remove({ parentComment: Comment }))
-        .then( contentImage => Notification.remove({ refContent: Comment }))
-        .catch(err => console.log(err))
+CommentSchema.post('remove', function(comment){
+    Subcomment.find({ parentComment: comment })
+        .then((subcomments) => subcomments.forEach(subcomment => {
+            subcomment.remove()
+        }))
+    ContentImage.find({ parentSubcomment: comment })
+        .then((contentImages) => contentImages.forEach(contentImage => {
+            contentImage.remove()
+        }))
+    Notification.findOne({ refContent: comment })
+        .then((notification) => notification.remove()
+        )
 });
 
 module.exports = Comment = mongoose.model("comment", CommentSchema);

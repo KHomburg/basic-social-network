@@ -41,11 +41,13 @@ const UserSchema = new Schema({
     }
 });
 
-UserSchema.post('remove', (User) => {
-    Profile.remove({ user: User })
-    .then()
-    .catch()
-});
-//TODO: destroy session
+UserSchema.post('remove', (user) => { 
+    console.log(user)
+    Profile.findOne({ user: user })
+        .then((profile) => {
+            console.log(profile)
+            profile.remove()
+        })
+})
 
 module.exports = User = mongoose.model("users", UserSchema);

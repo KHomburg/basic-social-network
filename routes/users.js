@@ -424,7 +424,8 @@ router.get('/deletion', authenticate.reqSessionProfile, (req,res) => {
     User.findById(currentUserProfile.user)
         .then((user)=>{
             user.remove()
-                .then((deleted) => {console.log(deleted)})
+                .then(deleted => res.send("test"))
+                .then(req.session.destroy())
         })
 });
 
