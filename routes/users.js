@@ -150,7 +150,7 @@ router.post("/login", (req, res) => {
                 errors.email = "User not found";
                 return res.status(404).json(errors);
             }
-            if(user.verified == true){
+            if(user.verified == true && user.suspended == false){
                 //check password
                 bcrypt.compare(password, user.password)
                     .then(isMatch => {
@@ -166,6 +166,8 @@ router.post("/login", (req, res) => {
                     })
             }else if(user.verified == false){
                 res.send("your account has not been verified yet")
+            }else if(user.suspended == true){
+                res.send("your account has been suspended")
             }
 
         });

@@ -3,6 +3,7 @@ const router = express.Router();
 const image = require("../functions/image");
 const errLog = require("../functions/error-log");
 const authenticate = require("../functions/authenticate");
+const mongoose = require('mongoose');
 
 //Load models
 const User = require("../models/User");
@@ -71,6 +72,9 @@ router.post("/profiles/suspenduser", authenticate.reqSessionProfile, authenticat
     User.findById(req.body.userId)
         .then((user) => {
             if(user){
+                mongoose.connection.db.collection("sessions").remove({"session": { $regex: req.body.userId}}, (err, result) => {
+                    console.log(result)
+                })
                 user.suspended = true
                 user.save()
                     .then(() => {

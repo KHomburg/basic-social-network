@@ -32,7 +32,13 @@ const Subcomment = require("./models/Subcomment");
 //Cookie middleware
 //app.use(upload.single('avatar'));
 app.use(cookieParser());
-app.use(session({secret: keys.secretOrKey, saveUninitialized: false, resave: true, store: new MongoStore({ mongooseConnection: mongoose.connection }) }));
+app.use(session(
+    {
+        secret: keys.secretOrKey, 
+        saveUninitialized: false, 
+        resave: true,
+        stringify: true,
+        store: new MongoStore({ mongooseConnection: mongoose.connection }) }));
 
 //DB Setup
 mongoose

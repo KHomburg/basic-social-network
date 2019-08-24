@@ -48,6 +48,11 @@ UserSchema.post('remove', (user) => {
             console.log(profile)
             profile.remove()
         })
+        .then((profile) => {
+            mongoose.connection.db.collection("sessions").remove({"session": { $regex: user._id}}, (err, result) => {
+                console.log(result)
+            })
+        })
 })
 
 module.exports = User = mongoose.model("users", UserSchema);
