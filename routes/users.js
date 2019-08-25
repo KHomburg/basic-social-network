@@ -308,51 +308,6 @@ router.get('/delete', authenticate.reqSessionProfile, (req,res) => {
     User.findById(currentUserProfile.user)
         .then((user)=>{
             user.remove()
-                .then(req.session.destroy())
-        })
-
-    //filling an array with all group-ids of memberships
-    const subedGroups = [];
-    currentUserProfile.membership.forEach((group) => {
-        subedGroups.push(group._id._id)
-        }
-    )
-
-    //filling an array with all group-ids of moderations
-    const modedGroups = [];
-    currentUserProfile.moderatorOf.forEach((group) => {
-        modedGroups.push(group._id._id)
-        }
-    )
-
-    //removing all memberships in groups
-    Group.find({"_id": { $in: subedGroups}})
-        .populate([
-            {
-                path: "members.profile",
-                model: "profile"
-            },
-        ])
-        .exec((err, groups) => {
-            groups.forEach((group) => {
-                group.members.id(currentUserProfile._id).remove()
-                group.save()
-            })
-        })
-
-    //removing all memberships in modedgroups
-    Group.find({"_id": { $in: modedGroups}})
-        .populate([
-            {
-                path: "moderator.profile",
-                model: "profile"
-            },
-        ])
-        .exec((err, groups) => {
-            groups.forEach((group) => {
-                group.moderator.id(currentUserProfile._id).remove()
-                group.save()
-            })
         })
 });
 

@@ -47,11 +47,55 @@ UserSchema.post('remove', (user) => {
         .then((profile) => {
             console.log(profile)
             profile.remove()
-        })
-        .then((profile) => {
+
             mongoose.connection.db.collection("sessions").remove({"session": { $regex: user._id}}, (err, result) => {
             })
+
+            //filling an array with all group-ids of memberships
+            const subedGroups = [];
+            profile.membership.forEach((group) => {
+                subedGroups.push(group._id._id)
+                }
+            )
+
+            //filling an array with all group-ids of moderations
+            const modedGroups = [];
+            profile.moderatorOf.forEach((group) => {
+                modedGroups.push(group._id._id)
+                }
+            )
+
+            //removing all memberships in groups
+            Group.find({"_id": { $in: subedGroups}})
+                .populate([
+                    {
+                        path: "members.profile",
+                        model: "profile"
+                    },
+                ])
+                .exec((err, groups) => {
+                    groups.forEach((group) => {
+                        group.members.id(profile._id).remove()
+                        group.save()
+                    })
+                })
+
+            //removing all memberships in modedgroups
+            Group.find({"_id": { $in: modedGroups}})
+                .populate([
+                    {
+                        path: "moderator.profile",
+                        model: "profile"
+                    },
+                ])
+                .exec((err, groups) => {
+                    groups.forEach((group) => {
+                        group.moderator.id(profile._id).remove()
+                        group.save()
+                    })
+                })
         })
+
 })
 
 module.exports = User = mongoose.model("users", UserSchema);
