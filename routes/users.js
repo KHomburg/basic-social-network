@@ -303,14 +303,13 @@ router.get('/logout', (req,res) => {
 router.get('/delete', authenticate.reqSessionProfile, (req,res) => {
     const currentUserProfile = req.currentUserProfile
 
+    //TODO: refactor to search groups by the profile reference in "moderator" and/or "members"
+
     User.findById(currentUserProfile.user)
-    .then((user)=>{
-        user.remove()
-            .then(deleted => res.send("test"))
-            .then(req.session.destroy())
-    })
-
-
+        .then((user)=>{
+            user.remove()
+                .then(req.session.destroy())
+        })
 
     //filling an array with all group-ids of memberships
     const subedGroups = [];
@@ -325,7 +324,7 @@ router.get('/delete', authenticate.reqSessionProfile, (req,res) => {
         modedGroups.push(group._id._id)
         }
     )
-    
+
     //removing all memberships in groups
     Group.find({"_id": { $in: subedGroups}})
         .populate([
@@ -336,71 +335,25 @@ router.get('/delete', authenticate.reqSessionProfile, (req,res) => {
         ])
         .exec((err, groups) => {
             groups.forEach((group) => {
-                let findIndexOfMember = () => {
-                    //finding index of profile's in group's member array
-                    return group.members.indexOf(
-                        //find profile in member array
-                        group.members.find(
-                            member => member.toString() == currentUserProfile._id.toString()
-                        )
-                    )
-                }
-                //splice currentUser out of members array of group
-                group.members.splice(findIndexOfMember(),1);
-
-                //find index of group in profile's membership array
-                let membershipIndex = () => {
-                    return currentUserProfile.membership.indexOf(
-                        currentUserProfile.membership.find(
-                            membership => membership._id._id.toString() == group._id.toString()
-                        )
-                    )
-                };
-                //splice group out of membership- array of profile
-                currentUserProfile.membership.splice(membershipIndex(), 1)
-                
-                group.save();
+                group.members.id(currentUserProfile._id).remove()
+                group.save()
             })
-            currentUserProfile.save();
         })
 
-        //removing all memberships in modedgroups
-        Group.find({"_id": { $in: modedGroups}})
-            .populate([
-                {
-                    path: "moderatorOf.profile",
-                    model: "profile"
-                },
-            ])
-            .exec((err, groups) => {
-                groups.forEach((group) => {
-                    let findIndexOfMod = () => {
-                        //finding index of profile's in group's member array
-                        return group.moderator.indexOf(
-                            //find profile in member array
-                            group.moderator.find(
-                                mod => mod.toString() == currentUserProfile._id.toString()
-                            )
-                        )
-                    }
-                    //splice currentUser out of members array of group
-                    group.moderator.splice(findIndexOfMod(),1);
-
-                    //find index of group in profile's membership array
-                    let modIndex = () => {
-                        return currentUserProfile.moderatorOf.indexOf(
-                            currentUserProfile.moderatorOf.find(
-                                modOf => modOf._id._id.toString() == group._id.toString()
-                            )
-                        )
-                    };
-                    //splice group out of membership-array of profile
-                    currentUserProfile.moderatorOf.splice(modIndex(), 1)
-                    
-                    group.save();
-                })
-                currentUserProfile.save();
+    //removing all memberships in modedgroups
+    Group.find({"_id": { $in: modedGroups}})
+        .populate([
+            {
+                path: "moderator.profile",
+                model: "profile"
+            },
+        ])
+        .exec((err, groups) => {
+            groups.forEach((group) => {
+                group.moderator.id(currentUserProfile._id).remove()
+                group.save()
             })
+        })
 });
 
 
