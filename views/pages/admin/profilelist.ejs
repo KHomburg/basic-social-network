@@ -6,7 +6,7 @@
 <body>
     <div class="main">
         <div class="uk-margin uk-margin-left uk-margin-right">
-            <h1> All profiles</h1>
+            <h4> All profiles</h4>
         </div>
 
         <!-- search Form-->
@@ -38,6 +38,12 @@
                             <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Nutzer Entsperren">
                         </form>
                     <%}%>
+                    <form action="/admin/profiles/delete" method="post">
+                        <div class="uk-margin-top" style="display:none">
+                            <input type="hidden" name="userId" value= <%= profile.user._id %>></br>
+                        </div>
+                        <input class="uk-button uk-button-primary uk-button-small delete-btn" type="submit" value="Nutzer Löschen">
+                    </form>
                 </div>
             <%}%>
         <% })} %>

@@ -302,16 +302,10 @@ router.get('/logout', (req,res) => {
 //Get users/logout
 router.get('/delete', authenticate.reqSessionProfile, (req,res) => {
     const currentUserProfile = req.currentUserProfile
-
-    //TODO: refactor to search groups by the profile reference in "moderator" and/or "members"
-
     User.findById(currentUserProfile.user)
         .then((user)=>{
             user.remove()
         })
 });
-
-
-
 
 module.exports = router;

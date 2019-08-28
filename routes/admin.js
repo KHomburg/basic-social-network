@@ -118,5 +118,19 @@ router.post("/profiles/unsuspenduser", authenticate.reqSessionProfile, authentic
         })
 });
 
+//User Delete Route (Private)
+//also deletes profile and all comments and posts by User
+//Get users/logout
+router.post('/profiles/delete', authenticate.reqSessionProfile, (req,res) => {
+    const currentUserProfile = req.currentUserProfile
+    var deletingUser = req.body.userId
+    User.findById(deletingUser)
+        .then((user)=>{
+            user.remove()
+        })
+        .then(res.redirect('back'))
+        .catch((err) => {if(err) console.log(err)}) 
+});
+
 
 module.exports = router;
