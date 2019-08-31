@@ -2,13 +2,17 @@
     <div class="main">
         <div class="uk-card uk-card-default">
             <div class="uk-card-header">
-                <div class="uk-flex-middle" uk-grid>
-                    <div class="uk-width-auto">
-                        <img  width="200" height="200" src="<%=showAvatar%>">
+                <div class="uk-flex-middle uk-child-width-expand@s" uk-grid>
+                    <div>
+                        <div class="uk-width-auto">
+                            <img  width="250" height="150" src="<%=showAvatar%>">
+                        </div>
                     </div>
-                    <div class="uk-width-expand">
-                        <h3 class="uk-card-title uk-margin-remove-bottom"><%= profile.name %></h3>
-                        <p class="uk-text-meta uk-margin-remove-top">Unternehmen/Bund</p>
+                    <div>
+                        <div class="uk-width-expand">
+                            <h3 class="uk-card-title uk-margin-remove-bottom"><%= profile.name %></h3>
+                            <p class="uk-text-meta uk-margin-remove-top">Unternehmen/Bund</p>
+                        </div>
                     </div>
                 </div>
             </div>

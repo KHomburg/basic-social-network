@@ -25,9 +25,9 @@
     <div class="uk-button-group uk-margin uk-margin-top uk-flex uk-flex-center uk-visible@m">
         <% buttons.forEach((button) => { %>
             <%if(button.activeName == activeSite){%>
-                <a href="<%=button.url%><%=group.name%>"  class="uk-button uk-button-small uk-margin-left uk-margin-right uk-button-primary"><%=button.buttonName%></a>
+                <a href="<%=button.url%><%=group.name%>"  class="uk-button uk-button-small uk-button-primary uk-width-1-4"><%=button.buttonName%></a>
             <%}else{%>
-                <a href="<%=button.url%><%=group.name%>"  class="uk-button uk-button-small uk-margin-left uk-margin-right uk-button-default uk-background-default"><%=button.buttonName%></a>
+                <a href="<%=button.url%><%=group.name%>"  class="uk-button uk-button-small uk-button-default uk-background-default uk-width-1-4"><%=button.buttonName%></a>
             <%}%>
         <%})%>
     </div>
@@ -40,9 +40,9 @@
             <ul class="uk-nav uk-dropdown-nav">
                 <% buttons.forEach((button) => { %>
                     <%if(button.activeName == activeSite){%>
-                        <li><a href="<%=button.url%><%=group.name%>"  class="uk-button uk-button-small uk-margin-left uk-margin-right uk-button-primary"><%=button.buttonName%></a></li>
+                        <li><a href="<%=button.url%><%=group.name%>"  class="uk-button uk-button-small uk-button-primary"><%=button.buttonName%></a></li>
                     <%}else{%>
-                        <li><a href="<%=button.url%><%=group.name%>"  class="uk-button uk-button-small uk-margin-left uk-margin-right uk-button-default uk-background-default"><%=button.buttonName%></a></li>
+                        <li><a href="<%=button.url%><%=group.name%>"  class="uk-button uk-button-small uk-button-default uk-background-default"><%=button.buttonName%></a></li>
                     <%}%>
                 <%})%>
             </ul>

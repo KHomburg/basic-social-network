@@ -20,6 +20,8 @@
 }
 
 .subcomment-slider-title{
+    box-sizing: border-box;
+    width: 100%;
     //background-color: #1e87f0;
     //color: white;
     border: 1px solid #e5e5e5;
@@ -37,12 +39,12 @@
 }
 
 .post{
+    box-sizing: border-box;
     background-color: white;
-    padding: 10px;
-    width: 90%;
-    max-width: 630px;
+    padding: 0px 18px 5px 10px;
+    width: 100%;
     border: 1px solid #e5e5e5;
-    margin: 8px;
+    margin: 8px 0px 8px 0px;
     border-left: 8px solid #1e87f0;
 
     &__autor{
@@ -79,19 +81,19 @@
         transition-property: color,background-color;
     }
     &__comment{
+        box-sizing: border-box;
         background-color: white;
         padding: 10px;
-        width: 90%;
-        max-width: 630px;
+        width: 100%;
         border: 1px solid #e5e5e5;
         border-left: 8px solid #1e87f0;
-        margin: 8px 8px 8px 8px;
+        margin: 8px 0px 8px 0px;
     }
     &__sub-comment{
+        box-sizing: border-box;
         background-color: white;
         padding: 0px 15px 0px 10px;
-        width: 90%;
-        max-width: 610px;
+        width: 100%;
         border-top: 1px solid #999;
         border-left: 4px solid #1e87f0;
         margin: 12px 8px 12px 0px;
@@ -110,7 +112,7 @@
 }
 
 .delete-btn{
-    text-align: right;
+    border: solid 1px #999;
     padding: 0px 7px 0px 7px;
     font-size: 0.65rem;
     line-height: 20px;

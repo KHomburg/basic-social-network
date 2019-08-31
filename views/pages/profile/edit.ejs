@@ -242,14 +242,13 @@
                 </div>
                 <hr>
                 <h3 class="uk-margin">Your uploaded Profile Images:</h3>
-                <div class="uk-child-width-2-3 uk-text-center uk-margin" uk-grid>
+                <div class="uk-grid-small uk-child-width-1-2@s uk-flex-center uk-text-center" uk-grid>
                     <%if(currentUserProfile.avatar){
                         avatars.forEach((avatar) => {%>
-
                             <div>
                                 <div class="uk-card uk-card-default">
                                     <div class="uk-card-media-top">
-                                        <img src="<%="/avatars/"+avatar._id%>" alt="">
+                                        <img class="uk-height-max-medium "src="<%="/avatars/"+avatar._id%>" alt="">
                                     </div>
                                     <div class="uk-card-body">
                                         <%if(currentUserProfile.avatar._id.toString() != avatar._id.toString()){%>
