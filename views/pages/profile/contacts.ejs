@@ -1,15 +1,11 @@
-<% include ../../partials/head %>
-
-<% include ../../partials/header %>
-<% include ../../partials/sidebar %>
+<% include ../start %>
 
 <body>
     <div class="main">
-        <h1> contacts list </h1>    
+        <h3> contacts list </h3>    
         <% if(contacts){ contacts.forEach((contact) => { %>
             <%- include('../../partials/components/single-profile-reference', {profile: contact._id, currentUserProfile})%>
         <% })} %>
     </div>
 </body>
-
-<% include ../../partials/foot %>
+<% include ../end %>

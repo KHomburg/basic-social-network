@@ -1,9 +1,4 @@
-<% include ../../partials/head %>
-
-<% include ../../partials/header %>
-<% include ../../partials/sidebar %>
-
-<body>
+<% include ../start %>
     <div class="main">
     <% include ../../partials/sidebar %>
         <!-- listing posts -->
@@ -11,7 +6,4 @@
             <%- include('../../partials/components/single-post-reference', {post: post})%>
         <% })} %>
     </main>
-</body>
-
-<% include ../../partials/footer %>
-<% include ../../partials/foot %>
+<% include ../end %>

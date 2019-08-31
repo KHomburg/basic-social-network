@@ -1,10 +1,4 @@
-<% include ../../partials/head %>
-
-<% include ../../partials/header %>
-<% include ../../partials/sidebar %>
-
-
-<body>
+<% include ../start %>
 <%const group = post.group%>
     <div class="main">
         <%- include('../../partials/components/show-post', {post: post, group: group})%>
@@ -30,7 +24,4 @@
         </div>
 
     </div>
-</body>
-
-
-<% include ../../partials/foot %>
+<% include ../end %>

@@ -1,12 +1,8 @@
-<% include ../../partials/head %>
+<% include ../start %>
 
-<% include ../../partials/header %>
-<% include ../../partials/sidebar %>
-
-<body>
     <div class="main">
         <div class="uk-margin uk-margin-left uk-margin-right">
-            <h1> profiles list </h1>
+            <h3> profiles list </h3>
         </div>
 
         <!-- search Form-->
@@ -20,13 +16,7 @@
             <%- include('../../partials/components/single-profile-reference', {profile, currentUserProfile})%>
         <% })} %>
 
-
-
-
-
-
-
     </div>
-</body>
 
-<% include ../../partials/foot %>
+
+<% include ../end %>

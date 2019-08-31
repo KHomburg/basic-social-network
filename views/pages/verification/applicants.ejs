@@ -1,9 +1,6 @@
-<% include ../../partials/head %>
+<% include ../start %>
 
-<% include ../../partials/header %>
-<% include ../../partials/sidebar %>
 
-<body>
     <div class="main">
         <h1>Applicants:</h1>    
         <% if(users){ users.forEach((user) => { %>
@@ -24,6 +21,6 @@
             </div>
         <% })} %>
     </div>
-</body>
 
-<% include ../../partials/foot %>
+
+<% include ../end %>
