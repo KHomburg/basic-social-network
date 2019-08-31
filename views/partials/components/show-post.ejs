@@ -30,7 +30,7 @@ requires
                 <a href="/profile/id/<%= post.profile._id %>">Von: <%= post.profile.name %></a>
                 <a href="/group/name/<%= post.group.name %>"> - In: <%= post.group.name %></a>
             </p>
-            <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><%= post.date.toDateString("de-De") + " " + post.date.toLocaleTimeString("de-De") %></p>           
+            <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom">Am <%= post.date.toLocaleDateString() + " um " + post.date.toLocaleTimeString("de-De") %></p>           
             
         </div>
     </header>

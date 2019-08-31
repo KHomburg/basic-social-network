@@ -27,7 +27,7 @@ requires
                 <a href="/profile/id/<%= comment.profile._id %>">Von: <%= comment.profile.name %></a>
                 <a href="/group/name/<%= comment.group.name %>"> - In: <%= comment.group.name %></a>
             </p>
-            <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><%= comment.date.toDateString("de-De") + " " + comment.date.toLocaleTimeString("de-De") %></p>
+            <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom">Am <%= comment.date.toLocaleDateString() + " um " + comment.date.toLocaleTimeString("de-De") %></p>
         </div>
     </header>
     <hr class="divider__b">

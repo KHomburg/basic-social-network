@@ -20,7 +20,7 @@ requires
         <div class="uk-width-expand uk-margin-remove">
             <h3 class="uk-comment-title uk-margin-remove"><a href="/post/id/<%= subcomment.content.parentPost %>">Zum Post: <%= subcomment.content.parentPost %></a></h3>                    
             <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><a href="/profile/id/<%= subcomment.content.profile._id %>"> Von: <%= subcomment.content.profile.name %></a></p>
-            <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><%= subcomment.content.date.toDateString("de-De") + " " + subcomment.content.date.toLocaleTimeString("de-De") %></p>
+            <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom">Am <%= subcomment.content.date.toLocaleDateString() + " um " + subcomment.content.date.toLocaleTimeString("de-De") %></p>
         </div>
     </header>
     <hr class="divider__b">
