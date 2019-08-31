@@ -1,0 +1,1 @@
+UIkit.modal(document.getElementById("modal-center")).show();

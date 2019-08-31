@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const keys = require("../config/keys");
 const authenticate = require("../functions/authenticate");
+const helpers = require("../functions/helpers");
 
 //Load Input Validation
 const validateRegisterInput = require("../validation/register");
@@ -125,7 +126,6 @@ router.get("/login", authenticate.reqSessionProfile, (req, res) => {
 //login route (Public)
 //post /users/login
 router.post("/login", (req, res) => {
-
     //fill in errors object if any occure and check validation
     const {
         errors,
@@ -147,8 +147,9 @@ router.post("/login", (req, res) => {
         .then(user => {
             //Check for user
             if (!user) {
-                errors.email = "User not found";
-                return res.status(404).json(errors);
+                helpers.formFlash(req, res, 'E-Mail not found, or incorrect password')
+                //errors.email = "User not found";
+                //return res.status(404).json(errors);
             }
             if(user.verified == true && user.suspended == false){
                 //check password
@@ -160,16 +161,14 @@ router.post("/login", (req, res) => {
                             console.log("session created");
                             res.redirect("/post/stream/1");
                         } else {
-                            errors.password = "Password incorrect";
-                            return res.status(400).json(errors);
+                            helpers.formFlash(req, res, 'E-Mail not found, or incorrect password')
                         }
                     })
             }else if(user.verified == false){
-                res.send("your account has not been verified yet")
+                helpers.formFlash(req, res, "your account has not been verified yet")
             }else if(user.suspended == true){
-                res.send("your account has been suspended")
+                helpers.formFlash(req, res, "your account has been suspended")
             }
-
         });
 });
 

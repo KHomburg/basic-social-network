@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const keys = require("./config/keys");
 const multer = require('multer');
 const authenticate = require("./functions/authenticate");
+const flash = require('express-flash');
 
 const session = require('express-session'); //for authentication Session
 const cookieParser = require('cookie-parser'); //for creating cookies (prob. not necessary in the future)
@@ -38,7 +39,10 @@ app.use(session(
         saveUninitialized: false, 
         resave: true,
         stringify: true,
-        store: new MongoStore({ mongooseConnection: mongoose.connection }) }));
+        store: new MongoStore({ mongooseConnection: mongoose.connection }) 
+    }
+));
+app.use(flash());
 
 //DB Setup
 mongoose

@@ -5,7 +5,7 @@ const router = express.Router();
 const postsAndComments = require("../functions/postsAndComments");
 const authenticate = require("../functions/authenticate");
 const image = require("../functions/image");
-const helpers = require("../functions/group-helpers");
+const helpers = require("../functions/helpers");
 const errLog = require("../functions/error-log");
 
 //Load models
@@ -104,7 +104,7 @@ router.post("/create", authenticate.reqSessionProfile, (req, res) => {
     Group.findOne({name: req.body.name})
         .then((group) => {
             if(group){
-                res.send("group already exists") //insert flash message here
+                helpers.formFlash(req, res, 'A Group with this name already exists')
             } else {
                     //Create and save new Group
                     const newGroup = new Group({
