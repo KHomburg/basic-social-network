@@ -321,6 +321,7 @@ router.get("/mycontent/comments/:page", authenticate.reqSessionProfile, (req, re
                     Subcomment.find({profile: currentUserProfile})
                         .sort({date: -1})
                         .skip((perPage * page) - perPage)
+                        .limit(perPage)
                         .populate(
                             [
                                 {
@@ -350,7 +351,7 @@ router.get("/mycontent/comments/:page", authenticate.reqSessionProfile, (req, re
                                     const allCount = commentCount + subCommentCount
 
                                     if(comment && subComment){
-                                        res.render("pages/profile/mycomments", {allComments, currentUserProfile, current: page, pages: Math.ceil(allCount / perPage) });
+                                        res.render("pages/profile/mycomments", {allComments, currentUserProfile, current: page, pages: Math.ceil(allCount / perPage)-1 });
                                     }else if(err1){
                                         console.log(err1)
                                     }else if(err2){
