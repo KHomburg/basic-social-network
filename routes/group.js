@@ -51,10 +51,19 @@ router.get("/all/:page", authenticate.reqSessionProfile, (req, res) => {
 
 })
 
+//redirect for entry
+router.get('/name/:name/', authenticate.reqSessionProfile,(req, res) => {
+    res.redirect('/group/name/' + req.params.name + "/1/")
+});
+
 //get groups by name in params(Private) showing all th posts in that group
 //Get /group/name/:id
-router.get('/name/:name', authenticate.reqSessionProfile,(req, res) => {
+router.get('/name/:name/:page', authenticate.reqSessionProfile,(req, res) => {
     const currentUserProfile = req.currentUserProfile
+
+    const perPage = 30
+    const page = req.params.page || 1
+
     Group.findOne({name: req.params.name})
         .then((currentGroup) => {
             //Check wether User is already member
@@ -68,16 +77,21 @@ router.get('/name/:name', authenticate.reqSessionProfile,(req, res) => {
             }
             
             Post.find({group: currentGroup})
-                .populate("profile")
                 .sort({date: -1})
+                .skip((perPage * page) - perPage)
+                .limit(perPage)
+                .populate("profile")
                 .then((posts) => {
-                    if(posts){
-                        res.render("pages/group/group", {currentGroup, posts, currentUserProfile, membership});
-                    }else if (err){
-                        console.log(err)
-                    } else {
-                        console.log("something went wrong")
-                    }
+                    Post.count({group: currentGroup})
+                        .then((postCount) => {
+                            if(posts){
+                                res.render("pages/group/group", {currentGroup, posts, currentUserProfile, membership, current: page, pages: Math.ceil(postCount / perPage)});
+                            }else if (err){
+                                console.log(err)
+                            } else {
+                                console.log("something went wrong")
+                            }
+                        })
                 })
                 .catch((err) => {
                     errLog.createError(err, "Error finding post for requested group", "get group/name/:name", currentUserProfile, currentGroup)
