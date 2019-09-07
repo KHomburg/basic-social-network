@@ -369,9 +369,14 @@ router.get("/mycontent/comments/:page", authenticate.reqSessionProfile, (req, re
         })
 });
 
+//redirect for entry
+router.get('/list', authenticate.reqSessionProfile,(req, res) => {
+    res.redirect('/profile/list/1')
+});
+
 //get all users
 //Get /list
-router.get('/list', authenticate.reqSessionProfile, (req, res) => {
+router.get('/list/:page', authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
     const contacts = currentUserProfile.contacts
 
@@ -387,7 +392,7 @@ router.get('/list', authenticate.reqSessionProfile, (req, res) => {
             Profile.count()
                 .exec((err2, count) => {
                     if(profiles){
-                        res.render("pages/profile/allusers", {profiles, currentUserProfile, current: page, pages: Math.ceil(count / perPage) });
+                        res.render("pages/profile/allusers", {profiles, currentUserProfile, current: page, pages: Math.ceil(count / perPage), url: "/profile/list" });
                     }else if(err1){
                         console.log(err1)
                     }else if(err2){
