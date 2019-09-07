@@ -320,12 +320,19 @@ router.get("/modpanel/reportlist/:name", authenticate.reqSessionProfile, (req, r
         })
 });
 
+//redirect for entry
+router.get('/modpanel/members/:name', authenticate.reqSessionProfile,(req, res) => {
+    res.redirect('/group/modpanel/members/' + req.params.name + "/1/")
+});
+
 //get all members of group shown in mod panel
 //get /name/modpanel/members
-router.get("/modpanel/members/:name", authenticate.reqSessionProfile, (req, res) => {
+router.get("/modpanel/members/:name/:page", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
-    //TODO: add pagination
+    const perPage = 30
+    const page = req.params.page || 1
+
     Group.findOne({name: req.params.name})
         .populate(
             [
@@ -341,9 +348,13 @@ router.get("/modpanel/members/:name", authenticate.reqSessionProfile, (req, res)
         )
         .then((group) => {
                 if(group){
+                    //reduce members array for pagination
+                    let members = group.members.slice(perPage*page-perPage, perPage*page)
+                    let membersCount = group.members.length
                     
                     //check for each member if is mod; if so add member._id.isMod = true
-                    group.members.forEach((member) =>{
+                    members.forEach((member) =>{
+                        //TODO: refactor to search in member object for moderator status
                         if (group.moderator.find((mod) => {
                             return mod._id._id.toString() == member._id._id.toString()
                         })){
@@ -358,7 +369,7 @@ router.get("/modpanel/members/:name", authenticate.reqSessionProfile, (req, res)
 
                     if(ifCurrentUserIsMod){
                         const groupID = group._id
-                        res.render("pages/group/modpanel-members", {currentUserProfile, group, members: group.members})
+                        res.render("pages/group/modpanel-members", {currentUserProfile, group, members: members, current: page, pages: Math.ceil(membersCount / perPage), url: '/group/modpanel/members/' + req.params.name })
                     } else{
                         console.log("cannot show this site: User is not a moderator of this group")
                     }
