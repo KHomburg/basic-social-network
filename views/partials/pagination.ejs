@@ -1,0 +1,36 @@
+<% /*
+pagination partial takes:
+Number of pages: pages (int)
+Current page: current (int)
+url of the site that has pagination: url (string)
+*/%>
+        
+<!-- Pagination -->
+<% if (pages > 0) { %>
+    <ul class="uk-pagination uk-flex-center" uk-margin>
+        <% if (current == 1) { %>
+            <li class="disabled"><a>First</a></li>
+        <% } else { %>
+            <li><a href="<%=url+"/1"%>">First</a></li>
+        <% } %>
+        <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+        <% if (i !== 1) { %>
+            <li class="disabled"><a>...</a></li>
+        <% } %>
+        <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+            <% if (i == current) { %>
+                <li class="active"><a><%= i %></a></li>
+            <% } else { %>
+                <li><a href="<%=url+"/"+ i %>"><%= i %></a></li>
+            <% } %>
+            <% if (i == Number(current) + 4 && i < pages) { %>
+                <li class="disabled"><a>...</a></li>
+            <% } %>
+        <% } %>
+        <% if (current == pages) { %>
+            <li class="disabled"><a>Last</a></li>
+        <% } else { %>
+            <li><a href="<%=url+"/"+ pages %>">Last</a></li>
+        <% } %>
+    </ul>
+<% } %>

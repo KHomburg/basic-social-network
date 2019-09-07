@@ -26,7 +26,7 @@ router.post("/addcontact", authenticate.reqSessionProfile, (req, res) => {
                 if(checkContact == undefined){
                     currentUserProfile.contacts.push(profile);
                     currentUserProfile.save()
-                        .cathc((err)=> {
+                        .catch((err)=> {
                             errLog.createError(err, "Error saving changes to currentUserProfile", "post contact/addcontact", currentUserProfile, undefined)
                             .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
                         })
