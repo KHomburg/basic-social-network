@@ -14,11 +14,14 @@ const Comment = require("../models/Comment");
 const Subcomment = require("../models/Subcomment");
 
 
-
+//redirect for entry
+router.get('/listprofiles', authenticate.reqSessionProfile,(req, res) => {
+    res.redirect('/admin/listprofiles/1')
+});
 
 //shows all profile with option to suspend or delete profiles
 //GET /admin/listprofiles
-router.get("/listprofiles", authenticate.reqSessionProfile, authenticate.checkAdmin, (req, res) => { 
+router.get("/listprofiles/:page", authenticate.reqSessionProfile, authenticate.checkAdmin, (req, res) => { 
     const currentUserProfile = req.currentUserProfile
     const contacts = currentUserProfile.contacts
 
@@ -34,7 +37,7 @@ router.get("/listprofiles", authenticate.reqSessionProfile, authenticate.checkAd
         .then((profiles) => {
             Profile.countDocuments()
                 .then((count) => {
-                    res.render("pages/admin/profilelist", {profiles, currentUserProfile, current: page, pages: Math.ceil(count / perPage) });
+                    res.render("pages/admin/profilelist", {profiles, currentUserProfile, current: page, pages: Math.ceil(count / perPage), url:  "/admin/listprofiles"} );
                 })
                 .catch((countErr) => {
                     errLog.createError(countErr, "Error counting profiles", "get admin/listprofiles", currentUserProfile, undefined)
