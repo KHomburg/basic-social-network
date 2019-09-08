@@ -217,7 +217,7 @@ router.post("/changemail", (req, res) => {
 
                                             helpers.singleFlash(req, res, "Email adress has been changed")
                                         } else {
-                                            helpers.multiFlash(req, res, errors)
+                                            helpers.singleFlash(req, res, "Wrong password")
                                         }
                                     })
                                 }
@@ -238,45 +238,44 @@ router.post("/changepassword", (req, res) => {
     User.findById({_id: req.body.id})
         .exec((err1, user) => {
             if(user){
-                    //fill in errors object if any occure and check validation
-                    const {
-                        errors,
-                        isValid
-                    } = validateChangePassword(req.body);
+                //fill in errors object if any occure and check validation
+                const {
+                    errors,
+                    isValid
+                } = validateChangePassword(req.body);
 
-                    //check if everything's valid
-                    if (!isValid) {
-                        helpers.multiFlash(req, res, errors)
-                    }
-
+                //check if everything's valid
+                if (!isValid) {
+                    helpers.multiFlash(req, res, errors)
+                }else{
                     const password = req.body.password;
                     const newPW = req.body.newPW;
                     const newPW2 = req.body.newPW2;
 
-                            //check password
-                            bcrypt.compare(password, user.password)
-                            .then(isMatch => {
-                                if (isMatch) {
+                    //check password
+                    bcrypt.compare(password, user.password)
+                    .then(isMatch => {
+                        if (isMatch) {
 
-                                    //initialize password encryption
-                                    bcrypt.genSalt(10, (err, salt) => {
-                                        bcrypt.hash(newPW, salt, (err, hash) => {
-                                            if (err) throw err;
-                                            user.password = hash;
-                                            //save new User
-                                            user.save()
-                                                .then((user) => {
-                                                    helpers.singleFlash(req, res, "Password has been changed")
-                                                })
-                                                .catch(err => console.log(err))
+                            //initialize password encryption
+                            bcrypt.genSalt(10, (err, salt) => {
+                                bcrypt.hash(newPW, salt, (err, hash) => {
+                                    if (err) throw err;
+                                    user.password = hash;
+                                    //save new User
+                                    user.save()
+                                        .then((user) => {
+                                            helpers.singleFlash(req, res, "Password has been changed")
                                         })
-                                    })
+                                        .catch(err => console.log(err))
+                                })
+                            })
 
-                                } else {
-                                    helpers.singleFlash(req, res, "Password is incorrect")
-                                }
-                            })                            
-                        
+                        } else {
+                            helpers.singleFlash(req, res, "Password is incorrect")
+                        }
+                    }) 
+                }
             } else {
                 helpers.singleFlash(req, res, "Something went wrong")
             }
