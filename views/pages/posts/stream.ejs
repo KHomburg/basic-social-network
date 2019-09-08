@@ -5,5 +5,6 @@
         <% if(posts){ posts.forEach((post) => { %>
             <%- include('../../partials/components/single-post-reference', {post: post})%>
         <% })} %>
+        <%- include('../../partials/pagination-reduced', {current: current, url: url })%>
     </main>
 <% include ../end %>

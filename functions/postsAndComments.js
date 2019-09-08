@@ -726,7 +726,7 @@ const getStream = (req, res) => {
     )
 
     //constants for pagination
-    const perPage = 30
+    const perPage = 2
     const page = req.params.page || 1
 
     //search the posts
@@ -747,7 +747,7 @@ const getStream = (req, res) => {
             ]
         )
         .then((posts) => {
-            res.render("pages/posts/stream", {currentUserProfile, posts});
+            res.render("pages/posts/stream", {currentUserProfile, posts, url: "/post/stream", current: page});
         })
         .catch((err)=>{                    
             errLog.createError(err, "Error getting Post for Stream (getStream function)", "getStream function", currentUserProfile, undefined)
