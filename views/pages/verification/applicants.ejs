@@ -8,7 +8,6 @@
                 <div class="uk-card-header">
                     <div class="uk-grid-small uk-flex-middle" uk-grid>
                         <div class="uk-width-expand">
-                                <%console.log(user)%>
                             <h3 class="uk-card-title uk-margin-remove-bottom"><%= user.profile.name %></h3>
                             <%if (user.invitedBy){%>
                                 <a class="uk-link-text" href="/profile/id/<%= user.invitedBy.profile %> "><span uk-icon="icon: chevron-right"></span>Invited by...</a>

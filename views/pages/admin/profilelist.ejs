@@ -1,4 +1,5 @@
 <% include ../start %>
+
     <div class="main">
         <div class="uk-margin uk-margin-left uk-margin-right">
             <h4> All profiles</h4>
@@ -20,32 +21,32 @@
                         <!-- Suspend button for user-->
                         <%if(profile.user.suspended == false){%>
                             <div>
-                                <form action="/admin/profiles/suspenduser" method="post">
+                                <form id="suspendUser<%= profile.user._id %>" action="/admin/profiles/suspenduser" method="post">
                                     <div class="uk-margin-top" style="display:none">
                                         <input type="hidden" name="userId" value= <%= profile.user._id %>></br>
-
                                     </div>
-                                    <input class="uk-button uk-button-primary uk-button-small delete-btn uk-width-1-1" type="submit" value="Nutzer sperren">
                                 </form>
+                                <button onclick="suspendUser('<%= profile.user._id %>')" class="uk-button uk-button-primary uk-button-small delete-btn uk-width-1-1" id="button<%= profile.user._id %>">
+                                    Nutzer sperren
+                                </button>
                             </div>
                         <%}else{%>
                             <div>
                                 <form action="/admin/profiles/unsuspenduser" method="post">
                                     <div class="uk-margin-top" style="display:none">
                                         <input type="hidden" name="userId" value= <%= profile.user._id %>></br>
-
                                     </div>
                                     <input class="uk-button uk-button-primary uk-button-small delete-btn uk-width-1-1" type="submit" value="Nutzer Entsperren">
                                 </form>
                             </div>
                         <%}%>
                         <div>
-                            <form action="/admin/profiles/delete" method="post">
+                            <form id="removeUser<%= profile.user._id %>" action="/admin/profiles/delete" method="post">
                                 <div class="uk-margin-top" style="display:none">
                                     <input type="hidden" name="userId" value= <%= profile.user._id %>></br>
                                 </div>
-                                <input class="uk-button uk-button-primary uk-button-small delete-btn uk-width-1-1" type="submit" value="Nutzer Löschen">
                             </form>
+                            <button onclick="removeUser('<%= profile.user._id %>')" class="uk-button uk-button-primary uk-button-small delete-btn uk-width-1-1">Nutzer Löschen</button>
                         </div>
                     </div>
                 <%}%>
