@@ -1,8 +1,16 @@
 
 
 //helper for form flashes
-const formFlash = (req, res, message) => {
-  req.flash('form', message);
+//takes a message as string
+const singleFlash = (req, res, message) => {
+  req.flash('single', message);
+  res.redirect('back')
+}
+
+//helper for form flashes
+//takes multiple messages as name object
+const multiFlash = (req, res, message) => {
+  req.flash('multi', message);
   res.redirect('back')
 }
 
@@ -35,7 +43,8 @@ const findReportedContent = (reportedContents, reportedContent) => {
 }
 
 module.exports = {
-  formFlash,
+  singleFlash,
+  multiFlash,
   findMembershipInProfile,
   ifCurrentUserIsMod,
   findReportedContent,

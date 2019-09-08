@@ -54,11 +54,12 @@ router.post("/register", (req, res) => {
 
                     //check if everything's valid
                     if (!isValid) {
-                        return res.status(400).json(errors);
-                    }
-
-                    //look wether the User with that email adress already exists
-                    User.findOne({
+                        helpers.multiFlash(req, res, errors)
+                        //return res.status(400).json(errors);
+                    }else{
+                        
+                        //look wether the User with that email adress already exists
+                        User.findOne({
                             email: req.body.email.toLowerCase()
                         })
                         .then(user => {
@@ -106,6 +107,8 @@ router.post("/register", (req, res) => {
                                 })
                             }
                         })
+                    }
+
             } else {
                 res.send("wrong registration code")
             }
@@ -126,16 +129,16 @@ router.get("/login", authenticate.reqSessionProfile, (req, res) => {
 //login route (Public)
 //post /users/login
 router.post("/login", (req, res) => {
-    //fill in errors object if any occure and check validation
-    const {
-        errors,
-        isValid
-    } = validateLoginInput(req.body);
-
-    //check if everything's valid
-    if (!isValid) {
-        return res.status(400).json(errors);
-    }
+    ////fill in errors object if any occure and check validation
+    //const {
+    //    errors,
+    //    isValid
+    //} = validateLoginInput(req.body);
+//
+    ////check if everything's valid
+    //if (!isValid) {
+    //    return res.status(400).json(errors);
+    //}
 
     const email = req.body.email.toLowerCase();
     const password = req.body.password;
@@ -147,7 +150,7 @@ router.post("/login", (req, res) => {
         .then(user => {
             //Check for user
             if (!user) {
-                helpers.formFlash(req, res, 'E-Mail not found, or incorrect password')
+                helpers.singleFlash(req, res, 'E-Mail not found, or incorrect password')
                 //errors.email = "User not found";
                 //return res.status(404).json(errors);
             }
@@ -161,13 +164,13 @@ router.post("/login", (req, res) => {
                             console.log("session created");
                             res.redirect("/post/stream/1");
                         } else {
-                            helpers.formFlash(req, res, 'E-Mail not found, or incorrect password')
+                            helpers.singleFlash(req, res, 'E-Mail not found, or incorrect password')
                         }
                     })
             }else if(user.verified == false){
-                helpers.formFlash(req, res, "your account has not been verified yet")
+                helpers.singleFlash(req, res, "your account has not been verified yet")
             }else if(user.suspended == true){
-                helpers.formFlash(req, res, "your account has been suspended")
+                helpers.singleFlash(req, res, "your account has been suspended")
             }
         });
 });

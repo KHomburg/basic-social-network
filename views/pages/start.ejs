@@ -1,7 +1,10 @@
 <% include ../partials/head %>
 
+
+<% include ../partials/flashes/single %>
+<% include ../partials/flashes/multi %>
+
 <% if (typeof currentUserProfile !== "undefined") { %>
   <% include ../partials/header %>
-  <% include ../partials/flash %>
   <% include ../partials/sidebar %>
 <% } %>
