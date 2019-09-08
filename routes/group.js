@@ -118,7 +118,7 @@ router.post("/create", authenticate.reqSessionProfile, (req, res) => {
     Group.findOne({name: req.body.name})
         .then((group) => {
             if(group){
-                helpers.formFlash(req, res, 'A Group with this name already exists')
+                helpers.singleFlash(req, res, 'A Group with this name already exists')
             } else {
                     //Create and save new Group
                     const newGroup = new Group({

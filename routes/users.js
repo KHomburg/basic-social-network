@@ -191,7 +191,7 @@ router.post("/changemail", (req, res) => {
 
                 //check if everything's valid
                 if (!isValid) {
-                    return res.status(400).json(errors);
+                    helpers.multiFlash(req, res, errors)
                 }
 
                     const password = req.body.password;
@@ -200,11 +200,10 @@ router.post("/changemail", (req, res) => {
                     User.findOne({email: newEmail})
                         .exec(
                             (err2, knownUser) => {
-                                console.log(knownUser)
 
                                 //check if email already exists
                                 if(knownUser) {
-                                    res.send("Email Adresse wird schon benutzt")
+                                    helpers.singleFlash(req, res, "Email adress is already in use")
                                 } else {
 
                                     //check password
@@ -216,18 +215,16 @@ router.post("/changemail", (req, res) => {
                                             user.email = newEmail;
                                             user.save();
 
-                                            console.log("Email changed");
-                                            res.redirect("back");
+                                            helpers.singleFlash(req, res, "Email adress has been changed")
                                         } else {
-                                            errors.password = "Password incorrect";
-                                            return res.status(400).json(errors);
+                                            helpers.multiFlash(req, res, errors)
                                         }
                                     })
                                 }
                             }
                         )
             } else {
-                res.send("Etwas lief schief")
+                helpers.singleFlash(req, res, "Something went wrong")
             }
         }
     )
@@ -249,7 +246,7 @@ router.post("/changepassword", (req, res) => {
 
                     //check if everything's valid
                     if (!isValid) {
-                        return res.status(400).json(errors);
+                        helpers.multiFlash(req, res, errors)
                     }
 
                     const password = req.body.password;
@@ -269,20 +266,19 @@ router.post("/changepassword", (req, res) => {
                                             //save new User
                                             user.save()
                                                 .then((user) => {
-                                                    res.redirect("back");
+                                                    helpers.singleFlash(req, res, "Password has been changed")
                                                 })
                                                 .catch(err => console.log(err))
                                         })
                                     })
 
                                 } else {
-                                    errors.password = "Password incorrect";
-                                    return res.status(400).json(errors);
+                                    helpers.singleFlash(req, res, "Password is incorrect")
                                 }
                             })                            
                         
             } else {
-                res.send("wrong registration code")
+                helpers.singleFlash(req, res, "Something went wrong")
             }
         })
 });
