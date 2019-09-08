@@ -18,19 +18,28 @@ const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const Subcomment = require("../models/Subcomment");
 
-
-router.get("/test", (req, res) => res.json({msg: "Groups Works"}));
+//redirect for entry
+router.get('/applicants', authenticate.reqSessionProfile,(req, res) => {
+    res.redirect('/verification/applicants/1')
+});
 
 //show all unverified users that registered
 //get /applicants
-router.get("/applicants", authenticate.reqSessionProfile, (req, res) => {
+router.get("/applicants/:page", authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
+    //constants for pagination
+    const perPage = 50
+    const page = req.params.page || 1
+
     User.find({verified: false})
+        .sort({name: 1})
+        .skip((perPage * page) - perPage)
+        .limit(perPage)
         .populate("profile")
         .exec((err, users) => {
             if(users){                        
-                res.render("pages/verification/applicants", {currentUserProfile, users})
+                res.render("pages/verification/applicants", {currentUserProfile, users, current: page, url:"/verification/applicants" })
 
             }else{
                 console.log("unable to find group")

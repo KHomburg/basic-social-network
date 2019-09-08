@@ -726,7 +726,7 @@ const getStream = (req, res) => {
     )
 
     //constants for pagination
-    const perPage = 2
+    const perPage = 50
     const page = req.params.page || 1
 
     //search the posts
