@@ -7,5 +7,7 @@
             <%- include('../../partials/components/single-profile-reference', {profile: contact._id, currentUserProfile})%>
         <% })} %>
     </div>
+
+    <%- include('../../partials/pagination-full', {pages: pages, current: current, url: url })%>
 </body>
 <% include ../end %>

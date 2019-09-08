@@ -72,12 +72,23 @@ router.post("/removecontact", authenticate.reqSessionProfile, (req, res) => {
     res.status(204).send(); //TODO: add frontend script to change state to addcontact form
 });
 
+//redirect for entry
+router.get('/list', authenticate.reqSessionProfile,(req, res) => {
+    res.redirect('/contacts/list/1')
+});
 
 //get currentUsers contact list
 //Get /list
-router.get('/list', authenticate.reqSessionProfile, (req, res) => {
+router.get('/list/:page', authenticate.reqSessionProfile, (req, res) => {
     const currentUserProfile = req.currentUserProfile
-    let contacts = currentUserProfile.contacts
+
+    //constants for pagination
+    const perPage = 50
+    const page = req.params.page || 1
+
+    let contactsCount = currentUserProfile.contacts.length
+    //reduce contacts size for pagination
+    let contacts = currentUserProfile.contacts.slice(perPage*page-perPage, perPage*page)
     
     //check if there are profile in contacts list, that are deleted and remove them from contacts list
     async function removeDeletedContacts() {for (var i = 0; i < contacts.length && contacts[i]; i++) {            
@@ -88,13 +99,16 @@ router.get('/list', authenticate.reqSessionProfile, (req, res) => {
                 i--
             }
     }}
-    removeDeletedContacts().then(currentUserProfile.save((err) => {
-        if(err){
-            errLog.createError(err, "Error saving changes to contacts list (removing deleted profiles)", "post contact/list", currentUserProfile, undefined)
-                .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
-        }
+    removeDeletedContacts()
+        .then(currentUserProfile.save((err) => {
+            if(err){
+                errLog.createError(err, "Error saving changes to contacts list (removing deleted profiles)", "post contact/list", currentUserProfile, undefined)
+                    .then((errLog)=>{res.render("pages/error-page", {})}).catch(err => console.log(err))
+            }
     }))
-    res.render("pages/profile/contacts", {currentUserProfile, contacts});
+
+
+    res.render("pages/profile/contacts", {currentUserProfile, contacts, current: page, url: "/contacts/list",pages: Math.ceil(contactsCount / perPage) });
 });
 
 module.exports = router;
