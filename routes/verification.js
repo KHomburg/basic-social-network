@@ -36,7 +36,16 @@ router.get("/applicants/:page", authenticate.reqSessionProfile, (req, res) => {
         .sort({name: 1})
         .skip((perPage * page) - perPage)
         .limit(perPage)
-        .populate("profile")
+        .populate([
+            {
+                path: "profile",
+                model: "profile"
+            },
+            {
+                path: "invitedBy",
+                model: "users"
+            },
+        ])
         .exec((err, users) => {
             if(users){                        
                 res.render("pages/verification/applicants", {currentUserProfile, users, current: page, url:"/verification/applicants" })
