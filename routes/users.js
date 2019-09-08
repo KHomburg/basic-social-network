@@ -46,71 +46,70 @@ router.post("/register", (req, res) => {
     User.findById({_id: req.body.code})
         .exec((err1, invitedByUser) => {
             if(invitedByUser || req.body.code == "tramitest"){
-                    //fill in errors object if any occure and check validation
-                    const {
-                        errors,
-                        isValid
-                    } = validateRegisterInput(req.body);
+                //fill in errors object if any occure and check validation
+                const {
+                    errors,
+                    isValid
+                } = validateRegisterInput(req.body);
 
-                    //check if everything's valid
-                    if (!isValid) {
-                        helpers.multiFlash(req, res, errors)
-                        //return res.status(400).json(errors);
-                    }else{
-                        
-                        //look wether the User with that email adress already exists
-                        User.findOne({
-                            email: req.body.email.toLowerCase()
-                        })
-                        .then(user => {
-                            //if user with that email is found, throw error
-                            if (user) {
-                                errors.email = "Email already exists"
-                                return res.status(400).json(errors);
-                            } else {
-                                //else create new User
-                                const newUser = new User({
-                                    email: req.body.email.toLowerCase(),
-                                    password: req.body.password
-                                });
+                //check if everything's valid
+                if (!isValid) {
+                    helpers.multiFlash(req, res, errors)
+                    //return res.status(400).json(errors);
+                }else{
+                    
+                    //look wether the User with that email adress already exists
+                    User.findOne({
+                        email: req.body.email.toLowerCase()
+                    })
+                    .then(user => {
+                        //if user with that email is found, throw error
+                        if (user) {
+                            helpers.singleFlash(req, res, 'E-mail has been sent to the entered adress')
+                        } else {
+                            //else create new User
+                            const newUser = new User({
+                                email: req.body.email.toLowerCase(),
+                                password: req.body.password
+                            });
 
-                                //initialize password encryption
-                                bcrypt.genSalt(10, (err, salt) => {
-                                    bcrypt.hash(newUser.password, salt, (err, hash) => {
-                                        if (err) throw err;
-                                        newUser.password = hash;
-                                        if(invitedByUser){
-                                            newUser.invitedBy = invitedByUser;
-                                        }
+                            //initialize password encryption
+                            bcrypt.genSalt(10, (err, salt) => {
+                                bcrypt.hash(newUser.password, salt, (err, hash) => {
+                                    if (err) throw err;
+                                    newUser.password = hash;
+                                    if(invitedByUser){
+                                        newUser.invitedBy = invitedByUser;
+                                    }
 
-                                        //Create the profile for newUser
-                                        const newProfile = new Profile({
-                                            name: req.body.name,
-                                            user: newUser._id
-                                        });
+                                    //Create the profile for newUser
+                                    const newProfile = new Profile({
+                                        name: req.body.name,
+                                        user: newUser._id
+                                    });
 
-                                        newUser.profile = newProfile._id
+                                    newUser.profile = newProfile._id
 
-                                        //save new User
-                                        newUser.save()
-                                            .then((user) => {
-                                                //save the Profile
-                                                newProfile.save()
-                                                    .then(() => {
-                                                        console.log("Profile saved:" + newProfile)
-                                                        res.render("pages/users/post-register");
-                                                    })
-                                                    .catch(err => console.log(err));
-                                            })
-                                            .catch(err => console.log(err))
-                                    })
+                                    //save new User
+                                    newUser.save()
+                                        .then((user) => {
+                                            //save the Profile
+                                            newProfile.save()
+                                                .then(() => {
+                                                    console.log("Profile saved:" + newProfile)
+                                                    res.render("pages/users/post-register");
+                                                })
+                                                .catch(err => console.log(err));
+                                        })
+                                        .catch(err => console.log(err))
                                 })
-                            }
-                        })
-                    }
+                            })
+                        }
+                    })
+                }
 
             } else {
-                res.send("wrong registration code")
+                helpers.singleFlash(req, res, 'Wrong registration code')
             }
         })
 });
