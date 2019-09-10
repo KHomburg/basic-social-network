@@ -73,8 +73,9 @@ router.post("/profiles/suspenduser", authenticate.reqSessionProfile, authenticat
 
     //find user and change suspended attribute to true
     User.findById(req.body.userId)
+        .populate("profile")
         .then((user) => {
-            if(user){
+            if(user && user.profile.admin == false ){
                 mongoose.connection.db.collection("sessions").remove({"session": { $regex: req.body.userId}}, (err, result) => {
                     console.log(result)
                 })
