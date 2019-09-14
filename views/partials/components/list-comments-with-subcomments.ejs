@@ -28,7 +28,7 @@ requires
                 </div>
                 <div class="uk-width-expand uk-margin-remove">
                     <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><a href="/profile/id/<%= comment._id.profile._id %>">von <%= comment._id.profile.name %></a></p>
-                    <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom">Am <%= comment._id.date.toLocaleDateString() + " um " + comment._id.date.toLocaleTimeString("de-De") %></p>
+                    <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom">Am <%= comment._id.date.toLocaleDateString("de-De") + " um " + comment._id.date.toLocaleTimeString("de-De") %></p>
                 </div>
             </header>
             <hr class="divider__b">
@@ -75,7 +75,7 @@ requires
                                 </div>
                                 <div class="uk-width-expand uk-margin-remove">
                                     <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><a href="/profile/id/<%= subComment._id.profile._id %>">von <%= subComment._id.profile.name %></a></p>
-                                    <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><%= subComment._id.date.toDateString("de-De") + " " + subComment._id.date.toLocaleTimeString("de-De") %></p>
+                                    <p class="uk-text-meta uk-margin-remove-top uk-margin-remove-bottom"><%= subComment._id.date.toLocaleDateString("de-De") + " " + subComment._id.date.toLocaleTimeString("de-De") %></p>
                                 </div>
                             </header>
                             
