@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+app.use(require('express-status-monitor')())
 const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const keys = require("./config/keys");
