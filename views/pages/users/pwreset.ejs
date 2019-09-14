@@ -1,0 +1,16 @@
+<% include ../start %>
+<div class="login-form">
+    <div class="form-group">
+        <form action="/users/pwreset" method="post">
+            <div class="uk-margin">
+                <div class="uk-inline login-input">
+                    <span class="uk-form-icon" uk-icon="icon: user"></span>
+                    <input class="uk-input" id="Email" type="email" name="email" placeholder="Email eingeben" required>
+                </div>
+            </div>
+                <input class="uk-button uk-button-default" type="submit" value="Absenden">
+        </form>
+    </div>
+</div>
+
+<% include ../end %>

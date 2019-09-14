@@ -125,19 +125,9 @@ router.get("/login", authenticate.reqSessionProfile, (req, res) => {
     }
 });
 
-//login route (Public)
+//login route (Private)
 //post /users/login
 router.post("/login", (req, res) => {
-    ////fill in errors object if any occure and check validation
-    //const {
-    //    errors,
-    //    isValid
-    //} = validateLoginInput(req.body);
-//
-    ////check if everything's valid
-    //if (!isValid) {
-    //    return res.status(400).json(errors);
-    //}
 
     const email = req.body.email.toLowerCase();
     const password = req.body.password;
@@ -281,6 +271,41 @@ router.post("/changepassword", (req, res) => {
             }
         })
 });
+
+//show form to reset password (Private)
+//Get users/pwreset
+router.get('/pwreset', (req,res) => {
+    res.render("pages/users/pwreset");
+});
+
+
+//reset password Route (Private)
+//Get users/pwreset
+router.post('/pwreset', (req,res) => {
+    User.findOne({email: req.body.email.toLowerCase()})
+        .then((user) => {
+            if (user){
+                let newPW = Math.random().toString(36).substring(3);
+                console.log(newPW);
+
+                //initialize password encryption
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(newPW, salt, (err, hash) => {
+                        if (err) throw err;
+                        user.password = hash;
+
+                        //save new User
+                        user.save()
+                            .then((user) => {
+                                res.redirect("/users/login")
+                            })
+                            .catch(err => console.log(err))
+                    })
+                    //TODO: send new pw via mail
+                })
+            }
+        });
+})
 
 //logout Route (Private)
 //Get users/logout

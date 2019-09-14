@@ -7,7 +7,6 @@ function suspendUser(userId){
 }
 
 function removeUser(userId){
-  console.log(document.getElementById('removeUser'+userId))
   UIkit.modal.confirm('Delete user and all its content?').then(function() {
     document.getElementById('removeUser'+userId).submit()
     //location.reload()
