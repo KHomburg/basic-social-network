@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const fs = require('fs');
 
 const AvatarSchema = new Schema({
     profile: {
@@ -16,5 +17,16 @@ const AvatarSchema = new Schema({
         required: true
     }
 })
+
+//delete file after deleting avatar document
+AvatarSchema.post('remove', function(avatar){
+    fs.unlink(`${avatar.path}`, function (err) {
+        console.log(avatar)
+        if (err) throw err;
+        // if no error, file has been deleted successfully
+        console.log('File deleted!');
+    }); 
+})
+
 
 module.exports = Avatar = mongoose.model("avatar", AvatarSchema);

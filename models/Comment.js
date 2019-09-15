@@ -55,7 +55,7 @@ CommentSchema.post('remove', function(comment){
         .then((subcomments) => subcomments.forEach(subcomment => {
             subcomment.remove()
         }))
-    ContentImage.find({ parentSubcomment: comment })
+    ContentImage.find({ parentComment: comment })
         .then((contentImages) => contentImages.forEach(contentImage => {
             contentImage.remove()
         }))

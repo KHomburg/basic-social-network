@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const fs = require('fs');
 
 const ContentImageSchema = new Schema({
     profile: {
@@ -37,6 +38,14 @@ const ContentImageSchema = new Schema({
     }
 })
 
-//TODO: remove image after deleted model
+//delete file after deleting image document
+ContentImageSchema.post('remove', function(image){
+    fs.unlink(`${image.path}`, function (err) {
+        console.log(image)
+        if (err) throw err;
+        // if no error, file has been deleted successfully
+        console.log('File deleted!');
+    }); 
+})
 
 module.exports = ContentImage = mongoose.model("contentImage", ContentImageSchema);
