@@ -38,24 +38,27 @@ router.get('/id/:id', authenticate.reqSessionProfile, (req, res) => {
     Profile.findOne({_id: req.params.id}, (err, profile) => {
         
         //check if currentUser has the now watched profile allready in contacts list
-        const checkContact = () => {
-            if(
-                currentUserProfile.contacts.find(
-                    contact => contact._id._id.toString() == req.params.id.toString()
-                ) != undefined || "") {
-                    return true
-                } else {
-                    return false
-                }
-        }
-        const isContact = checkContact()        
-
-        //currentUserProfile.contacts.find()
-        if(profile){
-            res.render("pages/profile/profile", {profile, currentUserProfile, isContact, showAvatar:image.showAvatar(profile)});
-        }else{
-            res.send("profile not found")
-        }        
+        //TODO: implement function to remove dead references
+        console.log(currentUserProfile.contacts)
+        
+        //const checkContact = () => {
+        //    if(
+        //        currentUserProfile.contacts.find(
+        //            contact => contact._id._id.toString() == req.params.id.toString()
+        //        ) != undefined || "") {
+        //            return true
+        //        } else {
+        //            return false
+        //        }
+        //}
+        //const isContact = checkContact()        
+//
+        ////currentUserProfile.contacts.find()
+        //if(profile){
+        //    res.render("pages/profile/profile", {profile, currentUserProfile, isContact, showAvatar:image.showAvatar(profile)});
+        //}else{
+        //    res.send("profile not found")
+        //}        
     });
 });
 
@@ -161,17 +164,12 @@ router.post('/changeavatar', authenticate.reqSessionProfile, function (req, res,
 router.post('/removeavatar', authenticate.reqSessionProfile, function (req, res, next) {
     const currentUserProfile = req.currentUserProfile
 
-    Avatar.deleteOne({_id: req.body.avatarID})
-        .then(
-            fs.unlink(config.uploadDirAvatars + req.body.avatarID, 
-                (err) => {
-                    if(err){
-                        console.log(err)
-                    }else{
-                        res.redirect("/profile/edit")
-                    }
-                })
-        )
+    Avatar.findById(req.body.avatarID)
+        .then((avatar) => {
+            
+            avatar.remove()
+            res.redirect("/profile/edit")
+        })
         .catch(
             (err) => {console.log(err)}
         )
