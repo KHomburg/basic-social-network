@@ -35,7 +35,15 @@ router.get("/current", authenticate.reqSessionProfile, (req, res) => {
 
 //registration route => creates a User and a Profile Model (Public)
 //get /users/register
-router.get("/register", (req, res) => res.render("pages/users/register"));
+router.get("/register", authenticate.sessionUser,
+    (req, res) => {
+        if (req.currentUser){
+            res.redirect("/post/stream/1")
+        }else{
+            res.render("pages/users/register")
+        }
+    }
+);
 
 
 //registration route (Public)
