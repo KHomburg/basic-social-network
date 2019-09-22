@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
-app.use(require('express-status-monitor')())
+const statusMonitor = require('express-status-monitor')({ path: '' });
+app.use(statusMonitor.middleware);
 const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const keys = require("./config/keys");
@@ -64,6 +65,7 @@ app.set('view engine', 'ejs');
 
 //ROUTES
 //Route Constants
+const start ={};
 const users ={};
 const profile ={};
 const post ={};
@@ -75,7 +77,7 @@ const verification ={};
 const admin = {};
 
 //Route files:
-root.routing = require("./routes/root")
+start.routing = require("./routes/root")
 users.routing = require('./routes/users');
 profile.routing = require('./routes/profile');
 post.routing = require('./routes/post');
@@ -87,7 +89,7 @@ verification.routing = require('./routes/verification');
 admin.routing = require('./routes/admin');
 
 //Use routes
-app.use("/", root.routing, errLog.errDisplay);
+app.use("/", start.routing, errLog.errDisplay);
 app.use('/users', users.routing, errLog.errDisplay);
 app.use('/profile', authenticate.checkLogIn, profile.routing, errLog.errDisplay);
 app.use('/post', authenticate.checkLogIn, post.routing, errLog.errDisplay);
@@ -95,10 +97,12 @@ app.use('/group', authenticate.checkLogIn, group.routing, errLog.errDisplay);
 app.use('/contacts', authenticate.checkLogIn, contacts.routing, errLog.errDisplay);
 app.use('/notification', authenticate.checkLogIn, notification.routing, errLog.errDisplay);
 app.use('/verification', authenticate.checkLogIn, verification.routing, errLog.errDisplay);
-app.use('/admin', authenticate.checkLogIn, admin.routing, errLog.errDisplay);
+app.use('/admin', authenticate.checkLogIn, authenticate.reqSessionProfile, authenticate.checkAdmin, admin.routing,  errLog.errDisplay);
 app.use(express.static('public'));
 app.use(authenticate.checkLogIn, express.static('images'))
 
+//Status monitor:
+app.get('/status', authenticate.reqSessionProfile, authenticate.checkAdmin, statusMonitor.pageRoute)
 
 //Server Setup
 

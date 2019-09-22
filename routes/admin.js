@@ -15,13 +15,13 @@ const Subcomment = require("../models/Subcomment");
 
 
 //redirect for entry
-router.get('/listprofiles', authenticate.reqSessionProfile,(req, res) => {
+router.get('/listprofiles',(req, res) => {
     res.redirect('/admin/listprofiles/1')
 });
 
 //shows all profile with option to suspend or delete profiles
 //GET /admin/listprofiles
-router.get("/listprofiles/:page", authenticate.reqSessionProfile, authenticate.checkAdmin, (req, res) => { 
+router.get("/listprofiles/:page", (req, res) => { 
     const currentUserProfile = req.currentUserProfile
     const contacts = currentUserProfile.contacts
 
@@ -52,7 +52,7 @@ router.get("/listprofiles/:page", authenticate.reqSessionProfile, authenticate.c
 
 //post search request to find users by text
 //POST admin/profiles/search
-router.post("/profiles/search", authenticate.reqSessionProfile, authenticate.checkAdmin, (req, res) => {
+router.post("/profiles/search", (req, res) => {
     const currentUserProfile = req.currentUserProfile
     
     const term = req.body.name;
@@ -68,7 +68,7 @@ router.post("/profiles/search", authenticate.reqSessionProfile, authenticate.che
 
 //post suspend to suspend user
 //POST admin/profiles/suspend
-router.post("/profiles/suspenduser", authenticate.reqSessionProfile, authenticate.checkAdmin, (req, res) => {
+router.post("/profiles/suspenduser", (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
     //find user and change suspended attribute to true
@@ -96,7 +96,7 @@ router.post("/profiles/suspenduser", authenticate.reqSessionProfile, authenticat
 
 //post suspend to suspend user
 //POST admin/profiles/suspend
-router.post("/profiles/unsuspenduser", authenticate.reqSessionProfile, authenticate.checkAdmin, (req, res) => {
+router.post("/profiles/unsuspenduser", (req, res) => {
     const currentUserProfile = req.currentUserProfile
 
     //find user and change suspended attribute to true
@@ -125,7 +125,7 @@ router.post("/profiles/unsuspenduser", authenticate.reqSessionProfile, authentic
 //User Delete Route (Private)
 //also deletes profile and all comments and posts by User
 //Get users/logout
-router.post('/profiles/delete', authenticate.reqSessionProfile, (req,res) => {
+router.post('/profiles/delete', (req,res) => {
     const currentUserProfile = req.currentUserProfile
     var deletingUser = req.body.userId
     User.findById(deletingUser)
