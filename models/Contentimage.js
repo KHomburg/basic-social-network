@@ -41,10 +41,7 @@ const ContentImageSchema = new Schema({
 //delete file after deleting image document
 ContentImageSchema.post('remove', function(image){
     fs.unlink(`${image.path}`, function (err) {
-        console.log(image)
         if (err) throw err;
-        // if no error, file has been deleted successfully
-        console.log('File deleted!');
     }); 
 })
 

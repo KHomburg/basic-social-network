@@ -148,7 +148,6 @@ router.post('/avatar', authenticate.reqSessionProfile, function (req, res, next)
 
 router.post('/changeavatar', authenticate.reqSessionProfile, function (req, res, next) {
     const currentUserProfile = req.currentUserProfile
-    console.log(req.body.avatarID)
     Avatar.findById(req.body.avatarID)
         .exec((err, avatar) => {
             if(err){

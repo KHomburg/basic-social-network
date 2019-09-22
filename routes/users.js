@@ -19,12 +19,6 @@ const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const Subcomment = require("../models/Subcomment");
 
-//test route
-router.get("/test", (req, res) => {
-    res.render("pages/test");
-    console.log(req.session);
-});
-
 //return current User route (Private)
 //Get users/current
 router.get("/current", authenticate.reqSessionProfile, (req, res) => {
@@ -294,7 +288,6 @@ router.post('/pwreset', (req,res) => {
         .then((user) => {
             if (user){
                 let newPW = Math.random().toString(36).substring(3);
-                console.log(newPW);
 
                 //initialize password encryption
                 bcrypt.genSalt(10, (err, salt) => {

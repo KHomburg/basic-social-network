@@ -6,8 +6,6 @@ function getNotified(){
             
         })
         .then(function(myJson) {
-            console.log("test")
-            console.log(myJson)
             if (myJson.toString() == "false" && document.getElementById("notify-icon").style.color == "red"){
                 document.getElementById("notify-icon").style.color = "grey"
             } else if (myJson.toString() == "true" && document.getElementById("notify-icon").style.color == "grey"){

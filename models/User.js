@@ -45,7 +45,6 @@ UserSchema.post('remove', (user) => {
     console.log(user)
     Profile.findOne({ user: user })
         .then((profile) => {
-            console.log(profile)
             profile.remove()
 
             mongoose.connection.db.collection("sessions").remove({"session": { $regex: user._id}}, (err, result) => {

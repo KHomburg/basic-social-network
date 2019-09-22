@@ -21,10 +21,7 @@ const AvatarSchema = new Schema({
 //delete file after deleting avatar document
 AvatarSchema.post('remove', function(avatar){
     fs.unlink(`${avatar.path}`, function (err) {
-        console.log(avatar)
         if (err) throw err;
-        // if no error, file has been deleted successfully
-        console.log('File deleted!');
     }); 
 })
 
