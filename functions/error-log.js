@@ -32,9 +32,9 @@ const errDisplay = (function(err, req, res, next){
     const newErrorLog = new ErrorLog({
         errLog: err,
     })
+    console.log(err)
     newErrorLog.save()
         .then((ErrLog) => {
-            console.log("ERROR: " + ErrLog)
             resolve(ErrLog)
             res.status(500);
             res.render("pages/error-page", {})
