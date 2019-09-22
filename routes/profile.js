@@ -41,24 +41,24 @@ router.get('/id/:id', authenticate.reqSessionProfile, (req, res) => {
         //TODO: implement function to remove dead references
         console.log(currentUserProfile.contacts)
         
-        //const checkContact = () => {
-        //    if(
-        //        currentUserProfile.contacts.find(
-        //            contact => contact._id._id.toString() == req.params.id.toString()
-        //        ) != undefined || "") {
-        //            return true
-        //        } else {
-        //            return false
-        //        }
-        //}
-        //const isContact = checkContact()        
-//
-        ////currentUserProfile.contacts.find()
-        //if(profile){
-        //    res.render("pages/profile/profile", {profile, currentUserProfile, isContact, showAvatar:image.showAvatar(profile)});
-        //}else{
-        //    res.send("profile not found")
-        //}        
+        const checkContact = () => {
+            if(
+                currentUserProfile.contacts.find(
+                    contact => contact._id._id.toString() == req.params.id.toString()
+                ) != undefined || "") {
+                    return true
+                } else {
+                    return false
+                }
+        }
+        const isContact = checkContact()        
+
+        //currentUserProfile.contacts.find()
+        if(profile){
+            res.render("pages/profile/profile", {profile, currentUserProfile, isContact, showAvatar:image.showAvatar(profile)});
+        }else{
+            res.send("profile not found")
+        }        
     });
 });
 

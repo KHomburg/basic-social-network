@@ -13,11 +13,11 @@ requires
 <% var comments = post.comments%>
 <% var index = 0 %>
 <% if(comments){ comments.forEach((comment) => { %>
-    <% if(comment != null) {%>
+    <% if(comment != null && comment != undefined && comment._id != undefined) {%>
         <div class="post__comment uk-inline">
             <header class="uk-comment-header uk-margin-remove-bottom uk-grid-medium uk-flex-middle" uk-grid>
 
-                    <%- include('./report-content-dropdown', {contentId: comment._id._id, groupId: group._id, currentUserProfile, contentType: "comment"} )%>
+                <%- include('./report-content-dropdown', {contentId: comment._id._id, groupId: group._id, currentUserProfile, contentType: "comment"} )%>
 
                 <div class="uk-width-auto uk-margin-remove">
                     <%if(comment._id.profile.avatar){%>
@@ -58,7 +58,7 @@ requires
             <!-- list subComments -->
             <% var subComments = comment._id.subcomments %>
             
-            <% if(subComments != undefined ){%>
+            <% if(subComments != undefined &&  subComments._id != undefined){%>
                 <% subComments.forEach((subComment) => { %>
                     <% if(subComment != null) {%>
                         <div class="post__sub-comment uk-inline">
