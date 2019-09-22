@@ -7,10 +7,12 @@ const keys = require("./config/keys");
 const multer = require('multer');
 const authenticate = require("./functions/authenticate");
 const flash = require('express-flash');
+const errLog = require("./functions/error-log")
 
 const session = require('express-session'); //for authentication Session
 const cookieParser = require('cookie-parser'); //for creating cookies (prob. not necessary in the future)
 const MongoStore = require('connect-mongo')(session); //for storing sessions server side
+require('dotenv').config()// for environment variables
 
 
 
@@ -46,9 +48,10 @@ app.use(session(
 app.use(flash());
 
 //DB Setup
+const db = process.env.DB || keys.db
 mongoose
-    .connect(keys.db, { useNewUrlParser: true })
-    .then(() => console.log('connected to DB'))
+    .connect(db, { useNewUrlParser: true })
+    .then(() => console.log('connected to DB: ' + db))
     .catch(err => console.log(err));
 
 
@@ -84,15 +87,15 @@ verification.routing = require('./routes/verification');
 admin.routing = require('./routes/admin');
 
 //Use routes
-app.use("/", root.routing);
-app.use('/users', users.routing);
-app.use('/profile', authenticate.checkLogIn, profile.routing);
-app.use('/post', authenticate.checkLogIn, post.routing);
-app.use('/group', authenticate.checkLogIn, group.routing);
-app.use('/contacts', authenticate.checkLogIn, contacts.routing);
-app.use('/notification', authenticate.checkLogIn, notification.routing);
-app.use('/verification', authenticate.checkLogIn, verification.routing);
-app.use('/admin', authenticate.checkLogIn, admin.routing);
+app.use("/", root.routing, errLog.errDisplay);
+app.use('/users', users.routing, errLog.errDisplay);
+app.use('/profile', authenticate.checkLogIn, profile.routing, errLog.errDisplay);
+app.use('/post', authenticate.checkLogIn, post.routing, errLog.errDisplay);
+app.use('/group', authenticate.checkLogIn, group.routing, errLog.errDisplay);
+app.use('/contacts', authenticate.checkLogIn, contacts.routing, errLog.errDisplay);
+app.use('/notification', authenticate.checkLogIn, notification.routing, errLog.errDisplay);
+app.use('/verification', authenticate.checkLogIn, verification.routing, errLog.errDisplay);
+app.use('/admin', authenticate.checkLogIn, admin.routing, errLog.errDisplay);
 app.use(express.static('public'));
 app.use(authenticate.checkLogIn, express.static('images'))
 
@@ -100,4 +103,4 @@ app.use(authenticate.checkLogIn, express.static('images'))
 //Server Setup
 
 const port = process.env.PORT || keys.port;
-app.listen(port, () => console.log('Server running'));
+app.listen(port, () => console.log('Server running at port: ' + port));

@@ -27,7 +27,27 @@ const createError = (errLog, message, route, profile, group) => {
     })
 }
 
+//ERROR MESSAGE DISPLAYER
+const errDisplay = (function(err, req, res, next){
+    const newErrorLog = new ErrorLog({
+        errLog: err,
+    })
+    newErrorLog.save()
+        .then((ErrLog) => {
+            console.log("ERROR: " + ErrLog)
+            resolve(ErrLog)
+            res.status(500);
+            res.render("pages/error-page", {})
+        })
+        .catch((err) => {
+            console.log("ERROR in ERROR Handler: Failed saving Error:   " + newErrorLog + " Error while trying to save:" + err)
+            res.status(500);
+            res.render("pages/error-page", {})
+        })
+});
+
 
 module.exports = {
     createError,
+    errDisplay,
 }
