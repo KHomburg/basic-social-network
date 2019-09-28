@@ -21,7 +21,7 @@ require('dotenv').config()// for environment variables
 
 //Middleware
 //body parser
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
@@ -38,22 +38,22 @@ const Subcomment = require("./models/Subcomment");
 //app.use(upload.single('avatar'));
 app.use(cookieParser());
 app.use(session(
-    {
-        secret: keys.secretOrKey, 
-        saveUninitialized: false, 
-        resave: true,
-        stringify: true,
-        store: new MongoStore({ mongooseConnection: mongoose.connection }) 
-    }
+  {
+    secret: keys.secretOrKey,
+    saveUninitialized: false,
+    resave: true,
+    stringify: true,
+    store: new MongoStore({ mongooseConnection: mongoose.connection })
+  }
 ));
 app.use(flash());
 
 //DB Setup
 const db = process.env.DB || keys.db
 mongoose
-    .connect(db, { useNewUrlParser: true })
-    .then(() => console.log('connected to DB: ' + db))
-    .catch(err => console.log(err));
+  .connect(db, { useNewUrlParser: true })
+  .then(() => console.log('connected to DB: ' + db))
+  .catch(err => console.log(err));
 
 
 // set the view engine to ejs
@@ -65,15 +65,15 @@ app.set('view engine', 'ejs');
 
 //ROUTES
 //Route Constants
-const start ={};
-const users ={};
-const profile ={};
-const post ={};
-const group ={};
-const contacts ={};
-const statics ={};
-const notification ={};
-const verification ={};
+const start = {};
+const users = {};
+const profile = {};
+const post = {};
+const group = {};
+const contacts = {};
+const statics = {};
+const notification = {};
+const verification = {};
 const admin = {};
 
 //Route files:
@@ -97,7 +97,7 @@ app.use('/group', authenticate.checkLogIn, group.routing, errLog.errDisplay);
 app.use('/contacts', authenticate.checkLogIn, contacts.routing, errLog.errDisplay);
 app.use('/notification', authenticate.checkLogIn, notification.routing, errLog.errDisplay);
 app.use('/verification', authenticate.checkLogIn, verification.routing, errLog.errDisplay);
-app.use('/admin', authenticate.checkLogIn, authenticate.reqSessionProfile, authenticate.checkAdmin, admin.routing,  errLog.errDisplay);
+app.use('/admin', authenticate.checkLogIn, authenticate.reqSessionProfile, authenticate.checkAdmin, admin.routing, errLog.errDisplay);
 app.use(express.static('public'));
 app.use(authenticate.checkLogIn, express.static('images'))
 

@@ -88,6 +88,7 @@ const ProfileSchema = new Schema({
             type: String
         }
     },
+    //memberships for groups:
     membership: [
         {
             group: {

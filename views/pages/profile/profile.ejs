@@ -1,128 +1,131 @@
 <% include ../start %>
-    <div class="main">
-        <div class="uk-card uk-card-default">
-            <div class="uk-card-header">
-                <div class="uk-flex-middle uk-child-width-expand@s" uk-grid>
-                    <div>
-                        <div class="uk-width-auto">
-                            <img  width="250" height="150" src="<%=showAvatar%>">
-                        </div>
-                    </div>
-                    <div>
-                        <div class="uk-width-expand">
-                            <h3 class="uk-card-title uk-margin-remove-bottom"><%= profile.name %></h3>
-                            <p class="uk-text-meta uk-margin-remove-top">Unternehmen/Bund</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="uk-card-body">
-
-                <ul class="uk-subnav uk-tab uk-visible@s" uk-switcher>
-                    <li class="uk-active"><a href="#">Social</a></li>
-                    <li><a href="#">Education</a></li>
-                    <li><a href="#">Experience</a></li>
-                </ul>
-
-                <ul class="uk-tab-left uk-tab uk-hidden@s" uk-switcher>
-                    <li class="uk-active"><a href="#">Social</a></li>
-                    <li><a href="#">Education</a></li>
-                    <li><a href="#">Experience</a></li>
-                </ul>
-                
-                <ul class="uk-switcher uk-margin">
-                    <li>
-                    <!--Social Table -->
-                        <table class="uk-table uk-table-divider uk-table-responsive">
-                            <tbody>
-                                <tr>
-                                    <td class="uk-width-small">Facebook</td>
-                                    <td><%= profile.social.facebook %></td>
-                                </tr>
-                                <tr>
-                                    <td class="uk-width-small">Xing</td>
-                                    <td><%= profile.social.xing %></td>
-                                </tr>
-                                <tr>
-                                    <td class="uk-width-small">Twitter</td>
-                                    <td><%= profile.social.twitter %></td>
-                                </tr>
-                                <tr>
-                                    <td class="uk-width-small">LinkedIn</td>
-                                    <td><%= profile.social.linkedin %></td>
-                                </tr>
-                                <tr>
-                                    <td class="uk-width-small">Website</td>
-                                    <td><%= profile.social.website %></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    
-                    </li>
-                    <!--Education Table -->
-                    <li>
-                        <table class="uk-table uk-table-divider uk-table-responsive">
-                            <% //sort array by startdate
-                                profile.education.sort(function(a, b) {
-                                    var dateA = new Date(a.from), dateB = new Date(b.from);
-                                    return dateA - dateB;
-                                }); 
-                            %>
-                            <% profile.education.forEach((education) => { %>
-                                <tbody>
-                                    <tr>
-                                        <td class="uk-width-small"><%= education.from.getMonth() + "." + education.from.getFullYear()  + " - " + education.to.getMonth() + "." + education.to.getFullYear() %></td>
-                                        <td>                                      
-                                            <dt> <%= education.university %> </dt>
-                                            <dl class="profile__dl"> <%= education.fieldOfStudy + " (" + education.degree +")"%></dl>                              
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            <% }) %>
-                        </table>                    
-                    </li>
-                    <!--Experience Table -->
-                    <li>
-                        <table class="uk-table uk-table-divider uk-table-responsive">
-                            <% //sort array by startdate
-                                profile.experience.sort(function(a, b) {
-                                    var dateA = new Date(a.from), dateB = new Date(b.from);
-                                    return dateA - dateB;
-                                }); 
-                            %>
-                            <% profile.experience.forEach((experience) => { %>
-                                <tbody>
-                                    <tr>
-                                        <td class="uk-width-small"><%= experience.from.getMonth() + "." + experience.from.getFullYear()  + " - " + experience.to.getMonth() + "." + experience.to.getFullYear() %></td>
-                                        <td>                                      
-                                            <dt> <%= experience.company + " (" + experience.location + ")" %> </dt>
-                                            <dl class="profile__dl"> <%= experience.title%></dl>                              
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            <% }) %>
-                        </table>  
-                    
-                    
-                    
-                    </li>
-                </ul>
-
-                <% if(profile._id.toString() == currentUserProfile._id.toString()){%>
-                <%} else if(isContact == false) { %>
-                    <form action="/contacts/addcontact" method="post">
-                        <input type="hidden" name="profileId" value="<%= profile._id %>">
-                        <button type="submit" value="<%= profile._id %>" class="uk-button uk-button-primary uk-button-small">Kontakt hinzufügen</button>                  
-                    </form>
-                <%} else if(isContact == true) { %>
-                    <form action="/contacts/removecontact" method="post">
-                        <input type="hidden" name="profileId" value="<%= profile._id %>">
-                        <button type="submit" value="<%= profile._id %>" class="uk-button uk-button-primary uk-button-small">Kontakt Entfernen</button>                  
-                    </form>
-                <% } %>
-
-
-            </div>
+<div class="main">
+  <div class="uk-card uk-card-default">
+    <div class="uk-card-header">
+      <div class="uk-flex-middle uk-child-width-expand@s" uk-grid>
+        <div>
+          <div class="uk-width-auto">
+            <img width="250" height="150" src="<%=showAvatar%>">
+          </div>
         </div>
+        <div>
+          <div class="uk-width-expand">
+            <h3 class="uk-card-title uk-margin-remove-bottom"><%= profile.name %></h3>
+            <p class="uk-text-meta uk-margin-remove-top">Unternehmen/Bund</p>
+          </div>
+        </div>
+      </div>
     </div>
+    <div class="uk-card-body">
+
+      <ul class="uk-subnav uk-tab uk-visible@s" uk-switcher>
+        <li class="uk-active"><a href="#">Social</a></li>
+        <li><a href="#">Education</a></li>
+        <li><a href="#">Experience</a></li>
+      </ul>
+
+      <ul class="uk-tab-left uk-tab uk-hidden@s" uk-switcher>
+        <li class="uk-active"><a href="#">Social</a></li>
+        <li><a href="#">Education</a></li>
+        <li><a href="#">Experience</a></li>
+      </ul>
+
+      <ul class="uk-switcher uk-margin">
+        <li>
+          <!--Social Table -->
+          <table class="uk-table uk-table-divider uk-table-responsive">
+            <tbody>
+              <tr>
+                <td class="uk-width-small">Facebook</td>
+                <td><%= profile.social.facebook %></td>
+              </tr>
+              <tr>
+                <td class="uk-width-small">Xing</td>
+                <td><%= profile.social.xing %></td>
+              </tr>
+              <tr>
+                <td class="uk-width-small">Twitter</td>
+                <td><%= profile.social.twitter %></td>
+              </tr>
+              <tr>
+                <td class="uk-width-small">LinkedIn</td>
+                <td><%= profile.social.linkedin %></td>
+              </tr>
+              <tr>
+                <td class="uk-width-small">Website</td>
+                <td><%= profile.social.website %></td>
+              </tr>
+            </tbody>
+          </table>
+
+        </li>
+        <!--Education Table -->
+        <li>
+          <table class="uk-table uk-table-divider uk-table-responsive">
+            <% //sort array by startdate
+                profile.education.sort(function(a, b) {
+                    var dateA = new Date(a.from), dateB = new Date(b.from);
+                    return dateA - dateB;
+                }); 
+            %>
+            <% profile.education.forEach((education) => { %>
+            <tbody>
+              <tr>
+                <td class="uk-width-small">
+                  <%= education.from.getMonth() + "." + education.from.getFullYear()  + " - " + education.to.getMonth() + "." + education.to.getFullYear() %>
+                </td>
+                <td>
+                  <dt> <%= education.university %> </dt>
+                  <dl class="profile__dl"> <%= education.fieldOfStudy + " (" + education.degree +")"%></dl>
+                </td>
+              </tr>
+            </tbody>
+            <% }) %>
+          </table>
+        </li>
+        <!--Experience Table -->
+        <li>
+          <table class="uk-table uk-table-divider uk-table-responsive">
+            <% //sort array by startdate
+              profile.experience.sort(function(a, b) {
+                  var dateA = new Date(a.from), dateB = new Date(b.from);
+                  return dateA - dateB;
+                }); 
+              %>
+            <% profile.experience.forEach((experience) => { %>
+            <tbody>
+              <tr>
+                <td class="uk-width-small">
+                  <%= experience.from.getMonth() + "." + experience.from.getFullYear()  + " - " + experience.to.getMonth() + "." + experience.to.getFullYear() %>
+                </td>
+                <td>
+                  <dt> <%= experience.company + " (" + experience.location + ")" %> </dt>
+                  <dl class="profile__dl"> <%= experience.title%></dl>
+                </td>
+              </tr>
+            </tbody>
+            <% }) %>
+          </table>
+        </li>
+      </ul>
+
+      <% if(profile._id.toString() == currentUserProfile._id.toString()){%>
+      <%} else if(isContact == false) { %>
+      <form action="/contacts/addcontact" method="post">
+        <input type="hidden" name="profileId" value="<%= profile._id %>">
+        <button type="submit" value="<%= profile._id %>" class="uk-button uk-button-primary uk-button-small">Kontakt
+          hinzufügen</button>
+      </form>
+      <%} else if(isContact == true) { %>
+      <form action="/contacts/removecontact" method="post">
+        <input type="hidden" name="profileId" value="<%= profile._id %>">
+        <button type="submit" value="<%= profile._id %>" class="uk-button uk-button-primary uk-button-small">Kontakt
+          Entfernen</button>
+      </form>
+      <% } %>
+
+
+    </div>
+  </div>
+</div>
 <% include ../end %>
