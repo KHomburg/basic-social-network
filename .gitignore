@@ -1,7 +1,6 @@
 /node_modules
 /test.js
 /note.txt
-/images
 public/main\.js
 public/main\.css
 .env
