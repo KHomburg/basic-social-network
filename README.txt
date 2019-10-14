@@ -14,3 +14,6 @@ module.exports = {
     db: 'YourDB', //db key/connection (standard local: 'mongodb://localhost:27017/trami')
     port: "YourPort", //localhost port 
 };
+
+
+=> Plenty of work left to do
